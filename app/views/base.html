@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %} - PAW 2018</title>
+    {% endblock %}
+</head>
+<body>
+    <header>{% block header %}{% endblock %}</header>
+    <main>{% block main %}{% endblock %}</main>
+    <footer>{% block footer %}{% endblock %}</footer>
+</body>
+</html>

@@ -1,0 +1,41 @@
+canvas {	
+	width:450px;
+	height:450px;
+    border: 5px solid black;
+    margin:auto
+}
+.juego{
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
+.piezas{
+	width:450px;
+	height:450px;
+    border: 5px solid black;
+	display:flex;
+	flex-flow: row wrap;
+	
+	transition: width 2s, height 4s;
+}
+.piezas:hover{
+	width: 600px;
+	height: 600px;
+	transform: rotate(45deg);
+}
+
+
+
+#cheers, #cut, #no{
+    display: none;
+}
+
+body {
+    --color1: #4d612f;
+    background-image: linear-gradient(var(--color1), #050632);
+    transition: 1s;
+    height: 100vh;
+}
+body:hover {
+    --color1: #00ffff;
+}
