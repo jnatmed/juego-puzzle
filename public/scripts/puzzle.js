@@ -1,16 +1,72 @@
-/**
+// import {Matriz} from './matriz';
 
- */
 var canvas=document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var empty=9;
 var moves=-1;
 
+
 /**
+ * DEFINICION DE CLASE
+ */
+class Matriz {
+	constructor(){
+		this.rangos = [];
+		this.combinaciones = [];
+	}
+    range(ini,fin){
+		var a = new Array();
+		// console.log('ini:'+ ini);
+		// console.log('ini:'+ fin);
+        for(var i = ini; i <= fin; i++){
+			a.push(i);
+            // console.log('i:'+ a);  
+        }
+        return a;       
+	}
+	setRangos(rangos){
+		for (let index = 0; index < rangos.length; index++) {
+			const element = rangos[index];
+			this.rangos.push(this.range(element['x'], element['y']));
+		}
+	}
+
+	estaEnSector(x,y){
+		var rangoX, rangoY, coordenadasXeY;
+		for (let index = 0; index < this.rangos.length; index++) {
+			const element = this.rangos[index];
+			if (element.indexOf(x)!=-1){
+				console.log("encontre x en rango: (" + element[0] + ":"+ element[element.length-1] + ")");	
+				rangoX = '('+ element[0] +','+ element[element.length-1] +')';
+			}
+			if (element.indexOf(y)!=-1){
+				console.log("encontre y en rango: (" + element[0] + ":" + element[element.length-1] + ")");	
+				rangoY = '('+ element[0] +','+ element[element.length-1] +')';
+			}
+		}
+		coordenadasXeY = rangoX + ':' + rangoY;
+		console.log(coordenadasXeY);
+		console.log('sector tocado: ' + this.combinaciones[coordenadasXeY]);
+		return this.combinaciones[coordenadasXeY];
+	}
+	setCombinaciones(combinaciones){
+		this.combinaciones = combinaciones;
+	}
+	getRangos(){
+		return this.rangos;
+	}
+	getCombinaciones(){
+		return this.combinaciones;
+	}
+	getRangos(){
+		return this.rangos;
+	}
+}
+/*
 Mezclar arreglo: 
 Se hace al principio del juego
  */
-function shuffle(array) { 
+function barajar(array) { 
 	/**
 	 currentIndex => igual al largo total del arreglo, en este caso = 9 elementos
 	 randomIndex = sera un posible indice aleatorio.
@@ -42,7 +98,7 @@ function shuffle(array) {
 el cero `0` representa la celda vacia. 
  */
 var ar=[1,2,3,4,5,6,7,8,0];
-im=shuffle([1,2,3,4,5,6,7,8,0]);
+im=barajar([1,2,3,4,5,6,7,8,0]);
 
 /**
 aca busco cual es la celda que esta vacia
@@ -105,7 +161,7 @@ function draw(){
 	/**
 	vuelvo a mezclar el arreglo de numeros
 	 */
-	  im=shuffle([1,2,3,4,5,6,7,8,0]);
+	  im=barajar([1,2,3,4,5,6,7,8,0]);
 		for(var i=0;i<=8;i++){
 			/**
 			si la posicion `i` es igual a 0
@@ -118,7 +174,7 @@ function draw(){
 				empty=i+1;							
 		}
 		
-		console.log(empty);
+		console.log('valor de empty: ' + empty);
 		
 	/**
 	limpia el canvas
@@ -155,7 +211,7 @@ function draw(){
 	/**
 	antes de controlar la variable `t` la muestro.
 	 */
-	console.log(t);
+	console.log("valor de t: " + t);
 	
 	/**
 	Finalmente si, t==0 entonces significar que llegue a un estado 
@@ -211,12 +267,19 @@ function component(x, y) {
 	/**
 	fillRect es la combinacion de dos metodos que se pueden usar por separado
 	fill() y rect(x0,y0,x1,y1)
+	150 => es el tamaño de la pieza, y las medidas de 450 x 450 
+	155 => si el puzzle fuera de 4x4 y las medidas 620 x 620 
+	126 => si el puzzle fuera de 5x5 y las medidas 630 x 630
 	 */
     ctx.fillRect(150*x,150*y,150,150);    
 }
 
 function moveup() {
+	/**
+	 * x => 450 e y => 450, donde 450 es el tamaño maximo del arreglo
+	 */
 	ctx.clearRect(0,0,450,450); 
+
 	if(restart==1)
 	/**
 	 * en que momento se ejecuta esta parte del codigo?
@@ -229,6 +292,12 @@ function moveup() {
 		draw();
 		return;
 		}
+	/**
+	 * para movimiento prohibidos al moverse hacia arriba si el puzzle es de: 
+	 * 3x3 => 7, 8, 9
+	 * 4x4 => 
+	 * 5x5 => 
+	 *  */	
     if(empty==7||empty==8||empty==9){
     	au=document.getElementById("no");
     	au.play();
@@ -268,7 +337,7 @@ function moveup() {
 	/**
 	finalmente muestro por consola, la celda vacia actual. 
 	 */
-    console.log(empty);
+    console.log('valor de empty: ' + empty);;
 }
 
 function movedown() {
@@ -298,7 +367,7 @@ function movedown() {
         
     }
     
-    console.log(empty);
+    console.log('valor de empty: ' + empty);;
     
 }
 
@@ -344,7 +413,7 @@ function moveleft() {
 	    	
 	  
 	    }
-	  console.log(empty);
+	  console.log('valor de empty: ' + empty);;
 }
 
 function moveright() {
@@ -371,8 +440,8 @@ function moveright() {
 	        im[curr-1]=im[next-1];
 	        im[next-1]=0;
 	        draw();
-	    }console.log(empty);
-	
+		}
+		console.log('valor de empty: ' + empty);;
 	  }
 	  
 window.addEventListener('keydown', function (e) {
@@ -404,6 +473,21 @@ window.addEventListener('keydown', function (e) {
 	}
     
 });
+// window.addEventListener('touchstart', function (event) {
+// 		// start();    
+// 		// var touch = event.targetTouches[0]; 
+// 		console.log(touch.pageX);
+// 		console.log(touch.pageY);
+// });		
+		// console.log(m.range(0,150));
+// });
+
+function getTouchPos(canvas, evt){
+	return {
+		x: evt.clientX,
+		y: evt.clientY
+	}
+}
 
 function enviarInfo(movimiento){
 	var xhttp = new XMLHttpRequest();
@@ -412,18 +496,33 @@ function enviarInfo(movimiento){
 		if(this.readyState == 4 && this.status == 200){
 			console.log(this.response);
 		}
-	}
-	// data : {
-	// 	action : movimiento,
-	// }
-	var data = {
-		movimiento : movimiento
+		if(this.readyState == 2){
+			console.log("response header received")
+		}
 	}
 
-	xhttp.open("POST", "envio-movimiento", true);
-	// xhttp.open("POST");
+	var time = new Date();
+
+	/**
+	 * cargo en un FormData los datos que vamos a enviar
+	 * mediante Ajax: 
+	 *  - el movimiento
+	 *  - el tiempo en que realizo el movimiento
+	 */
+	var data = new FormData();
+		data.append('movimiento', movimiento);
+		data.append('timeStamp', time.toLocaleTimeString());
+		
+	xhttp.open("POST", "envio-movimiento");
 	xhttp.send(data);
 }
+
+
+
+
+
+// m.setCombinaciones(combinaciones['3x3']);
+// m.setRangos(a['3x3']);
 
 function start(){
 	/**
@@ -431,7 +530,81 @@ function start(){
 	 * pidiendo la informacion al servidor
 	 * mediante ajax
 	 */
-draw();
+	
+	// console.log(m.getRangos());
+	// console.log(m.estaEnSector(40,150));
+	// console.log(m.getCombinaciones());
+	draw();
 }
+
+
+canvas.addEventListener('touchstart',function(evt){
+	m = new Matriz();
+
+	a = {
+		'3x3':[
+			{'x': 0, 'y' : 150},
+			{'x': 151, 'y' : 300},
+			{'x': 301, 'y' : 450},
+			],
+		'4x4':[
+			{'x': 0, 'y' : 155},
+			{'x': 156, 'y' : 310},
+			{'x': 311, 'y' : 465},
+			{'x': 466, 'y' : 620},
+			],
+		'5x5':[
+			{'x': 0, 'y' : 126},
+			{'x': 127, 'y' : 252},
+			{'x': 253, 'y' : 378},
+			{'x': 379, 'y' : 504},
+			{'x': 505, 'y' : 630},
+			]
+		};
+	combinaciones = {
+		'3x3' :{
+			'(0,150):(0,150)':1,'(0,150):(151,300)':4,'(0,150):(301,450)':7,
+			'(151,300):(0,150)':2,'(151,300):(151,300)':5,'(151,300):(301,450)':8,
+			'(301,450):(0,150)':3,'(301,450):(151,300)':6,'(301,450):(301,450)':9,
+			}
+	}
+
+	var movPermitidos = {
+		1: [2,4],
+		2: [1,3,5],
+		3: [2,6],
+		4: [1,5,7],
+		5: [2,4,6,8],
+		6: [3,5,9],
+		7: [4,8],
+		8: [5,7,9],
+		9: [6,8]
+	}
+	m.setCombinaciones(combinaciones['3x3']);
+	m.setRangos(a['3x3']);	
+	
+	var bcr = evt.target.getBoundingClientRect();
+	var x = parseInt(evt.targetTouches[0].clientX - bcr.x);
+	var y = parseInt(evt.targetTouches[0].clientY - bcr.y);
+	var sector = m.estaEnSector(x,y)
+	if(movPermitidos[sector].indexOf(empty)!=-1){
+
+		au=document.getElementById("cut");
+		au.play();
+		// text="puzz";
+		var curr=empty;
+		empty=sector;
+		var next=empty;
+		im[curr-1]=im[next-1];
+		im[next-1]=0;
+		draw();
+
+		console.log("se puede intercambiar")
+	}else{
+		console.log("movimiento no permitido")
+	}
+},true);
+
+
 ctx.font = "30px Arial";
 ctx.fillText("Hit S to start the game",80,210);

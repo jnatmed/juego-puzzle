@@ -1,8 +1,11 @@
+.lienzo{
+	text-align: center;
+}
 canvas {	
-	width:450px;
+	width:auto;
 	height:450px;
     border: 5px solid black;
-    margin:auto
+    margin:auto;
 }
 .juego{
     display: flex;
@@ -16,13 +19,17 @@ canvas {
 	display:flex;
 	flex-flow: row wrap;
 	
-	transition: width 2s, height 4s;
+	/* transition: width 2s, height 4s; */
 }
-.piezas:hover{
+
+.buttonTouch{
+	display: none;
+}
+/* .piezas:hover{
 	width: 600px;
 	height: 600px;
 	transform: rotate(45deg);
-}
+} */
 
 
 
@@ -36,6 +43,95 @@ body {
     transition: 1s;
     height: 100vh;
 }
-body:hover {
+/* body:hover {
     --color1: #00ffff;
+} */
+
+header {
+	width:100%;
+}
+header nav{
+	width:90%;
+	/* max-width:100px; */
+	margin:20px auto;
+	background: #024959;
+}
+
+.menu_bar{
+	display: none;
+}
+
+header nav ul{
+	overflow: hidden;
+	list-style: none;
+}
+
+header nav ul li{
+	float: left;
+}
+header nav ul li a{
+	color:white;
+	padding: 20px;
+	display: block;
+	text-decoration: none;
+}
+
+header nav ul li span{
+	margin-right: 10px;
+}
+
+header nav ul li a:hover{
+	background: #037E8C;
+}
+
+main{
+	padding:20px;
+}
+
+@media screen and (max-width:820px){
+	html{
+		max-width: 720px;
+	}	
+	.botonesTouch{
+		margin:auto;
+		align-items: center;
+	}
+	.buttonTouch{
+		display: inline-block;
+		border-radius: 80px;
+		border:#037E8C;
+	}
+	header nav{
+		width: 60%;
+		height: 100%;
+		left: -100%;
+		margin:0;
+		position:fixed;
+	}
+	header nav ul li{
+		display: block;
+		float:left;
+		border-bottom: 1px solid rgba(255,255,255,.3);
+	}
+	.menu_bar{
+		display: block;
+		width: 100%;
+		background: #ccc;
+	}
+	.menu_bar .bt-menu{
+		display: block;
+		padding: 20px;
+		background: #024959;
+		color: #fff;
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 25px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	.menu_bar span{
+		float: right;
+	}
 }
