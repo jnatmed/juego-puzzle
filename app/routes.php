@@ -1,8 +1,9 @@
  <?php
 
-    $router->get('', 'partidaController@home');
-   //  $router->get('', 'PagesController@home');
-    $router->post('envio-movimiento', 'partidaController@mostrar');
+    $router->get('', 'partidaController@mostrarImagenes');
+    $router->get('jugar', 'partidaController@cargarPuzzle');
+    $router->get('login', 'partidaController@login');
+    $router->post('envio-movimiento', 'partidaController@cargarMovimiento');
    //  $router->get('about', 'PlanillaTurnosController@verPlanillaTurnos');
     $router->get('contact', 'PagesController@contact');
 

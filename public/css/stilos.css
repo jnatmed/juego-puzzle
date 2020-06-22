@@ -1,8 +1,17 @@
+.imagenes_principales{
+	display: none;
+}
+body{
+	text-align: center;
+}
+.lienzo{
+	text-align: center;
+}
 canvas {	
 	width:450px;
 	height:450px;
     border: 5px solid black;
-    margin:auto
+    margin:auto;
 }
 .juego{
     display: flex;
@@ -16,13 +25,17 @@ canvas {
 	display:flex;
 	flex-flow: row wrap;
 	
-	transition: width 2s, height 4s;
+	/* transition: width 2s, height 4s; */
 }
-.piezas:hover{
+
+.buttonTouch{
+	display: none;
+}
+/* .piezas:hover{
 	width: 600px;
 	height: 600px;
 	transform: rotate(45deg);
-}
+} */
 
 
 
@@ -36,6 +49,107 @@ body {
     transition: 1s;
     height: 100vh;
 }
-body:hover {
+/* body:hover {
     --color1: #00ffff;
+} */
+
+header {
+	width:100%;
+}
+header nav{
+	width:90%;
+	/* max-width:100px; */
+	margin:20px auto;
+	background: #024959;
+}
+
+.menu_bar{
+	display: none;
+}
+
+header nav ul{
+	overflow: hidden;
+	list-style: none;
+}
+
+header nav ul li{
+	float: left;
+}
+header nav ul li a{
+	color:white;
+	padding: 20px;
+	display: block;
+	text-decoration: none;
+}
+
+header nav ul li span{
+	margin-right: 10px;
+}
+
+header nav ul li a:hover{
+	background: #037E8C;
+}
+
+main{
+	padding:20px;
+}
+.piezas{
+	display: none;
+}
+
+@media screen and (max-width:700px){
+	.lienzo, .juego, .imagen_original{
+		margin: 0 auto;
+		width: auto;
+		display: block;
+	}
+
+	canvas, .imagen_original{
+		width: 300px;
+		height: 300px;
+		margin: auto;
+		
+	}
+	html{
+		margin: 0 auto;
+		display: block;
+	}	
+	header nav{
+		width: 60%;
+		height: 100%;
+		left: -100%;
+		margin:0;
+		position:fixed;
+	}
+	header nav ul li{
+		display: block;
+		float:left;
+		border-bottom: 1px solid rgba(255,255,255,.3);
+	}
+	.menu_bar{
+		display: block;
+		width: 100%;
+		background: #ccc;
+	}
+	.menu_bar .bt-menu{
+		display: block;
+		padding: 20px;
+		background: #024959;
+		color: #fff;
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 25px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	.menu_bar span{
+		float: right;
+	}
+
+	/* canvas{
+		margin: 0 auto;
+		display: block;
+	} */
 }

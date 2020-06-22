@@ -3,15 +3,15 @@
 return array(
     'infoImg' => array(
             'imgs' => [
-                    // 'img-1' => 'public\imgs\salon-sofa-rosa-4.jpg',
-                       'chimenea' => 'public\imgs\chimeneaa-minimalista.jpg',
-                    //    'ciudad' => 'public\imgs\ciudad-in-block.jpg',
-                    //    'insecto' => 'public\imgs\insecto.jpg',
-                    //    'vista-edificio' => 'public\imgs\vista-edificio.jpg',
-                    //    'amsterdan' => 'public\imgs\amsterdan.jpg',
-                    //    'montaña' => 'public\imgs\montaña.jpg',
-                    //    'pratiwi' => 'public\imgs\pratiwi.jpg',
-                    //    'loto' => 'public\imgs\loto.jpg'
+                    'img-1' => 'public\imgs\salon-sofa-rosa-4.jpg',
+                    'chimenea' => 'public\imgs\chimeneaa-minimalista.jpg',
+                    'ciudad' => 'public\imgs\ciudad-in-block.jpg',
+                    'insecto' => 'public\imgs\insecto.jpg',
+                    'vista-edificio' => 'public\imgs\vista-edificio.jpg',
+                    'amsterdan' => 'public\imgs\amsterdan.jpg',
+                    'montaña' => 'public\imgs\montaña.jpg',
+                    'pratiwi' => 'public\imgs\pratiwi.jpg',
+                    'loto' => 'public\imgs\loto.jpg'
                 ],
             'dimensiones' => ['ANCHO' => '450',
                               'ALTO'  => '450',

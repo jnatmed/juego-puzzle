@@ -1,44 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" href="public/css/stilos.css">
-	<title>Juego de Rompecabezas</title>
-</head>
+
+{% include 'partials/base.html' %}
+
 <body>
-	<audio id="cheers" controls="none" preload="auto">
-	<source src="public/audios/aud.mp3" type="audio/mp3">
-	</audio>
-
-	<audio id="cut" controls="none" preload="auto">
-	<source src="public/audios/cut.mp4" type="audio/mp4">
-	</audio>
-
-	<audio id="no" controls="none" preload="auto">
-	<source src="public/audios/no.mp4" type="audio/mp4">
-	</audio>
-  
-	<h1 class="titulo_juego">Clasico juego de Puzzle</h1>
-
-	<section class="juego">
-		<section class="lienzo">
-			<h1 id="message"></h1> <!-- Esta propiedad se va modificando mientras corre el juego-->
-			<h1 id="moves"></h1> <!-- tambien se va modificando -->
-			<canvas id="canvas" height="450px" width="450px"></canvas>
-		</section>
-		<section class="imagen_original">
-			<h1>Imagen Original</h1>	
-			<article class="piezas">
-				{% set cont=1 %}
-				{% for pieza in piezas %}
+	{% include 'partials/nav-puzzle.html' %}
+	<main>
+			<audio id="cheers" controls>
+			<source src="../../public/audios/aud.mp3" type="audio/mp3">
+			<source src="../../public/audios/aud.ogg" type="audio/ogg">
+			</audio>
+		
+			<audio id="cut" controls>
+			<source src="../../public/audios/cut.mp4" type="audio/mp3">
+			<source src="../../public/audios/cut.ogg" type="audio/ogg">
+			</audio>
+		
+			<audio id="no" controls>
+			<source src="../../public/audios/no.mp4" type="audio/mp3">
+			<source src="../../public/audios/no.ogg" type="audio/ogg">
+			</audio>
+		
+			<h1 class="titulo_juego">Clasico juego de Puzzle</h1>
+		
+			<section class="juego">
+				<section class="lienzo">
+					<h1 id="message"></h1> <!-- Esta propiedad se va modificando mientras corre el juego-->
+					<h1 id="moves"></h1> <!-- tambien se va modificando -->
+					<canvas id="canvas" height="{{ ancho_canvas }}" width="{{ alto_canvas }}"></canvas>
+				<section class="imagen_original">
+					<h1>Imagen Original</h1>	
 					<article>
-						<img id="puzz{{ cont }}" src="data:image/jpeg;base64,{{ pieza }}">
-					</article>          
-					{% set cont = cont + 1 %}
-				{% endfor %}	
-				</article>
-		</section>
-	</section>
+						{% set cont=1 %}
+						{% for pieza in piezas %}
+							<article class="piezas">
+								<img id="puzz{{ cont }}" src="data:image/jpeg;base64,{{ pieza }}">
+							</article>          
+							{% set cont = cont + 1 %}
+						{% endfor %}	
+						</article>
+				</section>
+			</section>
+	</main>
+	<script type="module" src="../../public/scripts/matriz.js"></script>
 	<script src="public/scripts/puzzle.js"></script>
+	<!-- <script src="../../public/scripts/menu.js"></script> -->
 </body>
 </html>
