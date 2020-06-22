@@ -6,6 +6,9 @@ use App\Core\Database\Connection;
 use App\Core\Logger;
 use Monolog\Logger as MonologLogger;
 
+// echo(__DIR__);
+// exit();
+
 /**
  * Load config
  */
@@ -19,10 +22,10 @@ App::bind('logger', Logger::getLogger(App::get('config')['logger']['level']));
 /**
  * Load database connection
  */
-// App::bind('database', new QueryBuilder(
-//     Connection::make(App::get('config')['database']),
-//     App::get('logger')
-// ));
+App::bind('database', new QueryBuilder(
+    Connection::make(App::get('config')['database']),
+    App::get('logger')
+));
 
 /**
  * Load template engine

@@ -48,7 +48,10 @@ class PartidaController{
         foreach ($imagenes['imgs'] as $nombre_img=>$path_img){
 
             $img_resultado = base64_encode(file_get_contents($path_img));
-    
+            $nombre[] = explode('public\\imgs\\',$path_img);
+            // echo("<pre>");
+            // var_dump($nombre);
+            // $listadoImg[$nombre[1]] = $img_resultado;
             $listadoImg[$nombre_img] = $img_resultado;
         }
         // var_dump($listadoImg);
@@ -58,10 +61,10 @@ class PartidaController{
     }
 
     public function calcularNuevoAnchoyAlto($anchopagina, $dificultad){
-        while(($anchoPagina % $dificultad)<>0){
-            $anchoPagina--;
+        while(($anchopagina % $dificultad)<>0){
+            $anchopagina--;
         }
-        return $anchoPagina;
+        return $anchopagina;
     }
 
     public function crearArreglo($ancho, $tamanioPieza, $dificultad){
@@ -70,9 +73,9 @@ class PartidaController{
         $i = 0;
         while($cont < $ancho){
             if($cont==0){
-                $rango[i]=['x'=>$cont, 'y'=>$cont+$tamanioPieza];
+                $rango[$i]=['x'=>$cont, 'y'=>$cont+$tamanioPieza];
             }else{
-                $rango[i]=['x'=>$cont+1, 'y'=>$cont+$tamanioPieza];
+                $rango[$i]=['x'=>$cont+1, 'y'=>$cont+$tamanioPieza];
             }
             $cont+=$tamanioPieza;
             $i++;
@@ -82,34 +85,83 @@ class PartidaController{
 
     public function armarCombinaciones($rangos){
         $cont = 1;$combos=[];
-        for ($i=0; i < count($rangos) ; $i++) { 
+        for ($i=0; $i < count($rangos) ; $i++) { 
             $coord = $rangos[$i];
-            for ($j=0; i < count($rangos) ; $j++) { 
-                $combos['('.$rangos[$j].':'.$rangos[$i].')'] = $cont;
+            for ($j=0; $j < count($rangos) ; $j++) { 
+                $combos['('.$rangos[$j]['x'].','.$rangos[$j]['y'].'):('.$rangos[$i]['x'].','.$rangos[$i]['y'].')'] = $cont;
                 $cont++;
             }
         }
         return $combos;
     }
 
+    public function armarMatriz($ancho, $tamanioPieza, $dificultad){
+        $i=0;
+        $array=[];
+        $matriz=[];
+        while($i <= ($ancho-$tamanioPieza)){
+            $array[]=$i;
+            $i+=$tamanioPieza;
+        }
+        // var_dump($array);
+        for ($i=0; $i <= $dificultad-1 ; $i++) { 
+            for ($j=0; $j <= $dificultad-1 ; $j++) { 
+                $matriz[]=['x'=>$array[$j], 
+                           'y'=>$array[$i]
+                        ];
+            }
+        }
+        return $matriz;
+    }
+
     public function cargarPuzzle(){
-        $path = 'public\imgs\/';      
+        $info = require('info.php');
+        $path = 'public\imgs';      
         $id_imagen = $_GET['id_imagen'];
         $anchoPagina = $_GET['ancho_pagina'];
-        
-        $dificultad = 3; 
+    
 
-        $nuevoAncho = calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
-        $rango = crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
-        $combinaciones = armarCombinaciones($rango);
+        $dificultad = 3; 
+        // echo("<pre>");
+        // var_dump($path);
+        // var_dump($id_imagen);
+        // var_dump($anchoPagina);
+        // var_dump($dificultad);
+
+        if($anchoPagina<450){
+            $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
+        }else{
+            $nuevoAncho = 450;
+        }
+        
+        $rango = $this->crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
+        $combinaciones = $this->armarCombinaciones($rango);
+
+        $imgC = new ImgController(['ANCHO'=>$nuevoAncho, 
+                                    'ALTO'=>$nuevoAncho,
+                                    'TAMANIO_PIEZA'=>$nuevoAncho / $dificultad]);
+
+        
+        $salida = $imgC->redimensionar($info['infoImg']['imgs'][$id_imagen]);
+
+        $img_jpeg = $salida['formato_jpeg'];
+        $matriz = $this->armarMatriz($nuevoAncho, $nuevoAncho/$dificultad, $dificultad);
+        foreach ($matriz as $coord) {
+            $resul = $imgC->recortar(NULL, $coord['x'], $coord['y'],$img_jpeg);            
+            $piezas[] = $resul['resultado'];
+        }
 
         $array = [
             'ancho_canvas' => $nuevoAncho,
             'alto_canvas' => $nuevoAncho,
+            // 'tamanio_pieza'=> ($nuevoAncho / $dificultad),
             'piezas' => $piezas,
-            'imagen_original' =>$img_jpeg
+            'imagen_original' =>$img_jpeg,
+            // 'matriz' => $matriz
         ];
-        view('juego-puzzle', $array);
+        // var_dump($array);
+        
+        return view('juego-puzzle', $array);
     }
 
     public function cargarArreglo(){

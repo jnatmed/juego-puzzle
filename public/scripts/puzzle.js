@@ -534,7 +534,7 @@ function start(){
 }
 
 canvas.addEventListener('touchstart',function(evt){
-	alert('width: ' + screen.width + 'height: ' + screen.height) 
+	// alert('width: ' + screen.width + 'height: ' + screen.height) 
 	responsivo(evt);
 }, true);
 

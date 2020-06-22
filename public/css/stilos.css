@@ -1,6 +1,9 @@
 .imagenes_principales{
 	display: none;
 }
+/* .enlacesImagenes{
+	pointer-events: none;
+} */
 body{
 	text-align: center;
 }
