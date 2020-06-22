@@ -80,6 +80,18 @@ class PartidaController{
         return $rango;
     }
 
+    public function armarCombinaciones($rangos){
+        $cont = 1;$combos=[];
+        for ($i=0; i < count($rangos) ; $i++) { 
+            $coord = $rangos[$i];
+            for ($j=0; i < count($rangos) ; $j++) { 
+                $combos['('.$rangos[$j].':'.$rangos[$i].')'] = $cont;
+                $cont++;
+            }
+        }
+        return $combos;
+    }
+
     public function cargarPuzzle(){
         $path = 'public\imgs\/';      
         $id_imagen = $_GET['id_imagen'];
@@ -89,11 +101,11 @@ class PartidaController{
 
         $nuevoAncho = calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
         $rango = crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
-        $combinaciones = armarCombinaciones();
-        
+        $combinaciones = armarCombinaciones($rango);
+
         $array = [
-            'ancho_canvas' => $anchoPagina,
-            'alto_canvas' => $anchoPagina,
+            'ancho_canvas' => $nuevoAncho,
+            'alto_canvas' => $nuevoAncho,
             'piezas' => $piezas,
             'imagen_original' =>$img_jpeg
         ];
