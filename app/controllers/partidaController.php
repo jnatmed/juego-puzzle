@@ -121,7 +121,7 @@ class PartidaController{
         $anchoPagina = $_GET['ancho_pagina'];
     
 
-        $dificultad = 4; 
+        $dificultad = 3; 
         // echo("<pre>");
         // var_dump($path);
         // var_dump($id_imagen);
@@ -155,10 +155,11 @@ class PartidaController{
         $array = [
             'ancho_canvas' => $nuevoAncho,
             'alto_canvas' => $nuevoAncho,
-            // 'tamanio_pieza'=> ($nuevoAncho / $dificultad),
             'piezas' => $piezas,
             'imagen_original' =>$img_jpeg,
-            // 'matriz' => $matriz
+            'tamanio_pieza'=> ($nuevoAncho / $dificultad),
+            'cantElementos' => ($dificultad * 2),
+            'dificultad' => $dificultad
         ];
         // var_dump($array);
         

@@ -97,14 +97,23 @@ function barajar(array) {
 /**el arreglo va del 0 al 8, debido a que
 el cero `0` representa la celda vacia. 
  */
-var ar=[1,2,3,4,5,6,7,8,0];
-im=barajar([1,2,3,4,5,6,7,8,0]);
+
+var cantElementos = parseInt(document.getElementById('cantElementos').value);
+var array=new Array();
+for (let index = 0; index < (cantElementos -1) ; index++) {
+	array[index] =  index + 1; 
+}
+array[cantElementos] = 0;
+
+var ar=array;
+im=barajar(array);
 
 /**
 aca busco cual es la celda que esta vacia
 y guardo el valor en empty
  */
-for(var i=0;i<=8;i++){
+
+for(var i=0;i<=(cantElementos-1);i++){
 	if(im[i]==0)
 		empty=i+1; // esta es la celda que esta vacia
 }
@@ -156,13 +165,20 @@ function draw(){
   de exito, entonces mando a dibujar y barajar de nuevo el arreglo
    */ 
   t=0;
+  
+  var cantElementos = parseInt(document.getElementById('cantElementos').value);
+  var array=new Array();
+  for (let index = 0; index < (cantElementos -1) ; index++) {
+	  array[index] =  index + 1; 
+  }
+  array[cantElementos] = 0;
 
   if(restart==1){
 	/**
 	vuelvo a mezclar el arreglo de numeros
 	 */
-	  im=barajar([1,2,3,4,5,6,7,8,0]);
-		for(var i=0;i<=8;i++){
+	  im=barajar(array);
+		for(var i=0;i<=(cantElementos -1);i++){
 			/**
 			si la posicion `i` es igual a 0
 			le sumo la posicion + 1 en la . Ej: si en la 
@@ -179,13 +195,14 @@ function draw(){
 	/**
 	limpia el canvas
 	 */	
-	 ctx.clearRect(0,0,450,450); // LIMPIA TODO EL CANVAS
+	var anchoCanvas = parseInt(document.getElementById('canvas').width);
+	 ctx.clearRect(0,0,anchoCanvas,anchoCanvas); // LIMPIA TODO EL CANVAS
 	  restart=0;
   }
   /**
 	aca controlo el no haber llegado a un estado de exito
    */
-	for(var i=0;i<9;i++){
+	for(var i=0;i<cantElementos;i++){
 		if(im[i]!=ar[i])
 			t=1;	
 	}
@@ -201,8 +218,9 @@ function draw(){
 	 * la variable 3 en x e y, es valida solo para un arreglo de 3x3
 	 * para casos de 4x4 cambia a x=4 e y=4, y asi con 5x5
 	 */
-	for(var i=0;i<3;i++){
-    	for(var j=0;j<3;j++){
+	var dificultad = parseInt(document.getElementById('dificultad').value);
+	for(var i=0;i<dificultad;i++){
+    	for(var j=0;j<dificultad;j++){
     		   component(i,j);    		
     	}
     }
@@ -237,7 +255,9 @@ function component(x, y) {
 	se genera el rango de numeros del 1 al 9 [1,2,3,4,5,6,7,8,9]
 	
 	 */
-    z=x+3*y;
+	var dificultad = parseInt(document.getElementById('dificultad').value);
+
+    z=x+dificultad*y;
     z=im[z];
 	/**
 	se lo concatena a la cadena `puzz` para hacer referencia a cada uno de los 
@@ -271,7 +291,8 @@ function component(x, y) {
 	155 => si el puzzle fuera de 4x4 y las medidas 620 x 620 
 	126 => si el puzzle fuera de 5x5 y las medidas 630 x 630
 	 */
-    ctx.fillRect(150*x,150*y,150,150);    
+	var tamanio_pieza = parseInt(document.getElementById('tamanio_pieza').value);
+    ctx.fillRect(tamanio_pieza*x,tamanio_pieza*y,tamanio_pieza,tamanio_pieza);    
 }
 
 function moveup() {
