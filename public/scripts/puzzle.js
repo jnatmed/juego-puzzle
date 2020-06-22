@@ -109,7 +109,7 @@ for(var i=0;i<=8;i++){
 		empty=i+1; // esta es la celda que esta vacia
 }
 
-var restart=0;
+var restart=0;juegoNuevo=true;
 
 function won(){
 	// a) limpia el ultimo cuadro 
@@ -530,17 +530,19 @@ function start(){
 	 * pidiendo la informacion al servidor
 	 * mediante ajax
 	 */
-	
-	// console.log(m.getRangos());
-	// console.log(m.estaEnSector(40,150));
-	// console.log(m.getCombinaciones());
 	draw();
 }
 
-
 canvas.addEventListener('touchstart',function(evt){
-	m = new Matriz();
+	alert('width: ' + screen.width + 'height: ' + screen.height) 
+	responsivo(evt);
+}, true);
 
+
+function responsivo(evt){
+	
+	m = new Matriz();
+	
 	a = {
 		'3x3':[
 			{'x': 0, 'y' : 150},
@@ -561,6 +563,7 @@ canvas.addEventListener('touchstart',function(evt){
 			{'x': 505, 'y' : 630},
 			]
 		};
+	
 	combinaciones = {
 		'3x3' :{
 			'(0,150):(0,150)':1,'(0,150):(151,300)':4,'(0,150):(301,450)':7,
@@ -568,7 +571,7 @@ canvas.addEventListener('touchstart',function(evt){
 			'(301,450):(0,150)':3,'(301,450):(151,300)':6,'(301,450):(301,450)':9,
 			}
 	}
-
+	
 	var movPermitidos = {
 		1: [2,4],
 		2: [1,3,5],
@@ -580,6 +583,7 @@ canvas.addEventListener('touchstart',function(evt){
 		8: [5,7,9],
 		9: [6,8]
 	}
+	
 	m.setCombinaciones(combinaciones['3x3']);
 	m.setRangos(a['3x3']);	
 	
@@ -587,23 +591,34 @@ canvas.addEventListener('touchstart',function(evt){
 	var x = parseInt(evt.targetTouches[0].clientX - bcr.x);
 	var y = parseInt(evt.targetTouches[0].clientY - bcr.y);
 	var sector = m.estaEnSector(x,y)
-	if(movPermitidos[sector].indexOf(empty)!=-1){
-
-		au=document.getElementById("cut");
-		au.play();
-		// text="puzz";
-		var curr=empty;
-		empty=sector;
-		var next=empty;
-		im[curr-1]=im[next-1];
-		im[next-1]=0;
-		draw();
-
-		console.log("se puede intercambiar")
+	
+	if (!juegoNuevo){
+		if(movPermitidos[sector].indexOf(empty)!=-1){
+	
+			sonido = document.getElementById("cut");
+			sonido.play();
+			var valor_actual = empty;
+			empty=sector;
+			var proxima_celda_vacia = empty;
+			im[valor_actual-1]=im[proxima_celda_vacia - 1];
+			im[proxima_celda_vacia-1]=0;
+			draw();
+	
+			console.log("se puede intercambiar")
+	
+		}else{
+	
+			console.log("movimiento no permitido")
+			sonido = document.getElementById("no");
+			sonido.play();
+		}
 	}else{
-		console.log("movimiento no permitido")
+		juegoNuevo = false;
+		start();
 	}
-},true);
+	// },true);
+}
+
 
 
 ctx.font = "30px Arial";

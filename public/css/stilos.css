@@ -1,8 +1,14 @@
+.imagenes_principales{
+	display: none;
+}
+body{
+	text-align: center;
+}
 .lienzo{
 	text-align: center;
 }
 canvas {	
-	width:auto;
+	width:450px;
 	height:450px;
     border: 5px solid black;
     margin:auto;
@@ -87,20 +93,27 @@ header nav ul li a:hover{
 main{
 	padding:20px;
 }
+.piezas{
+	display: none;
+}
 
-@media screen and (max-width:820px){
+@media screen and (max-width:700px){
+	.lienzo, .juego, .imagen_original{
+		margin: 0 auto;
+		width: auto;
+		display: block;
+	}
+
+	canvas, .imagen_original{
+		width: 300px;
+		height: 300px;
+		margin: auto;
+		
+	}
 	html{
-		max-width: 720px;
+		margin: 0 auto;
+		display: block;
 	}	
-	.botonesTouch{
-		margin:auto;
-		align-items: center;
-	}
-	.buttonTouch{
-		display: inline-block;
-		border-radius: 80px;
-		border:#037E8C;
-	}
 	header nav{
 		width: 60%;
 		height: 100%;
@@ -134,4 +147,9 @@ main{
 	.menu_bar span{
 		float: right;
 	}
+
+	/* canvas{
+		margin: 0 auto;
+		display: block;
+	} */
 }

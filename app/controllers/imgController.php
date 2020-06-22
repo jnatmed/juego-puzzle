@@ -40,6 +40,7 @@ class ImgController{
 
         imagecopyresampled($img_redimencionada, // imagen destino
                            imagecreatefromjpeg($img), // imagen original 
+                           
                            0, // coord x inicio imagen destino 
                            0, // coord y inicio imagen destino
                            0, // coord x inicio imagen original
