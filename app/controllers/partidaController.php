@@ -121,7 +121,7 @@ class PartidaController{
         $anchoPagina = $_GET['ancho_pagina'];
     
 
-        $dificultad = 3; 
+        $dificultad = 4; 
         // echo("<pre>");
         // var_dump($path);
         // var_dump($id_imagen);
@@ -131,7 +131,8 @@ class PartidaController{
         if($anchoPagina<450){
             $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
         }else{
-            $nuevoAncho = 450;
+            $anchoPagina = 450;
+            $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
         }
         
         $rango = $this->crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
@@ -164,7 +165,7 @@ class PartidaController{
         return view('juego-puzzle', $array);
     }
 
-    public function cargarArreglo(){
+    public function cargarMovimiento(){
         /**
          * IN: 
          * OUT: arreglo con estado inicial del juego
