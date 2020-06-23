@@ -112,11 +112,60 @@ function crearArregloOrdenado(){
 	return arregloOrdenado;
 }
 
-// console.log('ar: ' + ar);
+
+/**
+ * implementacion para jugabilidad en teclado
+ */
+function listaProhibidos(dificultad){
+	var listaMoveUp=new Array;
+	var listaMoveDown=new Array;
+	var listaMoveLeft=new Array;
+	var listaMoveRight=new Array; 
+	/**
+	 *Prohibidos moveup
+	 */
+	for (let index = 0; index < dificultad ; index++) {
+		listaMoveUp.push((dificultad*dificultad)-index);		
+	}
+	/**
+	 * Prohibidos movedown
+	 */
+	for (let index = 1; index <= dificultad; index++) {
+		listaMoveDown.push(index);
+		
+	}
+	/**
+	 * Prohibidos moveleft
+	 */
+	for (let index = 0; index < dificultad; index++) {
+		listaMoveLeft.push(dificultad+(dificultad * index));
+		
+	}
+	/**
+	 * Prohibidos moveright
+	 */
+	for (let index = 0; index < dificultad; index++) {
+		listaMoveRight.push((dificultad*index)+1);
+		
+	}
+	return {
+		'moveup' : listaMoveUp,
+		'movedown' : listaMoveDown,
+		'moveleft' : listaMoveLeft,
+		'moveright' : listaMoveRight
+		}
+}
+
+
 var im=barajar(crearArregloOrdenado());
 var ar=crearArregloOrdenado();
+var dificultad = parseInt(document.getElementById('dificultad').value);
+var mov_prohibidos = listaProhibidos(dificultad);
 console.log('im: ' + im);
 console.log('ar: ' + ar);
+console.log(mov_prohibidos['movedown']);
+
+
 
 
 /**
@@ -339,7 +388,7 @@ function moveup() {
 	 * 4x4 => 
 	 * 5x5 => 
 	 *  */	
-    if(empty==7||empty==8||empty==9){
+    if(mov_prohibidos['moveup'].indexOf(empty)!=-1){
     	au=document.getElementById("no");
     	au.play();
     	moves--;
@@ -363,8 +412,10 @@ function moveup() {
 		datos => curr: es current osea celda vacia actual
 				 next: es proxima celda vacia 
 		 */
+		var dificultad = parseInt(document.getElementById('dificultad').value);
+
     	var curr=empty;
-    	empty=empty+3;
+    	empty=empty+dificultad;
     	var next=empty;
         im[curr-1]=im[next-1];
         im[next-1]=0;
@@ -388,7 +439,7 @@ function movedown() {
 		draw();
 		return;
 	}
-	if(empty==1||empty==2||empty==3) {
+	if(mov_prohibidos['movedown'].indexOf(empty)!=-1) {
 		au=document.getElementById("no");
     	au.play();
 		moves--;
@@ -397,8 +448,10 @@ function movedown() {
     	au=document.getElementById("cut");
     	au.play();
     	text="puzz";
-    	var curr=empty;
-    	empty=empty-3;
+		var curr=empty;
+		var dificultad = parseInt(document.getElementById('dificultad').value);
+
+    	empty=empty-dificultad;
     	var next=empty;
         im[curr-1]=im[next-1];
         im[next-1]=0;
@@ -431,7 +484,7 @@ function moveleft() {
 		return;
 	}
 	
-	if(empty==3||empty==6||empty==9) {
+	if(mov_prohibidos['moveleft'].indexOf(empty)!=-1) {
 		au=document.getElementById("no");
     	au.play();
 		moves--;  
@@ -458,7 +511,7 @@ function moveright() {
 		draw();
 		return;
 	}
-	if(empty==1||empty==4||empty==7) {
+	if(mov_prohibidos['moveright'].indexOf(empty)!=-1) {
 		  au=document.getElementById("no");
 	    	au.play();
 		  moves--;
