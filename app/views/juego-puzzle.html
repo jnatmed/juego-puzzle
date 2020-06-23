@@ -10,12 +10,12 @@
 			</audio>
 		
 			<audio id="cut" controls>
-			<source src="../../public/audios/cut.mp4" type="audio/mp3">
+			<source src="../../public/audios/cut.mp3" type="audio/mp3">
 			<source src="../../public/audios/cut.ogg" type="audio/ogg">
 			</audio>
 		
 			<audio id="no" controls>
-			<source src="../../public/audios/no.mp4" type="audio/mp3">
+			<source src="../../public/audios/no.mp3" type="audio/mp3">
 			<source src="../../public/audios/no.ogg" type="audio/ogg">
 			</audio>
 		
@@ -39,12 +39,13 @@
 						</article>
 				</section>
 			</section>
-			<input type="hidden" id="tamanio_pieza" value="{{ dificultad }}">
+			<input type="hidden" id="tamanio_pieza" value="{{ tamanio_pieza }}">
 			<input type="hidden" id="cantElementos" value="{{  cantElementos }}">
 			<input type="hidden" id="dificultad" value="{{ dificultad }}">
+			<input type="hidden" id="movPermitidos" value="{{ movPermitidos }}">
+			<input type="hidden" id="matriz" value="{{ matriz }}">
+			<input type="hidden" id="combinaciones" value="{{ combinaciones }}">
 	</main>
-	<script type="module" src="../../public/scripts/matriz.js"></script>
 	<script src="public/scripts/puzzle.js"></script>
-	<!-- <script src="../../public/scripts/menu.js"></script> -->
 </body>
 </html>

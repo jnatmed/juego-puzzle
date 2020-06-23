@@ -4,6 +4,7 @@
     $router->get('jugar', 'partidaController@cargarPuzzle');
     $router->get('login', 'partidaController@login');
     $router->post('envio-movimiento', 'partidaController@cargarMovimiento');
+    $router->post('config-movimiento-permitidos', 'partidaController@cargarMovimientosPermitidos');
    //  $router->get('about', 'PlanillaTurnosController@verPlanillaTurnos');
     $router->get('contact', 'PagesController@contact');
 

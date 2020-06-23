@@ -4,6 +4,10 @@ namespace App\controllers;
 use \App\controllers\ImgController;
 
 class PartidaController{
+    public $movPermitidos;
+    public $matriz;
+    public $combinaciones;
+    public $rango;
 
     public function home(){
 
@@ -42,22 +46,15 @@ class PartidaController{
 
         $info = require('info.php');
         $imagenes = $info['infoImg'];
-        $imgMatriz = $info['matriz'];
         $listadoImg = [];
-        $imgC = new ImgController($imagenes['dimensiones']);
+        /**
+         * CARGO IMAGENES GUARDADAS EN EL DIRECTORIO LOCAL
+         */
         foreach ($imagenes['imgs'] as $nombre_img=>$path_img){
-
             $img_resultado = base64_encode(file_get_contents($path_img));
-            $nombre[] = explode('public\\imgs\\',$path_img);
-            // echo("<pre>");
-            // var_dump($nombre);
-            // $listadoImg[$nombre[1]] = $img_resultado;
             $listadoImg[$nombre_img] = $img_resultado;
         }
-        // var_dump($listadoImg);
-        // exit();
         return view('listadeImagenes',array('listado' => $listadoImg));
-
     }
 
     public function calcularNuevoAnchoyAlto($anchopagina, $dificultad){
@@ -114,59 +111,81 @@ class PartidaController{
         return $matriz;
     }
 
+    public function cargarMovimientoPermitidos(){
+        $cantElementos = 9;
+        $dificultad = 3;
+        $permitidos = [];
+        for ($i=1; $i < $cantElementos; $i++) { 
+            for ($j=1; $j < $cantElementos; $j++) { 
+                if($i!=$j){
+                    echo("RESTA ABS: ${i} - ${j} : ".abs($i-$j)."<br>");
+                    if(abs($i-$j)==1||(abs($i-$j)==$dificultad)){
+                        echo("guardo : ${j}");
+                        $permitidos[$i][]=$j;
+                        var_dump($permitidos[$i]);
+                    }
+                }
+            }
+        }
+        return $permitidos;
+    }
+
     public function cargarPuzzle(){
         $info = require('info.php');
         $path = 'public\imgs';      
         $id_imagen = $_GET['id_imagen'];
         $anchoPagina = $_GET['ancho_pagina'];
-    
+        $this->movPermitidos = $info['mov-permitidos'];
 
-        $dificultad = 3; 
-        // echo("<pre>");
-        // var_dump($path);
-        // var_dump($id_imagen);
-        // var_dump($anchoPagina);
-        // var_dump($dificultad);
 
+        $dificultad = 5; 
+
+        // echo("ancho pagina: ".$anchoPagina); 
         if($anchoPagina<450){
+            $anchoPagina = $anchoPagina - 50;
+            // echo("ancho menor a 450<br> es de: ".$anchoPagina);
             $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
+            // echo("nuevo valor: ".$anchoPagina);
         }else{
             $anchoPagina = 450;
             $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
         }
         
-        $rango = $this->crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
-        $combinaciones = $this->armarCombinaciones($rango);
+        $this->rango = $this->crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
+        $this->combinaciones = $this->armarCombinaciones($this->rango);
 
         $imgC = new ImgController(['ANCHO'=>$nuevoAncho, 
-                                    'ALTO'=>$nuevoAncho,
-                                    'TAMANIO_PIEZA'=>$nuevoAncho / $dificultad]);
+                                   'ALTO'=>$nuevoAncho,
+                                   'TAMANIO_PIEZA'=>$nuevoAncho / $dificultad]);
 
         
         $salida = $imgC->redimensionar($info['infoImg']['imgs'][$id_imagen]);
 
         $img_jpeg = $salida['formato_jpeg'];
-        $matriz = $this->armarMatriz($nuevoAncho, $nuevoAncho/$dificultad, $dificultad);
-        foreach ($matriz as $coord) {
+        $this->matriz = $this->armarMatriz($nuevoAncho, $nuevoAncho/$dificultad, $dificultad);
+        foreach ($this->matriz as $coord) {
             $resul = $imgC->recortar(NULL, $coord['x'], $coord['y'],$img_jpeg);            
             $piezas[] = $resul['resultado'];
         }
-
+        
+        // echo("<pre>");
         $array = [
             'ancho_canvas' => $nuevoAncho,
             'alto_canvas' => $nuevoAncho,
             'piezas' => $piezas,
             'imagen_original' =>$img_jpeg,
             'tamanio_pieza'=> ($nuevoAncho / $dificultad),
-            'cantElementos' => ($dificultad * 2),
-            'dificultad' => $dificultad
+            'cantElementos' => ($dificultad * $dificultad),
+            'dificultad' => $dificultad,
+            'movPermitidos' => json_encode($this->movPermitidos[$dificultad]),
+            'matriz' => json_encode($this->rango),
+            'combinaciones' => json_encode($this->combinaciones)
         ];
-        // var_dump($array);
-        
+        // var_dump($array['mov-permitidos']);
         return view('juego-puzzle', $array);
     }
 
-    public function cargarMovimiento(){
+    public function cargarMovimientosPermitidos(){
         /**
          * IN: 
          * OUT: arreglo con estado inicial del juego

@@ -8,10 +8,12 @@ class ImgController{
     public $alto;
     public $tamanio_pieza;
 
-    public function __construct($dimensiones){
-        $this->ancho = $dimensiones['ANCHO'];
-        $this->alto = $dimensiones['ALTO'];
-        $this->tamanio_pieza = $dimensiones['TAMANIO_PIEZA'];
+    public function __construct($dimensiones=NULL){
+        if(isset($dimensiones)){
+            $this->ancho = $dimensiones['ANCHO'];
+            $this->alto = $dimensiones['ALTO'];
+            $this->tamanio_pieza = $dimensiones['TAMANIO_PIEZA'];
+        }
     }
 
     /**

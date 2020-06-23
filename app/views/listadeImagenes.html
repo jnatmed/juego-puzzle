@@ -3,7 +3,7 @@
     {% include 'partials/nav-puzzle.html' %}
     {%for key, value in listado%}
         <a class="enlacesImagenes" href="/jugar?id_imagen={{key}}">
-            <img class="imagenes_principales" src="data:image/jpeg;base64,{{ value }}">
+            <img class="imagenes_principales" alt="{{key}}" src="data:image/jpeg;base64,{{ value }}">
         </a>
     {% endfor %}
 </body>
