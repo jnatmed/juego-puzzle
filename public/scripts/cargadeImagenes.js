@@ -5,40 +5,55 @@ window.addEventListener('load', function(){
         element.width = screen.width * 0.2;    
         element.height = screen.height * 0.2;
         element.style.display = 'inline-block';    
-        element.style.padding = '10px';
+        element.style.borderRadius = '10px';
+        element.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)';
 
-    }
-    var listaEnlaces = document.getElementsByClassName('enlacesImagenes');
-    // console.debug(listaEnlaces);
-    for (let index = 0; index < listaEnlaces.length; index++) {
-        const element = listaEnlaces[index];
-        element.href = element.href + '&ancho_pagina=' + screen.width;
-        // element.style.pointerEvents = 'none';
-        // console.log('childNodes[0]: ' + element.childNodes[0]);
-        // var fisrtChild = element.firstChild;
-        // alert(element.firstChild.hasChildNodes);
-    //     element.addEventListener('onclick',function(){
-    //         var listaI = document.getElementsByClassName('imagenes_principales');
-    //         for (let index = 0; index < listaI.length; index++) {
-    //             const element = listaI[index];
-    //             element.style.display = 'none';
-    //             // console.log(element.style.active)
-    //         }
+        element.addEventListener('click', function(){
+            var listaIhidden = document.getElementsByClassName('imagenes_principales');
+            for (let index = 0; index < listaIhidden.length; index++) {
+                const imgaEsconder = listaIhidden[index];
+                if(imgaEsconder.getAttribute('alt')!=element.getAttribute('alt')){
+                    imgaEsconder.style.display = 'none';
+                }
+            }
+            element.width = screen.width * 0.7;    
+            element.height = screen.height * 0.6;
+            var botonNivel3 = document.createElement('A');
+            var botonNivel4 = document.createElement('A');
+            var botonNivel5 = document.createElement('A');
 
-    //     },false)
-    }
-
-    var imgs = document.getElementsByClassName('imagenes_principales');
-    for (let index = 0; index < imgs.length; index++) {
-        const element = imgs[index];
-        // console.log(element);
-        element.addEventListener('click',function(){
-            var a = document.createAttribute('a');
-            a.appendChild(element);
-            a.title = element.getAttribute('alt');
-            a.href = "/jugar?id_imagen=" + a.title;
-            document.body.appendChild(a);
+            crearBoton(botonNivel3, 'Nivel 3x3', //innerHTML
+                                    element.getAttribute('alt'), //nombreImagen
+                                    '3'); //dificultad
+            crearBoton(botonNivel4, 'Nivel 4x4', 
+                                    element.getAttribute('alt'), 
+                                    '4');
+            crearBoton(botonNivel5, 'Nivel 5x5', 
+                                    element.getAttribute('alt'), 
+                                    '5');
+            document.getElementById('botones_imagenes').appendChild(botonNivel3);
+            document.getElementById('botones_imagenes').appendChild(botonNivel4);
+            document.getElementById('botones_imagenes').appendChild(botonNivel5);
         });
+
     }
+    
+    
+
 }, false);
+
+function crearBoton(boton,inner, hrefName, hrefNivel){
+    boton.innerHTML = inner;
+    boton.style.padding = '5px';
+    boton.style.margin = '10px';
+    boton.style.aligntex = 'left';
+    boton.style.borderRadius = '20px';
+    boton.style.backgroundColor = '#B0C4DE';
+    boton.style.display = 'flex';
+    boton.width = '10px';
+    boton.height = '10px';
+    boton.href = '/jugar?ancho_pagina=' + screen.width + '&id_imagen=' + hrefName + '&dificultad='+ hrefNivel;
+    boton.alignitems = 'center';
+    return boton;
+}
 

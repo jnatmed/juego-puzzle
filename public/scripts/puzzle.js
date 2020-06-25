@@ -182,14 +182,16 @@ var restart=0;juegoNuevo=true;
 
 function won(){
 	// a) limpia el ultimo cuadro 
-	ctx.clearRect(300,300,150,150); 
+	var x1 = parseInt(document.getElementById('tamanio_pieza'));
+	var x0 = parseInt(document.getElementById('canvas').getAttribute('height')) - x1;
+	ctx.clearRect(x0,x0,x1,x1); 
 	// b) capturo la ultima pieza que no se usa en toda la partida
-	var cantElementos = parseInt(document.getElementById('cantElementos').value);
+	var cantElementos = document.getElementById('cantElementos').value;
 	var img=document.getElementById("puzz"+cantElementos);
 	var pat=ctx.createPattern(img,"repeat");
 	ctx.fillStyle=pat;
 	// c) la agrego al canvas para completar la imagen
-	ctx.fillRect(300,300,150,150); 
+	ctx.fillRect(x0,x0,x1,x1); 
 	// d) muestro un mensaje de juego ganado
 	m=document.getElementById("message");
 	m.innerHTML="You won the game in "+moves.toString() +" moves";
@@ -526,47 +528,60 @@ function moveright() {
 	    	var next=empty;
 	        im[curr-1]=im[next-1];
 	        im[next-1]=0;
-	        draw();
+			draw();
 		}
 		console.log('valor de empty: ' + empty);;
 	  }
 	  
 window.addEventListener('keydown', function (e) {
+	let dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));
     key = e.keyCode;
     if(key==37){
 		e.preventDefault();
-		// enviarInfo('left');
-    	moveleft();
+		enviarInfo(dificultad,im);
+		moveleft();
+		mostrarMovimiento(getMarcaTiempo(), im);
+
     }
     if(key==38){
 		e.preventDefault();
-		// enviarInfo('up');
-    	moveup();
+		enviarInfo(dificultad,im);
+		moveup();
+		mostrarMovimiento(getMarcaTiempo(), im);
+
     }
     if(key==39){
 		e.preventDefault();
-		// enviarInfo('right');
-    	moveright();
+		enviarInfo(dificultad,im);
+		moveright();
+		mostrarMovimiento(getMarcaTiempo(), im);
+
     }
     if(key==40){
 		e.preventDefault();
-		// enviarInfo('down');
-    	movedown();
+		enviarInfo(dificultad,im);
+		movedown();
+		mostrarMovimiento(getMarcaTiempo(), im);
+
     }
 	if(key==83){
 		e.preventDefault();
-		// enviarInfo('letra-s');
+		enviarInfo(dificultad,im);
 		start();
+		mostrarMovimiento(getMarcaTiempo(), im);
+
 	}
     
 });
 
-function cargarConfig(dificultad){
+function enviarInfo(dificultad, estadoJuego){
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
-			return(this.response);
+			var respuesta = JSON.parse(this.response);
+			console.log('recibo estadoJuego: ' + respuesta['estadoJuego']);
+			console.log('recibo dificultad: ' + respuesta['dificultad']);
 		}
 		if(this.readyState == 2){
 			console.log("response header received")
@@ -578,12 +593,16 @@ function cargarConfig(dificultad){
 	 *  - el movimiento
 	 *  - el tiempo en que realizo el movimiento
 	 */
+	var marcadeTiempo = getMarcaTiempo();
+	var estadoJuego = JSON.stringify(estadoJuego);
+	console.log('envio estadoJuego: ' + estadoJuego);
+
 	var data = new FormData();
-	data.append('dificultad', dificultad);
-	data.append('dificultad', dificultad);
+	data.append('marcadetiempo', marcadeTiempo);
+	data.append('estadoJuego', estadoJuego);
 	data.append('dificultad', dificultad);
 		
-	xhttp.open("POST", "config-movimiento-permitidos");
+	xhttp.open("POST", "enviar_movimiento");
 	xhttp.send(data);
 }
 
@@ -595,6 +614,25 @@ function start(){
 	 */
 	console.log("/*****NUEVO JUEGO*******/");
 	draw();
+}
+
+function mostrarMovimiento(marcadeTiempo, estadodeJuego){
+	var tag_lista_Movimientos = document.getElementById('lista_movimientos');
+	var cont = tag_lista_Movimientos.childElementCount;	
+	var item = document.createElement('li');
+	item.innerHTML = "Tiempo: "+ marcadeTiempo  + " Estado del Juego: " + estadodeJuego;
+	var listaLI = tag_lista_Movimientos.getElementsByTagName('li');
+	if(cont<3){
+		tag_lista_Movimientos.appendChild(item);
+	}else{
+		tag_lista_Movimientos.removeChild(tag_lista_Movimientos.firstChild)
+		tag_lista_Movimientos.appendChild(item);
+	}	
+}	
+
+function getMarcaTiempo(){
+	var today = new Date();
+	return (today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+":"+today.getMilliseconds());
 }
 
 canvas.addEventListener('touchstart',function(evt){
@@ -634,7 +672,11 @@ function responsivo(evt){
 			im[valor_actual-1]=im[proxima_celda_vacia - 1];
 			im[proxima_celda_vacia-1]=0;
 			draw();
-	
+			 
+			enviarInfo(dificultad,im);
+
+			mostrarMovimiento(getMarcaTiempo(), im);
+
 			console.log("se puede intercambiar")
 	
 		}else{

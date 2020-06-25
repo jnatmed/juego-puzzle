@@ -1,10 +1,11 @@
 {% include 'partials/base.html' %}
 <body>
     {% include 'partials/nav-puzzle.html' %}
-    {%for key, value in listado%}
-        <a class="enlacesImagenes" href="/jugar?id_imagen={{key}}">
-            <img class="imagenes_principales" alt="{{key}}" src="data:image/jpeg;base64,{{ value }}">
-        </a>
-    {% endfor %}
+    <section class="seccionImagenes">
+        {%for key, value in listado%}
+                <img class="imagenes_principales" alt="{{key}}" src="data:image/jpeg;base64,{{ value }}">
+        {% endfor %}
+        <section id="botones_imagenes"></section>
+    </section>
 </body>
 </html>

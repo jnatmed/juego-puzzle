@@ -9,42 +9,13 @@ class PartidaController{
     public $combinaciones;
     public $rango;
 
-    public function home(){
-
-        $info = require('info.php');
-        $imagenes = $info['infoImg'];
-        $imgMatriz = $info['matriz'];
-
-        // echo("<pre>");
-        // var_dump($info);
-        // exit();
-        $imgC = new ImgController($imagenes['dimensiones']);
-
-        foreach ($imagenes['imgs'] as $nombre_img=>$path_img){
-            /**
-             * redimensiono la imagen segun la configuracion elegida, en info.php
-             * y puesta en $imagenes['dimensiones']
-             */
-            $salida = $imgC->redimensionar($path_img);
-            $img_jpeg = $salida['formato_jpeg'];
-            foreach ($imgMatriz as $coord){
-                /**
-                 * aca una vez redimensionada la imagen a un tamaño manejable, 
-                 * empiezo a extraer las piezas segun la configuracion elegida en $info['matriz']
-                 */
-                $resul = $imgC->recortar(NULL, $coord['x'], $coord['y'],$img_jpeg);            
-                /**
-                 * y guardo pieza por pieza en el arreglo que voy a mostrar
-                 */
-                $piezas[] = $resul['resultado'];
-                } 
-        }
-        return view('juego-puzzle', array('piezas' => $piezas, 'imagen_original' => $img_jpeg));    
+    public function inicio(){
+        return view('login');
     }
 
-    public function mostrarImagenes(){
+    public function mostrarImagenes(){        
 
-        $info = require('info.php');
+        $info = require('info_juego.php');
         $imagenes = $info['infoImg'];
         $listadoImg = [];
         /**
@@ -131,14 +102,14 @@ class PartidaController{
     }
 
     public function cargarPuzzle(){
-        $info = require('info.php');
+        session_start();
+
+        $info = require('info_juego.php');
         $path = 'public\imgs';      
         $id_imagen = $_GET['id_imagen'];
         $anchoPagina = $_GET['ancho_pagina'];
         $this->movPermitidos = $info['mov-permitidos'];
-
-
-        $dificultad = 5; 
+        $dificultad = intval($_GET['dificultad']); 
 
         // echo("ancho pagina: ".$anchoPagina); 
         if($anchoPagina<450){
@@ -181,7 +152,8 @@ class PartidaController{
             'matriz' => json_encode($this->rango),
             'combinaciones' => json_encode($this->combinaciones)
         ];
-        // var_dump($array['mov-permitidos']);
+
+        $_SESSION['dificultad'] = $dificultad;
         return view('juego-puzzle', $array);
     }
 
@@ -190,10 +162,23 @@ class PartidaController{
          * IN: 
          * OUT: arreglo con estado inicial del juego
          */
+        session_start();
+        $_SESSION['dificultad'] = 'hola';
+
+        $marcadeTiempo = $_POST['marcadetiempo'];
+        $estadoJuego = json_decode($_POST['estadoJuego']);
+        $dificultad = $_POST['dificultad'];
+        return json_encode(array('marcadeTiempo' => $marcadeTiempo,
+                                 'estadoJuego' => $estadoJuego,
+                                 'dificultad' => $_SESSION['dificultad']
+                                ));
     }
 
     public function login(){
-        include 'app/views/login.html';
+        session_start();
+        var_dump($_POST);
+        var_dump($_SESSION);
+        
         // view('login');
     }
 
