@@ -157,7 +157,7 @@ function listaProhibidos(dificultad){
 }
 
 
-var im=barajar(crearArregloOrdenado());
+var im=JSON.parse(document.getElementById('estado_actual').getAttribute('value'));
 var ar=crearArregloOrdenado();
 var dificultad = parseInt(document.getElementById('dificultad').value);
 var mov_prohibidos = listaProhibidos(dificultad);
@@ -266,23 +266,23 @@ function draw(){
   /**
 	aca controlo el no haber llegado a un estado de exito
    */
-	console.log('ANTES DEL CONTROL t => ' + t);
-  	console.log("cantElementos: " + cantElementos);
+	// console.log('ANTES DEL CONTROL t => ' + t);
+  	// console.log("cantElementos: " + cantElementos);
 	for(var i=0;i<cantElementos;i++){
 		if(im[i]!=ar[i]){
 			t=1;	
-			console.log("Los arreglos son DINSTINTOS");
+			// console.log("Los arreglos son DINSTINTOS");
 		}
 	}
 
-	console.log('DESPUES DEL CONTROL t => ' + t);
+	// console.log('DESPUES DEL CONTROL t => ' + t);
 	/**
 	mostrando en la consola los dos arreglos
 	para que sirva como guia de como va avanzando la resolucion del 
 	rompecabezas.
 	 */
-	console.log(im); // arreglo con estado actual del rompecabezas
-	console.log(ar); // arreglo con las posiciones del [1..9] 
+	// console.log(im); // arreglo con estado actual del rompecabezas
+	// console.log(ar); // arreglo con las posiciones del [1..9] 
 
 	/**
 	 * la variable 3 en x e y, es valida solo para un arreglo de 3x3
@@ -630,10 +630,15 @@ function enviarInfo(dificultad, estadoJuego){
 	var estadoJuego = JSON.stringify(estadoJuego);
 	console.log('envio estadoJuego: ' + estadoJuego);
 
+
+	dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));	
 	var data = new FormData();
 	data.append('marca_de_tiempo', marcadeTiempo);
 	data.append('nuevo_estado_actual', estadoJuego);
-		
+	data.append('sector_vacio', empty);
+	data.append('dificultad', dificultad);
+	
+	
 	xhttp.open("POST", "enviar_movimiento");
 	xhttp.send(data);
 }

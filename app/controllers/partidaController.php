@@ -253,6 +253,9 @@ class PartidaController{
          *                                     `id_partida`, 
          *                                     `id_usuario`, 
          */
+        $info = require('info_juego.php');
+        $this->movPermitidos = $info['mov-permitidos'];
+
         if(isset($_SESSION['estado_actual'])){
             $estados_futuros = $_SESSION['estados_futuros'];
             $estado_actual = $_SESSION['estado_actual'];
@@ -291,16 +294,39 @@ class PartidaController{
              *                          }          
              */
     
-            $marcadeTiempo = $_POST['marcadetiempo'];
-            $estadoJuego = json_decode($_POST['estado_actual']);
-            $dificultad = $_POST['dificultad'];
-            return json_encode(array('marcadeTiempo' => $marcadeTiempo,
-                                     'estadoJuego' => $estadoJuego,
-                                     'dificultad' => $_SESSION['dificultad']
-                                    ));
+            $marca_de_tiempo = $_POST['marca_de_tiempo'];
+            $nuevo_estado_actual = json_decode($_POST['nuevo_estado_actual']);
+
+            if($this->buscarNuevoEstadoEnPosiblesFuturos($nuevo_estado_actual, $estados_futuros)){
+
+                $msj_respuesta['marca_de_tiempo'] = $marca_de_tiempo;
+                $msj_respuesta['sector_vacio'] = $_POST['sector_vacio'];
+                $msj_respuesta['nuevo_estado_actual'] = $nuevo_estado_actual;
+                $msj_respuesta['estados_futuros'] = $this->crear_estados_futuros($nuevo_estado_actual,$this->movPermitidos[$_POST['dificultad']]);    
+                $msj_respuesta['control_movimiento'] = 'OK' ;    
+
+                $_SESSION['estados_futuros'] = $msj_respuesta['estados_futuros'];
+                $_SESSION['estado_actual'] = $msj_respuesta['nuevo_estado_actual'];
+                $_SESSION['sector_vacio'] = $msj_respuesta['sector_vacio'];    
+
+            }else{
+                $msj_respuesta['control_movimiento'] = 'TRAMPA' ;    
+            };    
+
+            return json_encode($msj_respuesta);
         }else{
             $this->mostrarImagenes(); // lo redirijo a la pagina principal.
         }
+    }
+
+    public function buscarNuevoEstadoEnPosiblesFuturos($listaBuscada, $lista){
+        $mov_correcto = false;
+        foreach ($lista as $sublista) {
+            if($listaBuscada == $sublista){
+                $mov_correcto = true;
+            }
+        }
+        return $mov_correcto;
     }
 
     public function login(){
