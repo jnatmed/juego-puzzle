@@ -574,14 +574,47 @@ window.addEventListener('keydown', function (e) {
     
 });
 
+
+
+function mensajeRespuesta(mensaje){
+	/**
+	 * cambio color de fondo del contenedor id=`mensajes_estado`
+	 * creo h2 con display success
+	 * creo p con display Movimiento valido.!
+	 */
+	$article_msj = document.getElementById('mensajes_estado');
+	$article_msj.style.display = 'flex';
+	$article_msj.style.width = screen.width - 50; 	
+	$h2 = document.createElement('h2');
+	$h2.style.color = 'white';
+	$p = document.createElement('p');
+	switch(mensaje){
+		case 'OK':
+			$article_msj.style.backgroundColor = '#4CAF50';
+			$h2.innerHTML = 'Movimiento Correcto..'; 
+			break;
+		case 'TRAMPA':
+			$article_msj.style.backgroundColor = '#F44336';
+			$h2.innerHTML = 'El jugador Hizo Trampa..'; 			
+			break;
+		default: 
+			console.log('ni ok ni trampa, entonces que?..')
+	}
+
+}
+
 function enviarInfo(dificultad, estadoJuego){
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
 			var respuesta = JSON.parse(this.response);
-			console.log('recibo estadoJuego: ' + respuesta['estadoJuego']);
-			console.log('recibo dificultad: ' + respuesta['dificultad']);
+			console.log('recibo control_movimiento: ' + respuesta['control_movimiento']);
+			console.log('recibo marca_de_tiempo: ' + respuesta['marca_de_tiempo']);
+			console.log('recibo sector_vacio: ' + respuesta['sector_vacio']);
+			console.log('recibo nuevo_estado_actual: ' + respuesta['nuevo_estado_actual']);
+			console.log('recibo estados_futuros: ' + respuesta['estados_futuros']);
+			mensajeRespuesta(respuesta['control_movimiento']);
 		}
 		if(this.readyState == 2){
 			console.log("response header received")
@@ -598,9 +631,8 @@ function enviarInfo(dificultad, estadoJuego){
 	console.log('envio estadoJuego: ' + estadoJuego);
 
 	var data = new FormData();
-	data.append('marcadetiempo', marcadeTiempo);
-	data.append('estadoJuego', estadoJuego);
-	data.append('dificultad', dificultad);
+	data.append('marca_de_tiempo', marcadeTiempo);
+	data.append('nuevo_estado_actual', estadoJuego);
 		
 	xhttp.open("POST", "enviar_movimiento");
 	xhttp.send(data);

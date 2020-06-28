@@ -37,6 +37,14 @@ class QueryBuilder
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
 
+    public function selectId($table, $usuario, $contrasenia){
+        $sql = 'SELECT * FROM usuario WHERE `id_usuario` = :id_usuario AND `contrasenia` = :contrasenia';
+        $array_consulta = [':id_usuario' => $usuario, ':contrasenia' => $contrasenia];
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($array_consulta);
+        return $statement->setFetchMode(PDO::FETCH_ASSOC);
+    }
+
     /**
      * Insert a record into a table.
      *

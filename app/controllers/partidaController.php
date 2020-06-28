@@ -8,10 +8,7 @@ class PartidaController{
     public $matriz;
     public $combinaciones;
     public $rango;
-
-    public function inicio(){
-        return view('login');
-    }
+    public $listas_predefinidas;
 
     public function mostrarImagenes(){        
 
@@ -82,6 +79,67 @@ class PartidaController{
         return $matriz;
     }
 
+    public function mezclar($lista){
+        $mezclado = [];
+        shuffle($lista);
+        foreach ($lista as $item) {
+            $mezclado[] = $item;
+        }        
+        return $mezclado;
+    }
+
+    public function buscarVacio($lista, $valor_buscado){
+        $encontrado = -1;
+        for ($i=0; $i < count($lista)-1; $i++) { 
+            if($lista[$i]==$valor_buscado){
+                $encontrado = $i;     
+            }else{
+            }
+        }       
+        return $encontrado; 
+    }
+
+    public function mostrarlista($lista){
+        $l = '';
+        for ($i=0; $i < count($lista); $i++) { 
+            if($i == 0){
+                $l = $l."[".$lista[$i].",";
+            }elseif($i == count($lista)-1){
+                $l = $l.$lista[$i]."]";
+            }else{
+                $l = $l.$lista[$i].",";
+            }
+        }
+        return $l;
+    }
+
+    public function intercambio_valores($pos_anterior, $pos_nueva, $lista){
+
+        $valor_vacio = $lista[$pos_anterior];
+        $valor_actual = $lista[$pos_nueva];
+        $lista[$pos_nueva] = $valor_vacio;
+        $lista[$pos_anterior] = $valor_actual;
+
+        return $lista;
+    }
+
+    public function mostrarSublistas($lista){
+        foreach ($lista as $sublista) {
+            echo("estado posible futuro: ".$this->mostrarlista($sublista)."<br>");
+        }
+    }
+
+    public function crear_estados_futuros($estado_actual, $mov_permitidos){
+        $pos_vacio_actual = $this->buscarVacio($estado_actual, 0);
+        $nuevos_estados_futuros = [];
+        foreach ($mov_permitidos[$pos_vacio_actual+1] as $nuevos_pos_posible) {
+                $nuevos_estados_futuros[] = $this->intercambio_valores($pos_vacio_actual,
+                                                                        $nuevos_pos_posible-1,
+                                                                        $estado_actual);
+        }
+        return  $nuevos_estados_futuros;
+    }
+
     public function cargarMovimientoPermitidos(){
         $cantElementos = 9;
         $dificultad = 3;
@@ -103,75 +161,146 @@ class PartidaController{
 
     public function cargarPuzzle(){
         session_start();
+        // if(isset($_SESSION['estado_actual'])){
 
-        $info = require('info_juego.php');
-        $path = 'public\imgs';      
-        $id_imagen = $_GET['id_imagen'];
-        $anchoPagina = $_GET['ancho_pagina'];
-        $this->movPermitidos = $info['mov-permitidos'];
-        $dificultad = intval($_GET['dificultad']); 
-
-        // echo("ancho pagina: ".$anchoPagina); 
-        if($anchoPagina<450){
-            $anchoPagina = $anchoPagina - 50;
-            // echo("ancho menor a 450<br> es de: ".$anchoPagina);
-            $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
-            // echo("nuevo valor: ".$anchoPagina);
-        }else{
-            $anchoPagina = 450;
-            $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
-        }
-        
-        $this->rango = $this->crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
-        $this->combinaciones = $this->armarCombinaciones($this->rango);
-
-        $imgC = new ImgController(['ANCHO'=>$nuevoAncho, 
-                                   'ALTO'=>$nuevoAncho,
-                                   'TAMANIO_PIEZA'=>$nuevoAncho / $dificultad]);
-
-        
-        $salida = $imgC->redimensionar($info['infoImg']['imgs'][$id_imagen]);
-
-        $img_jpeg = $salida['formato_jpeg'];
-        $this->matriz = $this->armarMatriz($nuevoAncho, $nuevoAncho/$dificultad, $dificultad);
-        foreach ($this->matriz as $coord) {
-            $resul = $imgC->recortar(NULL, $coord['x'], $coord['y'],$img_jpeg);            
-            $piezas[] = $resul['resultado'];
-        }
-        
-        // echo("<pre>");
-        $array = [
-            'ancho_canvas' => $nuevoAncho,
-            'alto_canvas' => $nuevoAncho,
-            'piezas' => $piezas,
-            'imagen_original' =>$img_jpeg,
-            'tamanio_pieza'=> ($nuevoAncho / $dificultad),
-            'cantElementos' => ($dificultad * $dificultad),
-            'dificultad' => $dificultad,
-            'movPermitidos' => json_encode($this->movPermitidos[$dificultad]),
-            'matriz' => json_encode($this->rango),
-            'combinaciones' => json_encode($this->combinaciones)
-        ];
-
-        $_SESSION['dificultad'] = $dificultad;
-        return view('juego-puzzle', $array);
+            $info = require('info_juego.php');
+            $path = 'public\imgs';      
+    
+            $id_imagen = $_GET['id_imagen'];
+            $anchoPagina = $_GET['ancho_pagina'];
+            $this->movPermitidos = $info['mov-permitidos'];
+    
+            $dificultad = intval($_GET['dificultad']); 
+            $this->listas_predefinidas = $info['listas-predefinidas'][$dificultad];
+    
+            // echo("ancho pagina: ".$anchoPagina); 
+            if($anchoPagina<450){
+                $anchoPagina = $anchoPagina - 50;
+                // echo("ancho menor a 450<br> es de: ".$anchoPagina);
+                $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
+                // echo("nuevo valor: ".$anchoPagina);
+            }else{
+                $anchoPagina = 450;
+                $nuevoAncho = $this->calcularNuevoAnchoyAlto($anchoPagina, $dificultad);
+            }
+            
+            $this->rango = $this->crearArreglo($nuevoAncho, $nuevoAncho / $dificultad, $dificultad);
+            $this->combinaciones = $this->armarCombinaciones($this->rango);
+    
+            $imgC = new ImgController(['ANCHO'=>$nuevoAncho, 
+                                       'ALTO'=>$nuevoAncho,
+                                       'TAMANIO_PIEZA'=>$nuevoAncho / $dificultad]);
+    
+            
+            $salida = $imgC->redimensionar($info['infoImg']['imgs'][$id_imagen]);
+    
+            $img_jpeg = $salida['formato_jpeg'];
+            $this->matriz = $this->armarMatriz($nuevoAncho, $nuevoAncho/$dificultad, $dificultad);
+            foreach ($this->matriz as $coord) {
+                $resul = $imgC->recortar(NULL, $coord['x'], $coord['y'],$img_jpeg);            
+                $piezas[] = $resul['resultado'];
+            }
+            
+            $estado_inicial = $this->mezclar($this->listas_predefinidas)[0];
+            $estados_futuros = $this->crear_estados_futuros($estado_inicial,
+                                                            $this->movPermitidos[$dificultad]);
+            $sector_vacio = $this->buscarVacio($estado_inicial, 0);
+            $array = [
+                'ancho_canvas' => $nuevoAncho,
+                'alto_canvas' => $nuevoAncho,
+                'piezas' => $piezas,
+                'imagen_original' =>$img_jpeg,
+                'tamanio_pieza'=> ($nuevoAncho / $dificultad),
+                'cantElementos' => ($dificultad * $dificultad),
+                'dificultad' => $dificultad,
+                'movPermitidos' => json_encode($this->movPermitidos[$dificultad]),
+                'matriz' => json_encode($this->rango),
+                'combinaciones' => json_encode($this->combinaciones),
+    
+                'estado_actual' => json_encode($estado_inicial),  
+                'estados_futuros' => json_encode($estados_futuros),
+                'sector_vacio' => $sector_vacio
+            ];
+    
+            /**
+             * 1 - generar el primer estado del juego en `estado_actual`
+             * 2 - generar el primer vector de `estados_futuros`
+             * 3 - generar el primer `sector_vacio`
+             */
+            $_SESSION['estados_futuros'] = $estados_futuros;
+            $_SESSION['estado_actual'] = $estado_inicial;
+            $_SESSION['sector_vacio'] = $sector_vacio;
+            /**
+             * si inicio session, guardar id_partida, id_usuario
+             */
+                // $_SESSION['id_partida'] = $dificultad;
+                // $_SESSION['id_usuario'] = $dificultad;            
+            return view('juego-puzzle', $array);
+        // }else{
+        //     return ($this->mostrarImagenes());
+        // }
     }
 
     public function cargarMovimientosPermitidos(){
         /**
-         * IN: 
-         * OUT: arreglo con estado inicial del juego
+         * inicio session_start()
          */
         session_start();
-        $_SESSION['dificultad'] = 'hola';
-
-        $marcadeTiempo = $_POST['marcadetiempo'];
-        $estadoJuego = json_decode($_POST['estadoJuego']);
-        $dificultad = $_POST['dificultad'];
-        return json_encode(array('marcadeTiempo' => $marcadeTiempo,
-                                 'estadoJuego' => $estadoJuego,
-                                 'dificultad' => $_SESSION['dificultad']
-                                ));
+        /**
+         * mantengo en session (mientras dure) `estados_futuros`,
+         *                                     `estado_actual`;
+         *                                     `sector_vacio`;
+         *                                     `id_partida`, 
+         *                                     `id_usuario`, 
+         */
+        if(isset($_SESSION['estado_actual'])){
+            $estados_futuros = $_SESSION['estados_futuros'];
+            $estado_actual = $_SESSION['estado_actual'];
+            $sector_vacio = $_SESSION['sector_vacio'];
+            /**
+             * PREVIO A CARGAR EL `id_partida` y el `id_usuario`, tengo que preguntar
+             * si existen, porque se puede estar jugando una partida, sin logueo
+             * lo cual esta bien, ya que esta permitido jugar sin un login
+             * pero aun asi, mantengo `estados_futuros` y  `estado_actual`
+             */
+            if(isset($_SESSION['id_partida']) && isset($_SESSION['id_usuario'])){
+                $estados_posibles = $_SESSION['id_partida'];
+                $id_usuario = $_SESSION['id_usuario'];
+            }
+    
+            /**
+             * llega {`nuevo_estado_actual`, `marca_de_tiempo`}
+             * 
+             * busco `nuevo_estado_actual` en $estados_futuros
+             * 
+             * si existe => calculo: {`estados_futuros`, `sector_vacio`};
+             *           => guardo: {`id_partida`, `id_usuario`, `nuevo_estado_actual`, `marca_de_tiempo`}; en: {`session`, `base de datos`}
+             * si no existe => "..significa que me hizo trampa. Enconces:.."
+             *              => 
+             * 
+             * 
+             * 
+             * mensaje de respuesta: 
+             *          {`msj_respuesta` : {
+             *                              `control_movimiento` : ['OK', 'TRAMPA'], 
+             *                              `marca_de_tiempo` : 01:00:58, 
+             *                              `sector_vacio` : 1,
+             *                              `nuevo_estado_actual` : [..] 
+             *                              `estados_futuros` : {[..], [..]}
+             *                              } 
+             *                          }          
+             */
+    
+            $marcadeTiempo = $_POST['marcadetiempo'];
+            $estadoJuego = json_decode($_POST['estado_actual']);
+            $dificultad = $_POST['dificultad'];
+            return json_encode(array('marcadeTiempo' => $marcadeTiempo,
+                                     'estadoJuego' => $estadoJuego,
+                                     'dificultad' => $_SESSION['dificultad']
+                                    ));
+        }else{
+            $this->mostrarImagenes(); // lo redirijo a la pagina principal.
+        }
     }
 
     public function login(){
@@ -180,6 +309,22 @@ class PartidaController{
         var_dump($_SESSION);
         
         // view('login');
+    }
+
+    public function listarPartidas(){
+        
+    }
+
+    public function nuevaPartida(){
+
+    }
+
+    public function mostrarEstadisticasUsuario(){
+
+    }
+
+    public function listarImagenesSubidas(){
+
     }
 
 }

@@ -1,19 +1,52 @@
 {% include 'partials/base.html' %}
 <body>
-  <section class="login">
-    <form action="login" method="POST">
-      <article class="inputform">
-        <label for="usuario">Usuario</label>
-        <input type="text" name="usuario" id="usuario">
-      </article>
-      <article class="inputform">
-        <label for="contraseña">Contraseña</label>
-        <input type="password" name="contrasenia" id="contrasenia">
-      </article>
-      <article class="inputform">
-        <input class="submit" type="submit" name="login">
-      </article>
-    </form>
+  <section class="session">
+    <fieldset>
+        <legend>Login</legend>
+        <section class="login">
+          <form action="iniciar_session" method="POST">
+            <article class="inputform">
+              <label for="usuario">Usuario</label>
+              <input type="text" name="usuario">
+            </article>
+            <article class="inputform">
+              <label for="contraseña">Contraseña</label>
+              <input type="password" name="contrasenia">
+            </article>
+            <article class="inputform">
+              <input class="submit" type="submit" name="login" value="Loguearse">
+            </article>  
+          </form>
+          <p>{{ mensaje_error.logueo }}</p>
+        </section>
+      </fieldset>
+      <fieldset>
+        <legend>Registro</legend>
+        <section class="registro">
+          <form action="registrar_usuario" method="POST">
+            <article class="inputform">
+              <label for="usuario">Usuario</label>
+              <input type="text" name="usuario">
+            </article>  
+            <article class="inputform">
+              <label for="contraseña">Contraseña</label>
+              <input type="password" name="contrasenia">
+            </article>
+            <article class="inputform">
+              <label for="alias">Alias</label>
+              <input type="text" name="alias" id="alias">
+            </article>   
+            <article class="inputform">
+              <label for="email">Correo Electrónico</label>
+              <input type="text" name="email" id="email">
+            </article>   
+            <article class="inputform">
+              <input class="submit" type="submit" name="login" value="Registrar">
+            </article>  
+          </form>
+          <p>{{ mensaje_error.registro }}</p>
+        </section>
+      </fieldset>
   </section>
 </body>
 </html>

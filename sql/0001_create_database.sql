@@ -1,1 +1,1 @@
-CREATE SCHEMA mytodo;
+CREATE database `juego_puzzle`;

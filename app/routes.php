@@ -2,7 +2,9 @@
 
     $router->get('', 'partidaController@mostrarImagenes');
    //  $router->get('', 'partidaController@inicio');
-    $router->post('login', 'partidaController@login');
+    $router->post('iniciar_session', 'SessionController@iniciarSession');
+    $router->get('login', 'SessionController@login');
+
     $router->get('jugar', 'partidaController@cargarPuzzle');
     $router->post('enviar_movimiento', 'partidaController@cargarMovimientosPermitidos');
 

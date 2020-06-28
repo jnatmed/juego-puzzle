@@ -1,10 +1,14 @@
 :root{
-	--padding-form: 20px;
+	--padding-form: 10px;
 	--ancho:400px;
 }
 
 .seccionImagenes{
 	padding-top: 20px;
+}
+
+#mensajes_estado{
+	display: none;
 }
 
 #botones_imagenes{
@@ -17,27 +21,13 @@
 	display: none;
 	padding: 10px;
 }
-/* .enlacesImagenes{
-	pointer-events: none;
-} */
+
 
 label{
 	padding: var(--padding-form);
 }
 
-.login{
-	padding: var(--padding-form);
-	background-color: cadetblue;
-	border-radius: 10px;
-	width: 500px;
-	margin: auto;
-	text-align: center;
-}
 
-.inputform{
-	width: var(--ancho);
-	padding: 10px;
-}
 
 .submit{
 	width: var(--ancho);
@@ -160,6 +150,32 @@ main{
 .piezas{
 	display: none;
 }
+
+/**
+	VISTA LOGIN-REGISTRO 
+*/
+
+.session{
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+}
+
+.login .registro{
+	padding: var(--padding-form);
+	background-color: #354330;
+	border-radius: 10px;
+	width: auto;
+	margin: auto;
+	display: block;
+}
+
+.inputform{
+	width: auto;
+	padding: 5px;
+}
+
+
 
 @media screen and (max-width:700px){
 	.lienzo, .juego, .imagen_original{

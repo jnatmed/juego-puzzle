@@ -1,8 +1,13 @@
 <?php
+namespace App\models;
+
+use App\Core\Model;
 
 
-class PartidaModel {
+class PartidaModel extends Model{
     
+
+    protected $table = 'partida';
     /**
      * trae imagenes que usuarios clasificaron como publicas
      * para que otros las puedan ver y usar
