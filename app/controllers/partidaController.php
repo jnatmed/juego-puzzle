@@ -254,7 +254,7 @@ class PartidaController{
          *                                     `id_usuario`, 
          */
         $info = require('info_juego.php');
-        $this->movPermitidos = $info['mov-permitidos'];
+        $this->mov_permitidos = $info['mov-permitidos'];
 
         if(isset($_SESSION['estado_actual'])){
             $estados_futuros = $_SESSION['estados_futuros'];
@@ -296,13 +296,13 @@ class PartidaController{
     
             $marca_de_tiempo = $_POST['marca_de_tiempo'];
             $nuevo_estado_actual = json_decode($_POST['nuevo_estado_actual']);
-
+            $movimientos_permitidos = $this->mov_permitidos[$_POST['dificultad']];    
             if($this->buscarNuevoEstadoEnPosiblesFuturos($nuevo_estado_actual, $estados_futuros)){
 
                 $msj_respuesta['marca_de_tiempo'] = $marca_de_tiempo;
                 $msj_respuesta['sector_vacio'] = $_POST['sector_vacio'];
                 $msj_respuesta['nuevo_estado_actual'] = $nuevo_estado_actual;
-                $msj_respuesta['estados_futuros'] = $this->crear_estados_futuros($nuevo_estado_actual,$this->movPermitidos[$_POST['dificultad']]);    
+                $msj_respuesta['estados_futuros'] = $this->crear_estados_futuros($nuevo_estado_actual,$movimientos_permitidos);    
                 $msj_respuesta['control_movimiento'] = 'OK' ;    
 
                 $_SESSION['estados_futuros'] = $msj_respuesta['estados_futuros'];

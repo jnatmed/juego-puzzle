@@ -213,7 +213,7 @@ Cada vez que dibuja,
  */
 
 function draw(){
-	console.log("/*************NUEVO MOVIMIENTO***********/");
+	// console.log("/*************NUEVO MOVIMIENTO***********/");
 	moves++;
 	mov=document.getElementById("moves");
 	mov.innerHTML="MOVES: "+ moves.toString();
@@ -254,7 +254,7 @@ function draw(){
 			empty=i+1;							
 	}
 	
-	console.log('valor de empty: ' + empty);
+	// console.log('valor de empty: ' + empty);
 		
 	/**
 	limpia el canvas
@@ -431,7 +431,7 @@ function moveup() {
 	/**
 	finalmente muestro por consola, la celda vacia actual. 
 	 */
-    console.log('valor de empty: ' + empty);;
+    // console.log('valor de empty: ' + empty);;
 }
 
 function movedown() {
@@ -460,7 +460,7 @@ function movedown() {
         draw();        
     }
     
-    console.log('valor de empty: ' + empty);;
+    // console.log('valor de empty: ' + empty);;
     
 }
 
@@ -502,7 +502,7 @@ function moveleft() {
 		im[next-1]=0;
 		draw();   	
 	}
-	console.log('valor de empty: ' + empty);;
+	// console.log('valor de empty: ' + empty);;
 }
 
 function moveright() {
@@ -530,7 +530,7 @@ function moveright() {
 	        im[next-1]=0;
 			draw();
 		}
-		console.log('valor de empty: ' + empty);;
+		// console.log('valor de empty: ' + empty);;
 	  }
 	  
 window.addEventListener('keydown', function (e) {
@@ -538,35 +538,35 @@ window.addEventListener('keydown', function (e) {
     key = e.keyCode;
     if(key==37){
 		e.preventDefault();
-		enviarInfo(dificultad,im);
 		moveleft();
+		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
 
     }
     if(key==38){
 		e.preventDefault();
-		enviarInfo(dificultad,im);
 		moveup();
+		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
 
     }
     if(key==39){
 		e.preventDefault();
-		enviarInfo(dificultad,im);
 		moveright();
+		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
 
     }
     if(key==40){
 		e.preventDefault();
-		enviarInfo(dificultad,im);
 		movedown();
+		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
 
     }
 	if(key==83){
 		e.preventDefault();
-		enviarInfo(dificultad,im);
+		// enviarInfo(dificultad,im);
 		start();
 		mostrarMovimiento(getMarcaTiempo(), im);
 
@@ -582,24 +582,26 @@ function mensajeRespuesta(mensaje){
 	 * creo h2 con display success
 	 * creo p con display Movimiento valido.!
 	 */
-	$article_msj = document.getElementById('mensajes_estado');
-	$article_msj.style.display = 'flex';
-	$article_msj.style.width = screen.width - 50; 	
-	$h2 = document.createElement('h2');
-	$h2.style.color = 'white';
-	$p = document.createElement('p');
+	var article_msj = document.getElementById('mensajes_estado');
+	article_msj.style.display = 'flex';
+	article_msj.style.width = screen.width - 50; 	
+	var h2 = document.createElement('h2');
+	h2.style.color = 'white';
+	var p = document.createElement('p');
 	switch(mensaje){
 		case 'OK':
-			$article_msj.style.backgroundColor = '#4CAF50';
-			$h2.innerHTML = 'Movimiento Correcto..'; 
+			article_msj.style.backgroundColor = '#4CAF50';
+			h2.innerHTML = 'Movimiento Correcto..'; 
 			break;
 		case 'TRAMPA':
-			$article_msj.style.backgroundColor = '#F44336';
-			$h2.innerHTML = 'El jugador Hizo Trampa..'; 			
+			article_msj.style.backgroundColor = '#F44336';
+			h2.innerHTML = 'El jugador Hizo Trampa..'; 			
 			break;
 		default: 
-			console.log('ni ok ni trampa, entonces que?..')
+			article_msj.style.backgroundColor = '#3693D8';
+			h2.innerHTML = 'ni ok ni trampa, entonces que?..';
 	}
+	article_msj.appendChild(h2);
 
 }
 
@@ -631,7 +633,7 @@ function enviarInfo(dificultad, estadoJuego){
 	console.log('envio estadoJuego: ' + estadoJuego);
 
 
-	dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));	
+	var dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));	
 	var data = new FormData();
 	data.append('marca_de_tiempo', marcadeTiempo);
 	data.append('nuevo_estado_actual', estadoJuego);
@@ -649,7 +651,7 @@ function start(){
 	 * pidiendo la informacion al servidor
 	 * mediante ajax
 	 */
-	console.log("/*****NUEVO JUEGO*******/");
+	// console.log("/*****NUEVO JUEGO*******/");
 	draw();
 }
 
@@ -714,11 +716,11 @@ function responsivo(evt){
 
 			mostrarMovimiento(getMarcaTiempo(), im);
 
-			console.log("se puede intercambiar")
+			// console.log("se puede intercambiar")
 	
 		}else{
 	
-			console.log("movimiento no permitido")
+			// console.log("movimiento no permitido")
 			sonido = document.getElementById("no");
 			sonido.play();
 		}
