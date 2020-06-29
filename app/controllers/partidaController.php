@@ -1,7 +1,14 @@
 <?php
 namespace App\controllers;
 
+require 'vendor/autoload.php';
+
+use \Monolog\Logger;
+use \Monolog\Handler\RotatingFileHandler;
+use \Monolog\Handler\BrowserConsoleHandler;
+
 use \App\controllers\ImgController;
+use \App\models\PartidaModel;
 
 class PartidaController{
     public $movPermitidos;
@@ -9,6 +16,13 @@ class PartidaController{
     public $combinaciones;
     public $rango;
     public $listas_predefinidas;
+    public $logger;
+
+    public function __construct(){
+        $this->logger = new Logger('LogPuzzle');
+        $this->logger->pushHandler(new RotatingFileHandler('logs/LogPuzzle.log'), 7);
+        $this->logger->pushHandler(new BrowserConsoleHandler());
+    }
 
     public function mostrarImagenes(){        
 
@@ -90,7 +104,7 @@ class PartidaController{
 
     public function buscarVacio($lista, $valor_buscado){
         $encontrado = -1;
-        for ($i=0; $i < count($lista)-1; $i++) { 
+        for ($i=0; $i < count($lista); $i++) { 
             if($lista[$i]==$valor_buscado){
                 $encontrado = $i;     
             }else{
@@ -230,6 +244,7 @@ class PartidaController{
             $_SESSION['estados_futuros'] = $estados_futuros;
             $_SESSION['estado_actual'] = $estado_inicial;
             $_SESSION['sector_vacio'] = $sector_vacio;
+            $_SESSION['dificultad'] = $dificultad;
             /**
              * si inicio session, guardar id_partida, id_usuario
              */
@@ -258,6 +273,9 @@ class PartidaController{
 
         if(isset($_SESSION['estado_actual'])){
             $estados_futuros = $_SESSION['estados_futuros'];
+
+            // $this->logger->info('SESSION[estados_futuros]: ',array('estados_futuros: '=> $estados_futuros));
+
             $estado_actual = $_SESSION['estado_actual'];
             $sector_vacio = $_SESSION['sector_vacio'];
             /**
@@ -296,24 +314,40 @@ class PartidaController{
     
             $marca_de_tiempo = $_POST['marca_de_tiempo'];
             $nuevo_estado_actual = json_decode($_POST['nuevo_estado_actual']);
-            $movimientos_permitidos = $this->mov_permitidos[$_POST['dificultad']];    
+
+            $movimientos_permitidos = $this->mov_permitidos[$_SESSION['dificultad']];    
+
             if($this->buscarNuevoEstadoEnPosiblesFuturos($nuevo_estado_actual, $estados_futuros)){
 
-                $msj_respuesta['marca_de_tiempo'] = $marca_de_tiempo;
-                $msj_respuesta['sector_vacio'] = $_POST['sector_vacio'];
-                $msj_respuesta['nuevo_estado_actual'] = $nuevo_estado_actual;
-                $msj_respuesta['estados_futuros'] = $this->crear_estados_futuros($nuevo_estado_actual,$movimientos_permitidos);    
-                $msj_respuesta['control_movimiento'] = 'OK' ;    
+                // $msj_respuesta['marca_de_tiempo'] = $marca_de_tiempo;
+                // $msj_respuesta['sector_vacio'] = $_POST['sector_vacio'];
+                // $msj_respuesta['nuevo_estado_actual'] = $nuevo_estado_actual;
+                
+                $resul = $this->crear_estados_futuros($nuevo_estado_actual,$movimientos_permitidos);
+                // $msj_respuesta['estados_futuros'] = $resul;    
+                // $msj_respuesta['control_movimiento'] = 'OK' ;    
 
-                $_SESSION['estados_futuros'] = $msj_respuesta['estados_futuros'];
-                $_SESSION['estado_actual'] = $msj_respuesta['nuevo_estado_actual'];
+                $msj_respuesta = [
+                    'marca_de_tiempo' => $marca_de_tiempo,
+                    'sector_vacio' => $_POST['sector_vacio'],
+                    'nuevo_estado_actual' => $nuevo_estado_actual,
+                    'estados_futuros' => $resul,
+                    'control_movimiento' => 'OK'
+                ];
+
+                $_SESSION['estados_futuros'] = $resul;
+                $_SESSION['estado_actual'] = $nuevo_estado_actual;
                 $_SESSION['sector_vacio'] = $msj_respuesta['sector_vacio'];    
 
             }else{
-                $msj_respuesta['control_movimiento'] = 'TRAMPA' ;    
+                $msj_respuesta = ['control_movimiento' => 'TRAMPA'] ;    
             };    
 
             return json_encode($msj_respuesta);
+            $this->logger->info('SESSION[estados_futuros]: ',array('estados_futuros: '=> $_SESSION['estados_futuros']));
+            $this->logger->info('SESSION[estado_actual]: ',array('estado_actual: '=> $_SESSION['estado_actual']));
+            $this->logger->info('SESSION[sector_vacio]: ',array('sector_vacio: '=> $_SESSION['sector_vacio']));
+
         }else{
             $this->mostrarImagenes(); // lo redirijo a la pagina principal.
         }
@@ -321,30 +355,65 @@ class PartidaController{
 
     public function buscarNuevoEstadoEnPosiblesFuturos($listaBuscada, $lista){
         $mov_correcto = false;
+        // $this->logger->info('listaBuscada: ',array('listaBuscada: '=> $listaBuscada));
+        // $this->logger->info('lista: ',array('lista: '=> $lista));
         foreach ($lista as $sublista) {
+            // $this->logger->info('sublista: ',array('sublista: '=> $sublista));
             if($listaBuscada == $sublista){
                 $mov_correcto = true;
             }
         }
+        // $this->logger->info('encontrado: ', array('encontrado' => $mov_correcto));
         return $mov_correcto;
     }
 
-    public function login(){
+    public function listarPartidas($id_usuario){
+        
+        /**
+         * traer las partidas de partidaModel
+         * 
+         */
+        $partidaModel = new PartidaModel();
+        $lista = $partidaModel->cargarListadoPartidas($id_usuario);
+
+        // var_dump($lista);
+        $partidas = [
+            'jugador' => $id_usuario,
+            'partidas' => $lista,
+        ];
+
+        return view('partidas', array('detalle'=>$partidas));
+
+    }
+
+    public function nuevo_rompecabezas(){
+        /**
+         * viene por $_POST
+         * id_usuario, imagen, tags_imagen
+         * 
+         * se genera estado_juego {´marca_de_tiempo´, ´estado_inicial´, ´estados_futuros´}
+         * 
+         * guardarPartida
+         */
         session_start();
-        var_dump($_POST);
-        var_dump($_SESSION);
-        
-        // view('login');
-    }
 
-    public function listarPartidas(){
-        
-    }
-
-    public function nuevaPartida(){
+        return view('nuevo_rompecabezas');
 
     }
 
+    public function guardar_rompecabezas(){
+        session_start();
+
+        /**
+         * in: archivo_imagen, tags, 
+         * 
+         * controlar: tamanio imagen <= 6 Mb
+         * controlar: tags, explode(',', tags)
+         */
+
+        return $this->listarPartidas();
+    }
+    
     public function mostrarEstadisticasUsuario(){
 
     }

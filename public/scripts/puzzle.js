@@ -165,9 +165,6 @@ console.log('im: ' + im);
 console.log('ar: ' + ar);
 console.log(mov_prohibidos['movedown']);
 
-
-
-
 /**
 aca busco cual es la celda que esta vacia
 y guardo el valor en empty
@@ -182,6 +179,8 @@ var restart=0;juegoNuevo=true;
 
 function won(){
 	// a) limpia el ultimo cuadro 
+	var dificultad = parseInt(document.getElementById('dificultad').value);
+
 	var x1 = parseInt(document.getElementById('tamanio_pieza'));
 	var x0 = parseInt(document.getElementById('canvas').getAttribute('height')) - x1;
 	ctx.clearRect(x0,x0,x1,x1); 
@@ -202,6 +201,9 @@ function won(){
 	restart=1;
 	// g) pongo movimientos en -1
 	moves=-1;
+
+	enviarInfo(dificultad,im);
+
 }
 
 /**
@@ -425,7 +427,9 @@ function moveup() {
 		se manda a dibujar de nuevo todo el lienzo
 		 */
         draw();
-    	
+		
+		enviarInfo(dificultad,im);
+
     }
 
 	/**
@@ -457,7 +461,10 @@ function movedown() {
     	var next=empty;
         im[curr-1]=im[next-1];
         im[next-1]=0;
-        draw();        
+		draw();        
+		
+		enviarInfo(dificultad,im);
+
     }
     
     // console.log('valor de empty: ' + empty);;
@@ -466,6 +473,8 @@ function movedown() {
 
 function moveleft() {
 	var anchoCanvas = document.getElementById('canvas').width;
+	let dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));
+
 	ctx.clearRect(0,0,anchoCanvas,anchoCanvas);
 	/**
 	 * limpio canvas => (x-ini, y-ini, x-fin, y-fin)
@@ -501,12 +510,17 @@ function moveleft() {
 		im[curr-1]=im[next-1];
 		im[next-1]=0;
 		draw();   	
+
+		enviarInfo(dificultad,im);
+
 	}
 	// console.log('valor de empty: ' + empty);;
 }
 
 function moveright() {
 	var anchoCanvas = document.getElementById('canvas').width;
+	let dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));
+
 	ctx.clearRect(0,0,anchoCanvas,anchoCanvas);
 	if(restart==1){
 		moves--;
@@ -529,52 +543,42 @@ function moveright() {
 	        im[curr-1]=im[next-1];
 	        im[next-1]=0;
 			draw();
+
+			enviarInfo(dificultad,im);
 		}
-		// console.log('valor de empty: ' + empty);;
 	  }
 	  
 window.addEventListener('keydown', function (e) {
-	let dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));
     key = e.keyCode;
     if(key==37){
 		e.preventDefault();
 		moveleft();
-		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
 
     }
     if(key==38){
 		e.preventDefault();
 		moveup();
-		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
 
     }
     if(key==39){
 		e.preventDefault();
 		moveright();
-		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
-
     }
     if(key==40){
 		e.preventDefault();
 		movedown();
-		enviarInfo(dificultad,im);
 		mostrarMovimiento(getMarcaTiempo(), im);
-
     }
 	if(key==83){
 		e.preventDefault();
-		// enviarInfo(dificultad,im);
 		start();
 		mostrarMovimiento(getMarcaTiempo(), im);
-
 	}
     
 });
-
-
 
 function mensajeRespuesta(mensaje){
 	/**
@@ -582,27 +586,27 @@ function mensajeRespuesta(mensaje){
 	 * creo h2 con display success
 	 * creo p con display Movimiento valido.!
 	 */
-	var article_msj = document.getElementById('mensajes_estado');
-	article_msj.style.display = 'flex';
-	article_msj.style.width = screen.width - 50; 	
-	var h2 = document.createElement('h2');
-	h2.style.color = 'white';
-	var p = document.createElement('p');
+	var article_msj = document.getElementsByClassName('mensaje_error');
+	
+	// article_msj.style.display = 'flex';
+	// article_msj.style.width = ''+screen.width * 0.33+'px'; 	
+
+	var p = document.getElementById('mensaje');
+
+	// mensaje.style.color = 'white';
 	switch(mensaje){
 		case 'OK':
-			article_msj.style.backgroundColor = '#4CAF50';
-			h2.innerHTML = 'Movimiento Correcto..'; 
+			// article_msj.style.backgroundColor = '#4CAF50';
+			p.innerHTML = 'Movimiento Correcto..'; 
 			break;
 		case 'TRAMPA':
-			article_msj.style.backgroundColor = '#F44336';
-			h2.innerHTML = 'El jugador Hizo Trampa..'; 			
+			// article_msj.style.backgroundColor = '#F44336';
+			p.innerHTML = 'El jugador Hizo Trampa..'; 			
 			break;
 		default: 
-			article_msj.style.backgroundColor = '#3693D8';
-			h2.innerHTML = 'ni ok ni trampa, entonces que?..';
-	}
-	article_msj.appendChild(h2);
-
+			// article_msj.style.backgroundColor = '#3693D8';
+			p.innerHTML = 'ni ok ni trampa, entonces que?..';
+	}																					
 }
 
 function enviarInfo(dificultad, estadoJuego){
@@ -611,11 +615,13 @@ function enviarInfo(dificultad, estadoJuego){
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
 			var respuesta = JSON.parse(this.response);
-			console.log('recibo control_movimiento: ' + respuesta['control_movimiento']);
-			console.log('recibo marca_de_tiempo: ' + respuesta['marca_de_tiempo']);
-			console.log('recibo sector_vacio: ' + respuesta['sector_vacio']);
-			console.log('recibo nuevo_estado_actual: ' + respuesta['nuevo_estado_actual']);
-			console.log('recibo estados_futuros: ' + respuesta['estados_futuros']);
+			// var respuesta = this.response;
+			console.log(respuesta);
+			// console.log('recibo control_movimiento: ' + respuesta['control_movimiento']);
+			// console.log('recibo marca_de_tiempo: ' + respuesta['marca_de_tiempo']);
+			// console.log('recibo sector_vacio: ' + respuesta['sector_vacio']);
+			// console.log('recibo nuevo_estado_actual: ' + respuesta['nuevo_estado_actual']);
+			// console.log('recibo estados_futuros: ' + respuesta['estados_futuros']);
 			mensajeRespuesta(respuesta['control_movimiento']);
 		}
 		if(this.readyState == 2){
@@ -631,7 +637,7 @@ function enviarInfo(dificultad, estadoJuego){
 	var marcadeTiempo = getMarcaTiempo();
 	var estadoJuego = JSON.stringify(estadoJuego);
 	console.log('envio estadoJuego: ' + estadoJuego);
-
+	console.log('setor_vacio: ' + empty);
 
 	var dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));	
 	var data = new FormData();

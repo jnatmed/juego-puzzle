@@ -1,0 +1,45 @@
+{% include 'partials/base.html' %}
+
+<body>
+        {% include 'partials/nav-puzzle.html' %}
+    <section >
+        <fieldset>
+            <legend>Nueva Partida</legend>
+            <form action="guardar_rompecabezas" method="POST">
+                    <label for="nueva_imagen">Archivo</label>
+                    <input type="file" name="nueva_imagen" id="nueva_imagen">
+                    <label for="tags">Tags</label>
+                    <input type="text" name="tags" id="tags">
+                    <p>
+                    <ul>
+                        <li>Puedes subir archivos de los siguientes formatos: JPG, PNG</li>
+                        <li>Redimencionaremos la foto automaticamente para que encaje en el rompecabezas</li>
+                        <li>El tamaño maximo del archivo es de 6 Mb</li>
+                    </ul> 
+                    </p>
+                <input type="radio" name="acepto_tyc" id="acepto_tyc"><label for="acepto_tyc">Acepto Terminos y Condiciones</label>
+                <input type="submit" value="¡Crea mi nuevo rompecabezas!">
+            </form>
+            <section class="terminos_y_condiciones">
+                Los visitantes no podran utilizar PuzzlePaw para cargar, transmitir, retransmitir, almacenar o distribuir 
+                cualquier contenido incluyendo, sin limitacion, imagenes, text, datos u otro contenido que, a la sola discrecion de PuzzlePaw:
+                <ul>
+                    <li>
+                        "infringa los derechos de autor, marcas, secretos comerciales u otros derechos de propiedad de cualquiera de las partes"
+                    </li>
+                    <li>
+                        "Sea amenazante, obseno, incidente, pornografico, abusivo, acosador, injurioso, difamatorio, engañoso, fraudulento, invada la 
+                        propiedad o que de alguna manera pueda afectar negativamente a cualquier individuo, grupo o entidad 
+                        (colectivamente, "personas"),"
+                    </li>
+                    <li>
+                        "Discrimine, acose, degrade o intimide a una persona o grupo de individuos debido a religión, sexo, orientación sexual, raza, etnia, origen nacional, estatus migratorio, edad, discapacidad o cualquier otra razón,"
+                    </li>
+                </ul>
+                <p>El personal de PuzzlePaw tiene derecho, a su entera discrecion, a eliminar cualquier contenido del servidor y/o sitio web.</p>
+                <p>No puede depender de la disponibilidad y la precision del los contenidos subidos por usted.</p>
+            </section>
+        </fieldset>
+    </section>
+        
+</body>

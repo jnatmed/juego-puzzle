@@ -1,4 +1,3 @@
-
 {% include 'partials/base.html' %}
 
 <body>
@@ -23,18 +22,16 @@
 		
 			<section class="juego">
 				<section class="lienzo">
-					<h1 id="message"></h1> <!-- Esta propiedad se va modificando mientras corre el juego-->
-					<h1 id="moves"></h1> <!-- tambien se va modificando -->
+					<h1 id="message"></h1> 
+					<h1 id="moves"></h1> 
 					<canvas id="canvas" height="{{ ancho_canvas }}" width="{{ alto_canvas }}"></canvas>
 					<article class="movimientos">
 						<ul id="lista_movimientos">
 
 						</ul>
 					</article>
-					<article id="mensajes_estado">
-						<ul>
-
-						</ul>
+					<article class="mensaje_error">
+						<p id="mensaje"></p>
 					</article>
 				<section class="imagen_original">
 					

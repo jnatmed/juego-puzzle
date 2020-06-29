@@ -29,11 +29,14 @@ class SessionController{
         if($resultado['registrado']){
             if($resultado['contrasenia_correcta']){
                 $_SESSION['id_usuario'] = $resultado['id_usuario'];
-                $partidaController->listarPartidas($resultado['id_usuario']);
+                return $partidaController->listarPartidas($resultado['id_usuario']);
             }else{
                 $msj_error = 'CONTRASEÑA INCORRECTA';
                 return view('login', array('mensaje_error' => $msj_error));
             }
+        }else{
+            $msj_error = 'EL USUARIO NO SE ENCUENTRA REGISTRADO';
+            return view('login', array('mensaje_error' => $msj_error));
         }
     }
     

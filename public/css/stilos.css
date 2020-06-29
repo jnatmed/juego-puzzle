@@ -27,17 +27,15 @@ label{
 	padding: var(--padding-form);
 }
 
-
-
 .submit{
-	width: var(--ancho);
+	width: auto;
 }
 
 input{
 	display: block;
 	margin: auto;
 	padding: var(--padding-form);
-	width: var(--ancho);
+	width: auto;
 	border-radius: 10px;
 }
 .submit:hover{
@@ -65,42 +63,27 @@ canvas {
     border: 5px solid black;
 	display:flex;
 	flex-flow: row wrap;
-	
-	/* transition: width 2s, height 4s; */
 }
 
 .buttonTouch{
 	display: none;
 }
-/* .piezas:hover{
-	width: 600px;
-	height: 600px;
-	transform: rotate(45deg);
-} */
-
-
 
 #cheers, #cut, #no{
 	display: none;
-	/* border-radius: 20px; */
 }
 
 body {
-    --color1: #4d612f;
-    background-image: linear-gradient(var(--color1), #050632);
-    transition: 1s;
+	background: radial-gradient(ellipse at center, #7bac92 0%, rgb(87, 96, 179) 100%);
+	transition: 1s;
     height: 100vh;
 }
-/* body:hover {
-    --color1: #00ffff;
-} */
 
 header {
 	width:100%;
 }
 header nav{
 	width:90%;
-	/* max-width:100px; */
 	margin:20px auto;
 	background: #024959;
 }
@@ -120,10 +103,6 @@ header nav ul{
 	background-color: cadetblue;
 	border-radius: 10px;
 	text-align: left;
-}
-
-.lista_movimientos{
-	list-style-image: url('viñeta.gif');
 }
 
 header nav ul li{
@@ -162,7 +141,7 @@ main{
 }
 
 .login .registro{
-	padding: var(--padding-form);
+	padding: 300px;
 	background-color: #354330;
 	border-radius: 10px;
 	width: auto;
@@ -175,15 +154,12 @@ main{
 	padding: 5px;
 }
 
-
-
 @media screen and (max-width:700px){
 	.lienzo, .juego, .imagen_original{
 		margin: 0 auto;
 		width: auto;
 		display: block;
 	}
-
 
 	.seccionImagenes{
 		padding-left: 10px;
@@ -227,13 +203,8 @@ main{
 		box-sizing: border-box;
 	}
 
-
 	.menu_bar span{
 		float: right;
 	}
 
-	/* canvas{
-		margin: 0 auto;
-		display: block;
-	} */
 }
