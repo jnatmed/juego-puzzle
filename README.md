@@ -1,7 +1,6 @@
-# Proyecto MVC
+# Proyecto Final de Cursada. 
 
-Un proyecto derivado del tutorial introductorio de Laracast y con algunos
-agregados para ser utilizado como material de PAW - UNLu.
+El desarrollo de la práctica Integradora de la Asignatura Programación en Ambiente Web se basará en el diseño y desarrollo de una Aplicación Web (funcional para navegadores Móvil y de Escritorio).
 
 ## Instalación
 
@@ -34,11 +33,11 @@ composer requiere name/lib:version
 Ejecutar:
 
 ```
-git clone https://github.com/tomasdelvechio/The-PHP-Practitioner-Full-Source-Code.git paw-mvc/
-cd paw-mvc/
-# Aca irian los pasos de instalación
-php -S localhost:8888
+git clone https://github.com/jnatmed/juego-puzzle.git
+cd juego_puzzle/
+# Pasos de instalación
+php -S localhost:8080
 ```
 
-Luego ingresar a http://localhost:8888
+Luego ingresar a http://localhost:8080
 
