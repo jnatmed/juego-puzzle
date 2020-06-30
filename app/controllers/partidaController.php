@@ -271,6 +271,8 @@ class PartidaController{
         $info = require('info_juego.php');
         $this->mov_permitidos = $info['mov-permitidos'];
 
+        // echo("<pre>");
+        // var_dump($_REQUEST);
         if(isset($_SESSION['estado_actual'])){
             $estados_futuros = $_SESSION['estados_futuros'];
 
@@ -343,10 +345,10 @@ class PartidaController{
                 $msj_respuesta = ['control_movimiento' => 'TRAMPA'] ;    
             };    
 
-            return json_encode($msj_respuesta);
             $this->logger->info('SESSION[estados_futuros]: ',array('estados_futuros: '=> $_SESSION['estados_futuros']));
             $this->logger->info('SESSION[estado_actual]: ',array('estado_actual: '=> $_SESSION['estado_actual']));
             $this->logger->info('SESSION[sector_vacio]: ',array('sector_vacio: '=> $_SESSION['sector_vacio']));
+            return json_encode($msj_respuesta);
 
         }else{
             $this->mostrarImagenes(); // lo redirijo a la pagina principal.
