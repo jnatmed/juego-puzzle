@@ -223,7 +223,7 @@ class PartidaController{
                 'ancho_canvas' => $nuevoAncho,
                 'alto_canvas' => $nuevoAncho,
                 'piezas' => $piezas,
-                'imagen_original' =>$img_jpeg,
+                'imagen_original' => $imgC->crearImgfromResource($salida['formato_jpeg']),
                 'tamanio_pieza'=> ($nuevoAncho / $dificultad),
                 'cantElementos' => ($dificultad * $dificultad),
                 'dificultad' => $dificultad,
@@ -345,10 +345,10 @@ class PartidaController{
                 $msj_respuesta = ['control_movimiento' => 'TRAMPA'] ;    
             };    
 
+            return json_encode($msj_respuesta);
             $this->logger->info('SESSION[estados_futuros]: ',array('estados_futuros: '=> $_SESSION['estados_futuros']));
             $this->logger->info('SESSION[estado_actual]: ',array('estado_actual: '=> $_SESSION['estado_actual']));
             $this->logger->info('SESSION[sector_vacio]: ',array('sector_vacio: '=> $_SESSION['sector_vacio']));
-            return json_encode($msj_respuesta);
 
         }else{
             $this->mostrarImagenes(); // lo redirijo a la pagina principal.

@@ -23,6 +23,26 @@ class UsuarioModel{
         }
     }
 
+    public function buscarUsuario($id_usuario){
+        $sql = "SELECT 1 FROM usuario WHERE `id_usuario` =:id_usuario;";   
+        $array_consulta = [':id_usuario'=>$id_usuario];
+        try {
+            $statement = $this->db->prepare($sql);
+            $statement->execute($array_consulta);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
+            if($statement->rowCount()>0){
+                return ['ya_existe'=> true];
+            }else{
+                return ['ya_existe'=>false];
+            }
+            // foreach($statement as $res){
+            //     var_dump($res);
+            // }
+        } catch (\Throwable $th) {
+
+        }
+    }
+
     public function iniciarSession($usuario, $contrasenia){
 
         $sql = 'SELECT * FROM usuario WHERE `id_usuario` = :id_usuario AND `contrasenia` = :contrasenia';
@@ -35,11 +55,18 @@ class UsuarioModel{
             foreach($statement as $res){
                 $result[] = $res;
             }
-            return [
-                'registrado' => true,
-                'contrasenia_correcta' => true,
-                'id_usuario' => $result[0]['id_usuario']
-            ];
+
+            if(!empty($result)){
+                return [
+                    'logueo' => true,
+                    'contrasenia_correcta' => true,
+                    'id_usuario' => $result[0]['id_usuario']];
+            }else{
+                return [
+                    'logueo' => false,
+                    'contrasenia_correcta' => false,
+                    'id_usuario' => []];
+            }
         } catch (\Throwable $th) {
             echo("Error : ".$th);
         }

@@ -88,6 +88,14 @@ class ImgController{
         return array('original' => $img, 'resultado' => $img_resultado);
     }   
     
+
+    public function crearImgfromResource($resource){
+            ob_start();
+            imagejpeg($resource);
+            $image_data = ob_get_contents();
+            ob_end_clean();
+            return base64_encode($image_data);
+    }
 }
 
 ?>

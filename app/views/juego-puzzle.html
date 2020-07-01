@@ -24,7 +24,10 @@
 				<section class="lienzo">
 					<h1 id="message"></h1> 
 					<h1 id="moves"></h1> 
-					<canvas id="canvas" height="{{ ancho_canvas }}" width="{{ alto_canvas }}"></canvas>
+					<article class="imagen_original">
+						<canvas id="canvas" height="{{ ancho_canvas }}" width="{{ alto_canvas }}"></canvas>
+						<img class="img_o" src="data:image/jpeg;base64,{{ imagen_original }}">	
+					</article>
 					<article class="movimientos">
 						<ul id="lista_movimientos">
 
@@ -33,7 +36,7 @@
 					<article class="mensaje_error">
 						<p id="mensaje"></p>
 					</article>
-				<section class="imagen_original">
+				<section>
 					
 					<article>
 						{% set cont=1 %}

@@ -11,12 +11,20 @@ class SessionController{
 
     }
     public function registrarUsuarioNuevo(){
+        session_start();
 
+        $userModel = new UsuarioModel();
+        $resultado = $userModel->buscarUsuario($_POST['id_usuario']);
+        if(!$resultado['ya_existe']){
+            $userModel->registrarUsuario($_POST);
+        }
     }
 
     public function login(){
         return view('login');
     }
+
+
 
     public function iniciarSession(){
         session_start();
@@ -26,17 +34,12 @@ class SessionController{
         $userModel = new UsuarioModel();
         $partidaController = new PartidaController();
         $resultado = $userModel->iniciarSession($usuario, $contrasenia);
-        if($resultado['registrado']){
-            if($resultado['contrasenia_correcta']){
-                $_SESSION['id_usuario'] = $resultado['id_usuario'];
-                return $partidaController->listarPartidas($resultado['id_usuario']);
-            }else{
-                $msj_error = 'CONTRASEÑA INCORRECTA';
-                return view('login', array('mensaje_error' => $msj_error));
-            }
+        if($resultado['logueo']){
+            $_SESSION['id_usuario'] = $resultado['id_usuario'];
+            return $partidaController->listarPartidas($resultado['id_usuario']);
         }else{
-            $msj_error = 'EL USUARIO NO SE ENCUENTRA REGISTRADO';
-            return view('login', array('mensaje_error' => $msj_error));
+            $msj_error = 'USUARIO O CONTRASEÑA INCORRECTA';
+            return view('login', array('mensaje_error_log' => $msj_error));
         }
     }
     

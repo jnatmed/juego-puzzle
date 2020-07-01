@@ -165,6 +165,12 @@ console.log('im: ' + im);
 console.log('ar: ' + ar);
 console.log(mov_prohibidos['movedown']);
 
+
+function fondoIncorrecto(){
+	
+	document.body.style.backgroundImage = "url('public/imgs/fuego.jpg')";
+}
+
 /**
 aca busco cual es la celda que esta vacia
 y guardo el valor en empty
@@ -395,8 +401,9 @@ function moveup() {
     if(mov_prohibidos['moveup'].indexOf(empty)!=-1){
     	au=document.getElementById("no");
     	au.play();
-    	moves--;
+		moves--;
     	draw();
+		fondoIncorrecto();
     } 
     else{
 		/**
@@ -449,6 +456,7 @@ function movedown() {
 		au=document.getElementById("no");
     	au.play();
 		moves--;
+		fondoIncorrecto();
 		draw();
     }else{
     	au=document.getElementById("cut");
@@ -499,6 +507,7 @@ function moveleft() {
 		au=document.getElementById("no");
     	au.play();
 		moves--;  
+		fondoIncorrecto();
 		draw();
 	}else{
 		au=document.getElementById("cut");
@@ -531,6 +540,7 @@ function moveright() {
 		  au=document.getElementById("no");
 	    	au.play();
 		  moves--;
+		  fondoIncorrecto();
 		  draw();
 	    }
 	    else{
@@ -721,14 +731,13 @@ function responsivo(evt){
 			enviarInfo(dificultad,im);
 
 			mostrarMovimiento(getMarcaTiempo(), im);
-
-			// console.log("se puede intercambiar")
 	
 		}else{
 	
 			// console.log("movimiento no permitido")
 			sonido = document.getElementById("no");
 			sonido.play();
+			fondoIncorrecto();
 		}
 	}else{
 		juegoNuevo = false;

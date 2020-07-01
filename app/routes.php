@@ -3,7 +3,7 @@
    /** login */
    $router->get('login', 'SessionController@login');
    $router->post('iniciar_session', 'SessionController@iniciarSession');
-   $router->post('registrar_usuario', 'SessionController@registro');
+   $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
    /**juego */
     $router->get('', 'partidaController@mostrarImagenes');
