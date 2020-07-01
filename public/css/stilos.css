@@ -88,6 +88,9 @@ label{
 	width: auto;
 }
 
+#contrasenia_log_facebook{
+	display: none;
+}
 input{
 	display: block;
 	margin: auto;
@@ -151,7 +154,7 @@ body {
 
 .session{
 	display: flex;
-	flex-flow: row;
+	flex-flow: row wrap;
 	justify-content: center;
 }
 
@@ -159,9 +162,9 @@ body {
 	padding: 300px;
 	background-color: #354330;
 	border-radius: 10px;
-	width: auto;
+	/* width: auto;
 	margin: auto;
-	display: block;
+	display: block; */
 }
 
 .inputform{

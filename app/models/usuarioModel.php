@@ -67,12 +67,13 @@ class UsuarioModel{
                     'contrasenia_correcta' => false,
                     'id_usuario' => []];
             }
-        } catch (\Throwable $th) {
-            echo("Error : ".$th);
+        } catch (PDOException $e) {
+            echo("Error al Iniciar Session: ".$e);
         }
 
     }
     public function registrarUsuario($datos_registro){
+        var_dump($datos_registro);
         $consulta = "INSERT INTO `usuario`(`id_usuario`,
                                            `contrasenia`,
                                            `alias`,
@@ -87,12 +88,21 @@ class UsuarioModel{
             ':alias' => $datos_registro['alias'],
             ':email' => $datos_registro['email']
         ];
-
+        
         try {
             $sql = $this->db->prepare($consulta);
-            $sql->execute($array_consulta);    
-        } catch (\Throwable $th) {
-            echo($th);
+            $sql->execute($array_consulta); 
+            /**
+             * comprobar, si insertó correctamente, devolver true
+             * sino false
+             */
+            if($statement->rowCount()>0){
+                return ['registro_exitoso'=> true];
+            }else{
+                return ['registro_exitoso'=>false];
+            }
+        } catch (PDOException $e) {
+            echo("Error al registrar Usuario: ".$e);
         }
     }
 }

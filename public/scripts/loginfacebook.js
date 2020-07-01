@@ -44,7 +44,13 @@ function getFbUserData(){
         document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
         document.getElementById('fbLink').innerHTML = 'Logout from Facebook';
         document.getElementById('status').innerHTML = '<p>Thanks for logging in, ' + response.first_name + '!</p>';
-        document.getElementById('userData').innerHTML = '<h2>Facebook Profile Details</h2><p>Login by Facebook</p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
+        document.getElementById('user_log_facebook').setAttribute('value',response.first_name);
+
+        document.getElementById('contrasenia_log_facebook').setAttribute('value',response.id);
+        document.getElementById('alias_log_facebook').setAttribute('value',response.first_name);
+        document.getElementById('email_log_facebook').setAttribute('value',response.email);
+        document.getElementById('login_por_facebook').setAttribute('value','ok');
+        document.getElementById('form_login').submit();
     });
 }
 
