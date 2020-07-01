@@ -168,7 +168,7 @@ console.log(mov_prohibidos['movedown']);
 
 function fondoIncorrecto(){
 	
-	document.body.style.backgroundImage = "url('public/imgs/fuego.jpg')";
+	// document.body.style.backgroundImage = "url('public/imgs/fuego.jpg')";
 }
 
 /**

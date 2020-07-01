@@ -1,7 +1,62 @@
-:root{
-	--padding-form: 10px;
-	--ancho:400px;
-}
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	list-style: none;
+	text-decoration: none;
+  }
+  nav{
+	background: whitesmoke;
+	height: 80px;
+	width: 100%;
+  }
+  
+  label.logo img{
+	padding-top: 10px;
+	width: 250px;
+  }
+  label.logo{
+	color: #f2f2f2;
+	font-size: 33px;
+	line-height: 80px;
+	padding: 0 50px;
+	font-weight: 600px;
+	font-family: 'Poppins', sans-serif;
+  }
+  nav ul{
+	float: right;
+	margin-right: 60px;
+  }
+  nav ul li{
+	display: inline-block;
+	line-height: 80px;
+	margin: 0 2px;
+  }
+  nav ul li a{
+	color: #bd7c7c;
+	font-weight: 500;
+	font-size: 20px;
+	padding: 7px 13px;
+	border-radius: 3px;
+	/* text-transform: uppercase; */
+	font-family: 'Poppins', sans-serif;
+  }
+  a.active,a:hover{
+	background: whitesmoke;
+	transition: .5s;
+  }
+  .checkbtn{
+	font-size: 30px;
+	color: white;
+	float: right;
+	line-height: 80px;
+	margin-right: 10px;
+	cursor: pointer;
+	display: none;
+  }
+  #check{
+	display: none;
+  }
 
 .seccionImagenes{
 	padding-top: 20px;
@@ -17,14 +72,16 @@
 	width: 300px;
 }
 
+/*no se muestran a penas carga el CSS, para que 
+las pueda redimencionar con JS, y agregarles el evento
+sobre la eleccion de puzzle a jugar con su dificultad*/
 .imagenes_principales{
 	display: none;
 	padding: 10px;
 }
 
-
 label{
-	padding: var(--padding-form);
+	padding: 10px;
 }
 
 .submit{
@@ -34,7 +91,7 @@ label{
 input{
 	display: block;
 	margin: auto;
-	padding: var(--padding-form);
+	padding: 10px;
 	width: auto;
 	border-radius: 10px;
 }
@@ -42,9 +99,6 @@ input{
 	background-color: cadetblue;
 }
 
-body{
-	text-align: center;
-}
 .lienzo{
 	text-align: center;
 }
@@ -74,49 +128,10 @@ canvas {
 }
 
 body {
-	background: radial-gradient(ellipse at center, #7bac92 0%, rgb(87, 96, 179) 100%);
+	background: radial-gradient(ellipse at center, #7bac92 0%, rgb(0, 127, 127) 100%);
 	transition: 1s;
-    height: 100vh;
-}
-
-/**
-stilos sobre el menu
-*/
-
-header {
-	width:100%;
-}
-header nav{
-	width:90%;
-	margin:20px auto;
-	background: #024959;
-}
-
-.menu_bar{
-	display: none;
-	margin:20px auto;
-	background: #024959;
-}
-
-header nav ul{
-	overflow: hidden;
-	list-style: none;
-	list-style-type: none;
-
-}
-
-header nav ul li{
-	float: left;
-}
-header nav ul li a{
-	color:white;
-	padding: 20px;
-	display: block;
-	text-decoration: none;
-}
-
-header nav ul li a:hover{
-	background: #037E8C;
+	height: 100vh;
+	text-align: center;
 }
 
 /**stilos sobre la lista de movimientos - juego*/
@@ -126,9 +141,6 @@ header nav ul li a:hover{
 	text-align: left;
 }
 
-main{
-	padding:20px;
-}
 .piezas{
 	display: none;
 }
@@ -167,6 +179,16 @@ main{
 	padding:10px;
 }
 
+@media (max-width: 952px){
+	label.logo{
+	  font-size: 10px;
+	  padding-left: 0px;
+	}
+	nav ul li a{
+	  font-size: 16px;
+	}
+  }
+
 @media screen and (max-width:700px){
 	.lienzo, .juego, .imagen_original{
 		margin: 0 auto;
@@ -185,39 +207,35 @@ main{
 		margin: 0 auto;
 		display: block;
 	}	
-	header nav{
-		width: 60%;
-		height: 100%;
-		left: -100%;
-		margin:0;
-		position:fixed;
-	}
-	header nav ul li{
-		display: block;
-		float:left;
-		border-bottom: 1px solid rgba(255,255,255,.3);
-	}
-	.menu_bar{
-		display: block;
-		width: 100%;
-		background: #ccc;
-		justify-content: space-between;
-	}
-	.menu_bar .bt-menu .bt-login{
-		display: block;
-		padding: 20px;
-		background: #024959;
-		/* color: #fff; */
-		text-decoration: none;
-		font-weight: bold;
-		font-size: 25px;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		box-sizing: border-box;
-	}
 
-	.menu_bar span{
-		float: right;
-	}
+	.checkbtn{
+		display: block;
+		margin-right: 8px;
+	  }
+	  ul{
+		position: fixed;
+		width: 100%;
+		height: 100vh;
+		background: #007F7F;
+		top: 80px;
+		left: -100%;
+		text-align: center;
+		transition: all .5s;
+	  }
+	  nav ul li{
+		display: block;
+		margin: 50px 0;
+		line-height: 30px;
+	  }
+	  nav ul li a{
+		font-size: 20px;
+	  }
+	  a:hover,a.active{
+		background: none;
+		color: #007F7F;
+	  }
+	  #check:checked ~ ul{
+		left: 0;
+	  }
 
 }
