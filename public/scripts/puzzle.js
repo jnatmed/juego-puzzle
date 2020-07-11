@@ -1,69 +1,11 @@
-// import {Matriz} from './matriz';
+import { Matriz } from './matriz.js';
+
 var cantElementos = parseInt(document.getElementById('cantElementos').value);
 var canvas=document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var empty=cantElementos;
 var moves=-1;
 
-
-/**
- * DEFINICION DE CLASE
- */
-class Matriz {
-	constructor(){
-		this.rangos = [];
-		this.combinaciones = [];
-	}
-    range(ini,fin){
-		var a = new Array();
-		// console.log('ini:'+ ini);
-		// console.log('ini:'+ fin);
-        for(var i = ini; i <= fin; i++){
-			a.push(i);
-            // console.log('i:'+ a);  
-        }
-        return a;       
-	}
-	setRangos(rangos){
-		for (let index = 0; index < rangos.length; index++) {
-			const element = rangos[index];
-			this.rangos.push(this.range(element['x'], element['y']));
-		}		
-	}
-
-	estaEnSector(x,y){
-		console.log("estaEnSector: ");
-		var rangoX, rangoY, coordenadasXeY;
-		for (let index = 0; index < this.rangos.length; index++) {
-			const element = this.rangos[index];
-			console.debug(element);
-			if (element.indexOf(x)!=-1){
-				console.log("encontre x en rango: (" + element[0] + ":"+ element[element.length-1] + ")");	
-				rangoX = '('+ element[0] +','+ element[element.length-1] +')';
-			}
-			if (element.indexOf(y)!=-1){
-				console.log("encontre y en rango: (" + element[0] + ":" + element[element.length-1] + ")");	
-				rangoY = '('+ element[0] +','+ element[element.length-1] +')';
-			}
-		}
-		coordenadasXeY = rangoX + ':' + rangoY;
-		console.log(coordenadasXeY);
-		console.log('sector tocado: ' + this.combinaciones[coordenadasXeY]);
-		return this.combinaciones[coordenadasXeY];
-	}
-	setCombinaciones(combinaciones){
-		this.combinaciones = combinaciones;
-	}
-	getRangos(){
-		return this.rangos;
-	}
-	getCombinaciones(){
-		return this.combinaciones;
-	}
-	getRangos(){
-		return this.rangos;
-	}
-}
 /*
 Mezclar arreglo: 
 Se hace al principio del juego
@@ -181,7 +123,7 @@ for(var i=0;i<=(cantElementos-1);i++){
 		empty=i+1; // esta es la celda que esta vacia
 }
 
-var restart=0;juegoNuevo=true;
+var restart=0,juegoNuevo=true;
 
 function won(){
 	// a) limpia el ultimo cuadro 
@@ -223,9 +165,9 @@ Cada vez que dibuja,
 function draw(){
 	// console.log("/*************NUEVO MOVIMIENTO***********/");
 	moves++;
-	mov=document.getElementById("moves");
+	let mov=document.getElementById("moves");
 	mov.innerHTML="MOVES: "+ moves.toString();
-	m=document.getElementById("message");
+	let m=document.getElementById("message");
 	m.innerHTML="";
   var t;
   /**
@@ -334,7 +276,7 @@ function component(x, y) {
 	 */
 	var dificultad = parseInt(document.getElementById('dificultad').value);
 
-    z=x+dificultad*y;
+    let z=x+dificultad*y;
     z=im[z];
 	/**
 	se lo concatena a la cadena `puzz` para hacer referencia a cada uno de los 
@@ -399,7 +341,7 @@ function moveup() {
 	 * 5x5 => 
 	 *  */	
     if(mov_prohibidos['moveup'].indexOf(empty)!=-1){
-    	au=document.getElementById("no");
+    	var au=document.getElementById("no");
     	au.play();
 		moves--;
     	draw();
@@ -412,7 +354,7 @@ function moveup() {
 		 */
     	au=document.getElementById("cut");
     	au.play();
-    	text="puzz";
+    	var text="puzz";
 		/**
 		aca ocurre el intercambio 
 		en el caso de empty = 0 
@@ -453,7 +395,7 @@ function movedown() {
 		return;
 	}
 	if(mov_prohibidos['movedown'].indexOf(empty)!=-1) {
-		au=document.getElementById("no");
+		var au=document.getElementById("no");
     	au.play();
 		moves--;
 		fondoIncorrecto();
@@ -461,7 +403,7 @@ function movedown() {
     }else{
     	au=document.getElementById("cut");
     	au.play();
-    	text="puzz";
+    	var text="puzz";
 		var curr=empty;
 		var dificultad = parseInt(document.getElementById('dificultad').value);
 
@@ -482,6 +424,8 @@ function movedown() {
 function moveleft() {
 	var anchoCanvas = document.getElementById('canvas').width;
 	let dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));
+	var text, au;
+
 
 	ctx.clearRect(0,0,anchoCanvas,anchoCanvas);
 	/**
@@ -504,7 +448,7 @@ function moveleft() {
 	}
 	
 	if(mov_prohibidos['moveleft'].indexOf(empty)!=-1) {
-		au=document.getElementById("no");
+		let au=document.getElementById("no");
     	au.play();
 		moves--;  
 		fondoIncorrecto();
@@ -529,6 +473,7 @@ function moveleft() {
 function moveright() {
 	var anchoCanvas = document.getElementById('canvas').width;
 	let dificultad = parseInt(document.getElementById('dificultad').getAttribute('value'));
+	var text, au;
 
 	ctx.clearRect(0,0,anchoCanvas,anchoCanvas);
 	if(restart==1){
@@ -559,7 +504,7 @@ function moveright() {
 	  }
 	  
 window.addEventListener('keydown', function (e) {
-    key = e.keyCode;
+    let key = e.keyCode;
     if(key==37){
 		e.preventDefault();
 		moveleft();
@@ -699,6 +644,7 @@ function responsivo(evt){
 	
 	matriz = new Matriz();
 
+
 	var dificultad = parseInt(document.getElementById('dificultad').value);
 
 	var rangos = JSON.parse(document.getElementById('matriz').getAttribute('value'));
@@ -719,7 +665,7 @@ function responsivo(evt){
 	if (!juegoNuevo){
 		if(movPermitidos[sector].indexOf(empty)!=-1){
 	
-			sonido = document.getElementById("cut");
+			var sonido = document.getElementById("cut");
 			sonido.play();
 			var valor_actual = empty;
 			empty=sector;

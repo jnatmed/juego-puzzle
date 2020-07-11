@@ -327,7 +327,7 @@ class PartidaController{
                 
                 $resul = $this->crear_estados_futuros($nuevo_estado_actual,$movimientos_permitidos);
                 // $msj_respuesta['estados_futuros'] = $resul;    
-                // $msj_respuesta['control_movimiento'] = 'OK' ;    
+                // $msj_respuesta['control_movimiento'] = 'OK';    
 
                 $msj_respuesta = [
                     'marca_de_tiempo' => $marca_de_tiempo,
@@ -344,7 +344,7 @@ class PartidaController{
             }else{
                 $msj_respuesta = ['control_movimiento' => 'TRAMPA'] ;    
             };    
-
+            
             return json_encode($msj_respuesta);
             $this->logger->info('SESSION[estados_futuros]: ',array('estados_futuros: '=> $_SESSION['estados_futuros']));
             $this->logger->info('SESSION[estado_actual]: ',array('estado_actual: '=> $_SESSION['estado_actual']));

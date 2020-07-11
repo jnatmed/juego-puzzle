@@ -41,7 +41,7 @@ class SessionController{
             if(!$result_log_face['ya_existe']){
                 /**registro usuario de facebook si no existe en la base*/
                 $data = ['id_usuario'=>$_POST['user_log_facebook'],
-                         'contrasenia'=>$_POST['contrasenia_log_facebook'],
+                         'contrasenia'=>$_POST['contrasenia_log_facebook'], 
                          'alias'=>$_POST['alias_log_facebook'],
                          'email'=>$_POST['email_log_facebook']
                         ];
