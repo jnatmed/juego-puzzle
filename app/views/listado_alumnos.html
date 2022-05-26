@@ -1,0 +1,39 @@
+{% include 'partials/base.html' %}
+<body>
+    {% include 'partials/nav-puzzle.html' %}
+    <main>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre Alumno</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Grado</th>
+                        <th>Nombre del Padre</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in listado %}
+                    <tr>
+                        <td>
+                            {{ value.nombre_alumno }}
+                        </td>
+                        <td>
+                            {{ value.fecha_nacimiento }}
+                        </td>
+                        <td>
+                            {{ value.grado }}
+                        </td>
+                        <td>
+                            {{ value.nombre_padre }}
+                        </td>
+                        <td>
+                            <a href="ver_alumno?nombre_alumno={{ value.nombre_alumno }}">Ver Alumno</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </main>
+</body>
+</html>

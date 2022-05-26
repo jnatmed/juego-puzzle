@@ -11,6 +11,10 @@ El desarrollo de la práctica Integradora de la Asignatura Programación en Ambi
   - Configurar la base de datos creada y los usuarios correspondientes
  - Ejecutar `composer install`
 
+- hay que descomentar en el php.ini la linea referida a la extension:
+    extension=pdo_mysql y reiniciar el servidor. 
+
+
 ### Aclaración
 
 Por cada objeto creado por usted mismo (Model o Controller), debera indicar a

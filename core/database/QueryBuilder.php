@@ -37,6 +37,14 @@ class QueryBuilder
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
 
+    public function selectOne($table, $column, $searched)
+    {
+        // SELECT * FROM `escuela`.`alumno` WHERE `nombre_alumno` = 'dante natello medina'
+        $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_CLASS);
+    }
+
     /**
      * Insert a record into a table.
      *

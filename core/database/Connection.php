@@ -22,7 +22,9 @@ class Connection
                 $config['options']
             );
         } catch (PDOException $e) {
-            die($e->getMessage());
+            echo("ERROR AL CONECTAR");
+            echo($e->getMessage());
+            // die($e->getMessage());
         }
     }
 }

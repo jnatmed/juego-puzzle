@@ -6,7 +6,7 @@
 	text-decoration: none;
   }
   nav{
-	background: whitesmoke;
+	background: rgb(245, 245, 245);
 	height: 80px;
 	width: 100%;
   }
@@ -16,7 +16,7 @@
 	width: 250px;
   }
   label.logo{
-	color: #f2f2f2;
+	color: #da5656;
 	font-size: 33px;
 	line-height: 80px;
 	padding: 0 50px;
@@ -33,12 +33,15 @@
 	margin: 0 2px;
   }
   nav ul li a{
-	color: #bd7c7c;
+	/* color: cadetblue; */
+	-webkit-text-stroke: 2px rgb(182, 58, 58);
+	color: transparent;
 	font-weight: 500;
 	font-size: 20px;
 	padding: 7px 13px;
 	border-radius: 3px;
-	/* text-transform: uppercase; */
+	text-decoration: none;
+	text-transform: uppercase;
 	font-family: 'Poppins', sans-serif;
   }
   a.active,a:hover{
@@ -189,6 +192,7 @@ body {
 	}
 	nav ul li a{
 	  font-size: 16px;
+	  color: white;
 	}
   }
 
@@ -232,10 +236,11 @@ body {
 	  }
 	  nav ul li a{
 		font-size: 20px;
+		color: cadetblue;
 	  }
 	  a:hover,a.active{
 		background: none;
-		color: #007F7F;
+		color: cadetblue;
 	  }
 	  #check:checked ~ ul{
 		left: 0;

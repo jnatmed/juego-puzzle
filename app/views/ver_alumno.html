@@ -1,0 +1,36 @@
+{% include 'partials/base.html' %}
+<body>
+    {% include 'partials/nav-puzzle.html' %}
+    <main>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre Alumno</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Grado</th>
+                    <th>Nombre del Padre</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ datos_alumno.nombre_alumno }}
+                    </td>
+                    <td>
+                        {{ datos_alumno.fecha_nacimiento }}
+                    </td>
+                    <td>
+                        {{ datos_alumno.grado }}
+                    </td>
+                    <td>
+                        {{ datos_alumno.nombre_padre }}
+                    </td>                
+                    <td>
+                        <a href="alumnos">Volver a Listado</a>
+                    </td>
+                </tr>
+    </main>
+</body>
+</html>

@@ -6,6 +6,8 @@
    $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
    /**juego */
+    $router->get('alumnos', 'alumnosController@listar');
+    $router->get('ver_alumno', 'alumnosController@verAlumno');
     $router->get('', 'partidaController@mostrarImagenes');
     $router->get('jugar', 'partidaController@cargarPuzzle');
     $router->get('listar_partidas', 'partidaController@listar_partidas');
