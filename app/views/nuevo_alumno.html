@@ -1,0 +1,24 @@
+{% include 'partials/base.html' %}
+{% include 'partials/nav-puzzle.html' %}
+<body>
+    <main>
+        <form class="form_nuevo" action="guardar_alumno" method="POST">
+            <caption>FORMULARIO DE NUEVO ALUMNO</caption>
+            <label class="entrada" for="nombre_alumno">Nombre del Alumno</label>
+            <input class="entrada" type="text" name="nombre_alumno">
+            <label class="entrada" for="fecha_nacimiento">Fecha de Nacimiento</label>
+            <input class="entrada" type="text" name="fecha_nacimiento">
+            <label class="entrada" for="grado">Grado</label>
+            <input class="entrada" type="text" name="grado">
+            <label class="entrada" for="nombre_padre">Nombre del Padre</label>
+            <select class="entrada" name="nombre_padre" id="nombre_padre">
+                <option value=""></option>
+                {% for key, value in listado %}
+                    <option value="{{ value.nombre_padre }}">{{ value.nombre_padre }}</option>
+                {% endfor %}
+            </select>
+            <input class="enviar" type="submit" value="enviar">
+        </form>
+    </main>
+</body>
+</html>

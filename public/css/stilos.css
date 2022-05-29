@@ -9,6 +9,7 @@
 	background: rgb(245, 245, 245);
 	height: 80px;
 	width: 100%;
+	border: 4px dotted skyblue;
   }
   
   label.logo img{
@@ -61,189 +62,108 @@
 	display: none;
   }
 
-.seccionImagenes{
-	padding-top: 20px;
-}
-
-#mensajes_estado{
-	display: none;
-}
-
-#botones_imagenes{
-	margin: auto;
-	padding: 20px;
-	width: 300px;
-}
-
-/*no se muestran a penas carga el CSS, para que 
-las pueda redimencionar con JS, y agregarles el evento
-sobre la eleccion de puzzle a jugar con su dificultad*/
-.imagenes_principales{
-	display: none;
-	padding: 10px;
-}
-
-label{
-	padding: 10px;
-}
-
-.submit{
-	width: auto;
-}
-
-#contrasenia_log_facebook{
-	display: none;
-}
-input{
-	display: block;
-	margin: auto;
-	padding: 10px;
-	width: auto;
-	border-radius: 10px;
-}
-.submit:hover{
-	background-color: cadetblue;
-}
-
-.lienzo{
-	text-align: center;
-}
-canvas {	
-    border: 5px solid black;
-	margin:auto;
-	border-radius: 10px;
-}
-
-.juego{
-    display: flex;
-	flex-flow: row wrap;
-	justify-content: space-around;
-}
-.piezas{
-    border: 5px solid black;
-	display:flex;
-	flex-flow: row wrap;
-}
-
-.buttonTouch{
-	display: none;
-}
-
-#cheers, #cut, #no{
-	display: none;
-}
-
-body {
-	background: radial-gradient(ellipse at center, #7bac92 0%, rgb(0, 127, 127) 100%);
-	transition: 1s;
+main {
+	display: flex;
 	height: 100vh;
-	text-align: center;
+	width: 100vw;
+	justify-content: center;
+	/* align-items: center; */
 }
 
-/**stilos sobre la lista de movimientos - juego*/
-.movimientos{
-	background-color: cadetblue;
+.form_nuevo {
+	display: flex;
+	flex-direction: column;
+	height: 60%;
+	width: 30%;
+	align-items: center;
+	background-color: rgb(141, 204, 211);
+	border-radius: 10%;
+}
+
+.form_nuevo input{
+	padding-top: 5px;
+}
+
+.entrada {
+	height: 30px;
+	padding: 0;
+	margin: 0;
+	width: 60%;
+}
+
+.enviar {
+	padding	: 10px;
+	height: 40px;
+	width: 60%;
 	border-radius: 10px;
+}
+
+table.listado {
+	border: 1px solid #1C6EA4;
+	background-color: #EEEEEE;
+	width: 40vw;
+	height: 15vh;
 	text-align: left;
-}
-
-.piezas{
-	display: none;
-}
-
-/**
-	VISTA LOGIN-REGISTRO 
-*/
-
-.session{
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: center;
-}
-
-.login .registro{
-	padding: 300px;
-	background-color: #354330;
-	border-radius: 10px;
-	/* width: auto;
-	margin: auto;
-	display: block; */
-}
-
-.inputform{
-	width: auto;
-	padding: 5px;
-}
-
-.imagen_original{
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: center;
-}
-
-.img_o{
-	padding:10px;
-}
-
-@media (max-width: 952px){
-	label.logo{
-	  font-size: 10px;
-	  padding-left: 0px;
-	}
-	nav ul li a{
-	  font-size: 16px;
-	  color: white;
-	}
+	border-collapse: collapse;
+  }
+  table.listado td, table.listado th {
+	border: 1px solid #AAAAAA;
+	padding: 3px 2px;
+  }
+  table.listado tbody td {
+	font-size: 13px;
+  }
+  table.listado tr:nth-child(even) {
+	background: #D0E4F5;
+  }
+  table.listado thead {
+	background: #1C6EA4;
+	background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+	background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+	background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+	border-bottom: 2px solid #444444;
+  }
+  table.listado thead th {
+	font-size: 15px;
+	font-weight: bold;
+	color: #FFFFFF;
+	border-left: 2px solid #D0E4F5;
+  }
+  table.listado thead th:first-child {
+	border-left: none;
+  }
+  
+  table.listado tfoot {
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background: #D0E4F5;
+	background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+	background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+	background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+	border-top: 2px solid #444444;
+  }
+  table.listado tfoot td {
+	font-size: 14px;
   }
 
-@media screen and (max-width:700px){
-	.lienzo, .juego, .imagen_original{
-		margin: 0 auto;
-		width: auto;
-		display: block;
-	}
+ .mensaje {
+	
+		font-family: "Comic Sans MS", cursive, sans-serif;
+		font-size: 24px;
+		letter-spacing: 1.4px;
+		word-spacing: -5px;
+		color: #7cb0b4;
+		font-weight: 700;
+		text-decoration: none solid rgb(68, 68, 68);
+		font-style: italic;
+		font-variant: small-caps;
+		text-transform: uppercase;
+	
+ }
 
-	.seccionImagenes{
-		padding-left: 10px;
-	}
-
-	canvas, .imagen_original{
-		margin: auto;		
-	}
-	html{
-		margin: 0 auto;
-		display: block;
-	}	
-
-	.checkbtn{
-		display: block;
-		margin-right: 8px;
-	  }
-	  ul{
-		position: fixed;
-		width: 100%;
-		height: 100vh;
-		background: #007F7F;
-		top: 80px;
-		left: -100%;
-		text-align: center;
-		transition: all .5s;
-	  }
-	  nav ul li{
-		display: block;
-		margin: 50px 0;
-		line-height: 30px;
-	  }
-	  nav ul li a{
-		font-size: 20px;
-		color: cadetblue;
-	  }
-	  a:hover,a.active{
-		background: none;
-		color: cadetblue;
-	  }
-	  #check:checked ~ ul{
-		left: 0;
-	  }
-
-}
+ .accion {
+	 display: block;
+	 padding: 5px;
+	 text-align: center;
+ }

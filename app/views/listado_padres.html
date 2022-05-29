@@ -1,0 +1,40 @@
+{% include 'partials/base.html' %}
+<body>
+    {% include 'partials/nav-puzzle.html' %}
+    <main>
+            {# {% if mensaje != '' %}
+                <p>{{ mensaje }}</p>
+            {% endif %}  #}
+            <table class="listado">
+                <caption>LISTADO DE PADRES</caption>
+                <thead>
+                    <tr>
+                        <th>Nombre del Padre</th>
+                        <th>Nombre del Alumno</th>
+                        <th>Dni del Padre</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in listado %}
+                    <tr>
+                        <td>
+                            {{ value.nombre_padre }}
+                        </td>
+                        <td>
+                            <a href="ver_alumno?nombre_alumno={{ value.nombre_alumno }}">{{ value.nombre_alumno }}</a>
+                        </td>
+                        <td>
+                            {{ value.dni_padre }}
+                        </td>
+                        <td>
+                            <a class="accion" href="/modificar_padre">Modificar</a>
+                            <a class="accion" href="/eliminar_padre">Eliminar</a>                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </main>
+</body>
+</html>

@@ -53,23 +53,46 @@ class QueryBuilder
      */
     public function insert($table, $parameters)
     {
+
+        // echo("<pre>");
+        // var_dump($parameters);
+        $aux = array_values($parameters);
+        // echo("<pre>");
+        // var_dump($aux);
+        if ($aux['3']=='NULL'){
+            $aux = array_slice($aux,0,3);
+            $values = implode("','", $aux);
+            $values = "'".$values."',"."NULL";  
+            // echo($values);
+        }else{
+            $values = implode("','", array_values($parameters));
+            $values = "'".$values."'";    
+            // echo("<pre>");
+            // var_dump($values);
+        }
         $parameters = $this->cleanParameterName($parameters);
         $sql = sprintf(
             'insert into %s (%s) values (%s)',
             $table,
             implode(', ', array_keys($parameters)),
-            ':' . implode(', :', array_keys($parameters))
+            $values
         );
+        // echo("<pre>");
+        // var_dump($sql);
 
         try {
             $statement = $this->pdo->prepare($sql);
-            $statement->execute($parameters);
+            $result = $statement->execute();
+            return $result;
         } catch (Exception $e) {
             $this->sendToLog($e);
-        }
+            echo($e->getMessage());
+            return $e->getCode();
+        }   
     }
 
-    private function sendToLog(Exception $e)
+    private function 
+    sendToLog(Exception $e)
     {
         if ($this->logger) {
             $this->logger->error('Error', ["Error" => $e]);

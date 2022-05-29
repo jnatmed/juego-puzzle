@@ -5,15 +5,23 @@
    $router->post('iniciar_session', 'SessionController@iniciarSession');
    $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
+   
+   $router->post('guardar_alumno', 'alumnosController@guardarAlumno');
+   $router->post('guardar_padre', 'alumnosController@guardarPadre');
+   $router->post('guardar_recibo', 'alumnosController@guardarRecibo');
+   $router->post('enviar_nombre', 'alumnosController@buscarAlumno');
+
+  //  Sistema Alumnos
+   $router->get('alumnos', 'alumnosController@listar');
+   $router->get('padres', 'alumnosController@listarPadres');
+   $router->get('ver_alumno', 'alumnosController@verAlumno');
+   $router->get('ver_recibos', 'alumnosController@verRecibos');
+   $router->get('nuevo_alumno', 'alumnosController@nuevoAlumno');
+   $router->get('nuevo_padre', 'alumnosController@nuevoPadre');
+   $router->get('nuevo_recibo', 'alumnosController@nuevoRecibo');
+   
    /**juego */
-    $router->get('alumnos', 'alumnosController@listar');
-    $router->get('ver_alumno', 'alumnosController@verAlumno');
-    $router->get('', 'partidaController@mostrarImagenes');
-    $router->get('jugar', 'partidaController@cargarPuzzle');
-    $router->get('listar_partidas', 'partidaController@listar_partidas');
-    $router->get('nuevo_rompecabezas', 'partidaController@nuevo_rompecabezas');
-    $router->get('guardar_rompecabezas', 'partidaController@guardar_rompecabezas');
-    $router->post('enviar_movimiento', 'partidaController@cargarMovimientosPermitidos');
+    $router->get('', 'alumnosController@listar');
 
    /**proyecto */
     $router->get('not_found', 'ProjectController@notFound');

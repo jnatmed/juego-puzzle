@@ -1,0 +1,28 @@
+{% include 'partials/base.html' %}
+<body>
+    {% include 'partials/nav-puzzle.html' %}
+    <main>
+            
+        <form class="form_nuevo" action="guardar_recibo" method="POST" enctype="multipart/form-data">
+            <caption>FORMULARIO - NUEVO RECIBO</caption>
+            <label for="nombre_alumno">Nombre del Alumno</label>
+            <select class="entrada" name="nombre_alumno" id="nombre_alumno">
+                <option value=""></option>
+                {% for key, value in listado %}
+                    <option value="{{ value.nombre_alumno }}">{{ value.nombre_alumno }}</option>
+                {% endfor %}
+            </select>
+            <label class="entrada" for="grado">Grado</label>
+            <input class="entrada" type="text" id="grado" name="grado">
+            <label class="entrada" for="mes_cuota">Mes Cuota</label>
+            <input class="entrada" type="text" name="mes_cuota">
+            <label class="entrada" for="nro_recibo">Nro Recibo</label>
+            <input class="entrada" type="text" name="nro_recibo">
+            <label class="entrada" for="archivo_recibo">Sube el Recibo</label>
+            <input class="entrada" type="file" name="archivo_recibo">
+            <input class="enviar" name="enviar" type="submit" value="enviar">
+        </form>
+        
+    </main>
+</body>
+</html>
