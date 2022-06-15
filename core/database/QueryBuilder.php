@@ -91,6 +91,36 @@ class QueryBuilder
         }   
     }
 
+    public function update($table, $parameters, $condition){
+        $params = '';
+
+        foreach($parameters as $key=>$value) {
+            $params .= $key . " = '" . $value . "', "; 
+         }
+         
+        $params = trim($params, ' '); // first trim last space
+        $params = trim($params, ','); // then trim trailing and prefixing commas
+
+        $sql = sprintf(
+            'update %s set %s where %s',
+            $table,
+            $params,
+            $condition
+        );
+        // echo("<pre>");
+        // var_dump($sql);
+
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $result = $statement->execute();
+            return $result;
+        } catch (Exception $e) {
+            $this->sendToLog($e);
+            echo($e->getMessage());
+            return $e->getCode();
+        }          
+    }  
+
     private function 
     sendToLog(Exception $e)
     {

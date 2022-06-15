@@ -26,10 +26,12 @@
                         {{ datos_alumno.grado }}
                     </td>
                     <td>
-                        {{ datos_alumno.nombre_padre }}
+                        <a class="accion" href="ver_padre?nombre_padre={{ datos_alumno.nombre_padre }}">{{ datos_alumno.nombre_padre }}</a>
                     </td>                
                     <td>
-                        <a href="alumnos">Volver a Listado</a>
+                        <a class="accion" href="alumnos">Volver a Listado</a>
+                        <a class="accion" href="/ver_recibos_alumno">Ver Recibos</a>
+                        <a class="accion" href="/actualizar_alumno?nombre_alumno={{ datos_alumno.nombre_alumno }}">Editar</a>
                     </td>
                 </tr>
     </main>

@@ -21,3 +21,5 @@ nombre_alumno.addEventListener('change', (event) => {
     xhttp.open("POST", "enviar_nombre");
 	xhttp.send(data);
 });
+
+

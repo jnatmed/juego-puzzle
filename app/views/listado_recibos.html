@@ -17,7 +17,7 @@
                     {% for key, value in listado %}
                     <tr>
                         <td>
-                            {{ value.nombre_alumno }}
+                            <a class="accion" href="ver_alumno?nombre_alumno={{ value.nombre_alumno }}">{{ value.nombre_alumno }}</a>
                         </td>
                         <td>
                             {{ value.grado }}

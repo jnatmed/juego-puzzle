@@ -23,6 +23,15 @@ class AlumnosController{
         return $listado;
     }
 
+    public function cargarImagenes(){
+        $imagenes = new AlumnosModel();
+        $resultado = $imagenes->cargarImagenes();
+        foreach ($resultado as $obj) {
+            $listado[] = get_object_vars($obj);
+        }
+        return $listado;
+    }
+
     public function traerAlumnos(){
         $alumnosModel = new AlumnosModel();
         $resultado = $alumnosModel->cargarAlumnos();
@@ -42,8 +51,28 @@ class AlumnosController{
         $nombre_alumno = $_GET['nombre_alumno'];
         $alumnoModel = new AlumnosModel();
         $resultado = $alumnoModel->verAlumno($nombre_alumno);
-     
-       return view('ver_alumno',['datos_alumno'=>get_object_vars($resultado[0])]);
+        if ($resultado == true) {
+            return view('ver_alumno',['datos_alumno'=>get_object_vars($resultado[0])]);
+        }else {
+            return view('excepciones',["mensaje"=>$resultado]);
+        }
+    }
+
+    
+    public function traerImagenes(){
+        
+        return view('lista_imagenes', ['listado' => $this->cargarImagenes(), 'mensaje'=>'Error al cargar Imagenes']);
+    }
+
+    public function verPadre(){
+        $nombre_padre = $_GET['nombre_padre'];
+        $alumnoModel = new AlumnosModel();
+        $resultado = $alumnoModel->verPadre($nombre_padre);
+        if ($resultado == true) {
+            return view('ver_padre',['datos_padre'=>get_object_vars($resultado[0])]);
+        }else {
+            return view('excepciones',["mensaje"=>$resultado]);
+        }
     }
 
     public function buscarAlumno(){
@@ -113,6 +142,16 @@ class AlumnosController{
             };
         };
     }
+    public function actualizarAlumno(){
+        $alumnosModel = new AlumnosModel();
+        $_POST['nombre_padre'] = $_POST['nombre_padre'] == '' ? 'NULL' : $_POST['nombre_padre'];
+        $resultado = $alumnosModel->actualizarAlumno($_POST,"nombre_alumno='".$_POST['nombre_alumno']."'");
+        if ($resultado){               
+            return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'alumno agregado']);
+        }else{           
+            return view('excepciones',["mensaje"=>$resultado]);
+        };
+    }
 
     public function guardarPadre(){
         $alumnosModel = new AlumnosModel();
@@ -173,5 +212,19 @@ class AlumnosController{
                 }
             }
         }
+    }
+
+    public function editarAlumno(){
+        $nombre_alumno = $_GET['nombre_alumno'];
+        $alumnoModel = new AlumnosModel();
+        $alumno = $alumnoModel->verAlumno($nombre_alumno);
+        if ($alumno == true) {
+            return view('editar_alumno',['datos'=>get_object_vars($alumno[0]),
+                                         'padres' => $this->traerPadres()]);
+        }else {
+            return view('excepciones',["mensaje"=>$alumno]);
+        }
+
+        // return view('editar_alumno');
     }
 }

@@ -1,0 +1,35 @@
+{% include 'partials/base.html' %}
+<body>
+    {% include 'partials/nav-puzzle.html' %}
+    <main>
+
+        <table class="listado">
+            <caption>DATOS DEL PADRE</caption>
+            <thead>
+                <tr>
+                    <th>Nombre Padre</th>
+                    <th>Nombre del Alumno</th>
+                    <th>Dni</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ datos_padre.nombre_padre }}
+                    </td>
+                    <td>
+                        <a class="accion" href="ver_alumno?nombre_alumno={{ datos_padre.nombre_alumno }}">{{ datos_padre.nombre_alumno }}</a>
+                    </td>
+                    <td>
+                        {{ datos_padre.dni_padre }}
+                    </td>
+                    <td>
+                        <a class="accion" href="alumnos">Volver a Listado</a>
+                        <a class="accion" href="/ver_recibos_alumno?nombre_alumno={{ datos_padre.nombre_padre }}">Ver Recibos</a>
+                        <a class="accion" href="/actualizar_padre?nombre_padre={{ datos_padre.nombre_padre }}">Editar</a>
+                    </td>
+                </tr>
+    </main>
+</body>
+</html>

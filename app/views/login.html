@@ -2,8 +2,9 @@
 
 <body>
   {% include 'partials/nav-puzzle.html' %}  
+  <main>
   <section class="session">
-        <section class="login">
+        
       <fieldset>
           <legend>Login</legend>
           <form id="form_login" action="iniciar_session" method="POST">
@@ -17,26 +18,14 @@
             </article>
             <article class="inputform">
             </article>  
-            <article class="login_fb">
-              <a href="javascript:void(0);" onclick="fbLogin();" id="fbLink">Login by Facebook</a>
-              <input type="hidden" id="user_log_facebook" name="user_log_facebook" value="">
-              <input type="password" id="contrasenia_log_facebook" name="contrasenia_log_facebook" value="">
-              <input type="hidden" id="alias_log_facebook" name="alias_log_facebook" value="">
-              <input type="hidden" id="email_log_facebook" name="email_log_facebook" value="">
-              <input type="hidden" id="login_por_facebook" name="login_por_facebook" value="">
               <input class="submit" type="submit" name="login" value="Loguearse">
 
-              <article id="status">
-              </article>
-              <article class="ac-data" id="userData">
-              </article>
-            </article>
           </form>
           <p>{{ mensaje_error_log }}</p>
-        </fieldset>
-        </section>
-        <section class="registro">
-        <fieldset>
+      </fieldset>
+      
+      <section class="registro">
+      <fieldset>
           <legend>Registro</legend>
           <form action="registrar_usuario" method="POST">
             <article class="inputform">
@@ -61,7 +50,8 @@
           </form>
           <p>{{ mensaje_error_registro }}</p>
         </fieldset>
-        </section>
+       
   </section>
+  </main>
 </body>
 </html>

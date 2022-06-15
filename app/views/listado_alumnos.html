@@ -1,7 +1,7 @@
 {% include 'partials/base.html' %}
 <body>
     {% include 'partials/nav-puzzle.html' %}
-    <main>
+    <main class="seccion_alumnos">
             {% if mensaje != '' %}
                 <p>{{ mensaje }}</p>
             {% endif %} 
@@ -29,17 +29,23 @@
                             {{ value.grado }}
                         </td>
                         <td>
-                            {{ value.nombre_padre }}
+                            <a class="accion" href="ver_padre?nombre_padre={{ value.nombre_padre }}">{{ value.nombre_padre }}</a>
+                            
                         </td>
                         <td>
                             <a class="accion" href="ver_alumno?nombre_alumno={{ value.nombre_alumno }}">Ver</a>
-                            <a class="accion" href="/modificar_alumno">Modificar</a>
-                            <a class="accion" href="/eliminar_alumno">Eliminar</a>                            
+                            <a class="accion" href="/editar_alumno?nombre_alumno={{ value.nombre_alumno }}">Editar</a>
+                            <a class="accion" href="/eliminar_alumno?nombre_alumno={{ value.nombre_alumno }}">Eliminar</a>                            
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        <section class="seccion_info">
+            <textarea name="resultado" id="resultado" cols="30" rows="10"></textarea>
+            <button id="boton">Haz click</button>
+            {# <button id="traer_info" onclick="traerInfo()" type="submit">Traer informacion</button>             #}
+        </section>
     </main>
 </body>
 </html>
