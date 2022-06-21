@@ -7,6 +7,33 @@ use \App\models\AlumnosModel;
 
 class AlumnosController{
 
+    public function iniciarSession(){
+        session_start();
+
+        // echo("<pre>");
+        // var_dump($_POST);
+
+        $alumnoModel = new AlumnosModel();
+        $resultado = $alumnoModel->buscarUsuario($_POST['id_usuario']);
+
+        // echo("<pre>");
+        // var_dump($resultado);
+
+        if ($resultado){
+
+            foreach ($resultado as $obj) {
+                $listado[] = get_object_vars($obj);
+            }
+    
+            $_SESSION['id_usuario'] = $listado['id_usuario'];
+            return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'SESSION INICIADA']);
+
+        }else{
+            $resultado = 'USUARIO NO REGISTRADO';
+            return view('excepciones',["mensaje"=>$resultado]);
+        }
+    }
+
     public function cargarItem($item, $listado){
         foreach ($item as $key => $value){
             $item[$key] = $listado->$listado[$key];

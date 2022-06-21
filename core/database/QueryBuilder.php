@@ -40,9 +40,20 @@ class QueryBuilder
     public function selectOne($table, $column, $searched)
     {
         // SELECT * FROM `escuela`.`alumno` WHERE `nombre_alumno` = 'dante natello medina'
-        $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_CLASS);
+        // $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
+        // $statement->execute();
+        // return $statement->fetchAll(PDO::FETCH_CLASS);
+
+        echo("entre");
+        try {
+            $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_CLASS);
+        } catch (Exception $e) {
+            $this->sendToLog($e);
+            echo($e->getMessage());
+            return $e->getCode();
+        } 
     }
 
     /**

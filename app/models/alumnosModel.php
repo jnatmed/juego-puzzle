@@ -6,6 +6,10 @@ use PDO;
 
 class AlumnosModel extends Model{
 
+    public function buscarUsuario($nombre_usuario){
+        return $this->db->selectOne('usuario','id_usuario',$nombre_usuario);
+    }
+
     public function cargarAlumnos(){
         return $this->db->selectAll('alumno');
     }
@@ -16,6 +20,7 @@ class AlumnosModel extends Model{
     public function verPadre($nombre_padre){
         return $this->db->selectOne('padre','nombre_padre',$nombre_padre);
     }
+
 
     public function cargarRecibos(){
         return $this->db->selectAll('recibos');

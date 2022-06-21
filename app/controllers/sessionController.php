@@ -2,9 +2,9 @@
 namespace App\controllers;
 
 use \App\models\UsuarioModel;
-use \App\models\PartidaModel;
+use \App\models\AlumnosModel;
 
-class SessionController{
+class SessionController extends AlumnosModel{
     public $session;
 
     public function usuariosRegistrados(){

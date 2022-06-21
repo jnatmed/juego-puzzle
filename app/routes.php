@@ -2,7 +2,7 @@
 
    /** login */
    $router->get('login', 'SessionController@login');
-   $router->post('iniciar_session', 'SessionController@iniciarSession');
+   $router->post('iniciar_session', 'alumnosController@iniciarSession');
    $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
    
