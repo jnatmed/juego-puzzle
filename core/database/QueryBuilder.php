@@ -44,7 +44,7 @@ class QueryBuilder
         // $statement->execute();
         // return $statement->fetchAll(PDO::FETCH_CLASS);
 
-        echo("entre");
+        // echo("entre");
         try {
             $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
             $statement->execute();

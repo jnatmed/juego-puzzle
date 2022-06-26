@@ -7,30 +7,55 @@ use \App\models\AlumnosModel;
 
 class AlumnosController{
 
+    public function login(){
+        
+        return view('login');
+    }
+
     public function iniciarSession(){
+        return $this->listar();
+    }
+
+    public function comprobarSession(){
         session_start();
 
         // echo("<pre>");
         // var_dump($_POST);
 
-        $alumnoModel = new AlumnosModel();
-        $resultado = $alumnoModel->buscarUsuario($_POST['id_usuario']);
+        if (!isset($_SESSION['id_usuario'])){
 
-        // echo("<pre>");
-        // var_dump($resultado);
+            // echo("<pre>");
+            // var_dump("hay sesion iniciada");
 
-        if ($resultado){
-
-            foreach ($resultado as $obj) {
-                $listado[] = get_object_vars($obj);
-            }
+            if(isset($_POST['id_usuario'])){
+                $alumnoModel = new AlumnosModel();
+                $resultado = $alumnoModel->buscarUsuario($_POST['id_usuario']);
+        
+                // echo("<pre>");
+                // var_dump($resultado);
+        
+                if ($resultado){
+        
+                    $listado = get_object_vars($resultado[0]);
+                    // echo("<pre>");
+                    // var_dump($listado);
+            // id_usuario
+                    $_SESSION['id_usuario'] = $listado['id_usuario'];
+                    // return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'SESSION INICIADA']);
+                    return True;
+                }else{
+                    $resultado = 'USUARIO NO REGISTRADO';
+                    return view('excepciones',["mensaje"=>$resultado]);
+                }
+            }else {
+                // cuando acceden directamente por url
+                // echo("<pre>");
+                // var_dump("no inicio sesion");
     
-            $_SESSION['id_usuario'] = $listado['id_usuario'];
-            return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'SESSION INICIADA']);
-
-        }else{
-            $resultado = 'USUARIO NO REGISTRADO';
-            return view('excepciones',["mensaje"=>$resultado]);
+                return False;
+            }
+        }else {
+            return True;
         }
     }
 
@@ -70,15 +95,19 @@ class AlumnosController{
     }
 
     public function listar(){
-       
-        return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'']);
+        if($this->comprobarSession()){
+            echo("logueado");
+            return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'']);
+        }else {
+            return $this->login();
+        }
     }
 
     public function verAlumno(){
         $nombre_alumno = $_GET['nombre_alumno'];
         $alumnoModel = new AlumnosModel();
         $resultado = $alumnoModel->verAlumno($nombre_alumno);
-        if ($resultado == true) {
+        if ($resultado == True) {
             return view('ver_alumno',['datos_alumno'=>get_object_vars($resultado[0])]);
         }else {
             return view('excepciones',["mensaje"=>$resultado]);
@@ -95,7 +124,7 @@ class AlumnosController{
         $nombre_padre = $_GET['nombre_padre'];
         $alumnoModel = new AlumnosModel();
         $resultado = $alumnoModel->verPadre($nombre_padre);
-        if ($resultado == true) {
+        if ($resultado == True) {
             return view('ver_padre',['datos_padre'=>get_object_vars($resultado[0])]);
         }else {
             return view('excepciones',["mensaje"=>$resultado]);
@@ -245,7 +274,7 @@ class AlumnosController{
         $nombre_alumno = $_GET['nombre_alumno'];
         $alumnoModel = new AlumnosModel();
         $alumno = $alumnoModel->verAlumno($nombre_alumno);
-        if ($alumno == true) {
+        if ($alumno == True) {
             return view('editar_alumno',['datos'=>get_object_vars($alumno[0]),
                                          'padres' => $this->traerPadres()]);
         }else {
