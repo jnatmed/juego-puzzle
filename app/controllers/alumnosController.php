@@ -25,7 +25,8 @@ class AlumnosController{
         if (!isset($_SESSION['id_usuario'])){
 
             // echo("<pre>");
-            // var_dump("hay sesion iniciada");
+            var_dump("1) hay sesion iniciada");
+            var_dump($_POST);
 
             if(isset($_POST['id_usuario'])){
                 $alumnoModel = new AlumnosModel();
@@ -42,6 +43,7 @@ class AlumnosController{
             // id_usuario
                     $_SESSION['id_usuario'] = $listado['id_usuario'];
                     // return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'SESSION INICIADA']);
+
                     return True;
                 }else{
                     $resultado = 'USUARIO NO REGISTRADO';
@@ -50,11 +52,12 @@ class AlumnosController{
             }else {
                 // cuando acceden directamente por url
                 // echo("<pre>");
-                // var_dump("no inicio sesion");
+                var_dump("no inicio sesion");
     
                 return False;
             }
         }else {
+            echo(session_cache_expire());
             return True;
         }
     }
@@ -99,36 +102,56 @@ class AlumnosController{
             echo("logueado");
             return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'']);
         }else {
+            echo("USUARIO NO LOGUEADO");
             return $this->login();
         }
     }
 
     public function verAlumno(){
-        $nombre_alumno = $_GET['nombre_alumno'];
-        $alumnoModel = new AlumnosModel();
-        $resultado = $alumnoModel->verAlumno($nombre_alumno);
-        if ($resultado == True) {
-            return view('ver_alumno',['datos_alumno'=>get_object_vars($resultado[0])]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            $nombre_alumno = $_GET['nombre_alumno'];
+            $alumnoModel = new AlumnosModel();
+            $resultado = $alumnoModel->verAlumno($nombre_alumno);
+            if ($resultado == True) {
+                return view('ver_alumno',['datos_alumno'=>get_object_vars($resultado[0])]);
+            }else {
+                return view('excepciones',["mensaje"=>$resultado]);
+            }
         }else {
-            return view('excepciones',["mensaje"=>$resultado]);
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
         }
+    
     }
 
     
     public function traerImagenes(){
+        if($this->comprobarSession()){
+            echo("logueado");
+            return view('lista_imagenes', ['listado' => $this->cargarImagenes(), 'mensaje'=>'Error al cargar Imagenes']);
+        }else {
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }
         
-        return view('lista_imagenes', ['listado' => $this->cargarImagenes(), 'mensaje'=>'Error al cargar Imagenes']);
     }
 
     public function verPadre(){
-        $nombre_padre = $_GET['nombre_padre'];
-        $alumnoModel = new AlumnosModel();
-        $resultado = $alumnoModel->verPadre($nombre_padre);
-        if ($resultado == True) {
-            return view('ver_padre',['datos_padre'=>get_object_vars($resultado[0])]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            $nombre_padre = $_GET['nombre_padre'];
+            $alumnoModel = new AlumnosModel();
+            $resultado = $alumnoModel->verPadre($nombre_padre);
+            if ($resultado == True) {
+                return view('ver_padre',['datos_padre'=>get_object_vars($resultado[0])]);
+            }else {
+                return view('excepciones',["mensaje"=>$resultado]);
+            }
         }else {
-            return view('excepciones',["mensaje"=>$resultado]);
-        }
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }        
     }
 
     public function buscarAlumno(){
@@ -152,8 +175,14 @@ class AlumnosController{
     }
 
     public function verRecibos(){
+        if($this->comprobarSession()){
+            echo("logueado");
+            return view('listado_recibos', ['listado' => $this->traerRecibos()]);
+        }else {
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }
         
-        return view('listado_recibos', ['listado' => $this->traerRecibos()]);
     }
 
     public function traerPadres(){
@@ -167,21 +196,45 @@ class AlumnosController{
     }
 
     public function nuevoAlumno(){
-        $listado = $this->traerPadres();
-        return view('nuevo_alumno', ['listado' => $listado]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            $listado = $this->traerPadres();
+            return view('nuevo_alumno', ['listado' => $listado]);
+        }else {
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }
     }
     
     public function nuevoPadre(){
-        $listado = $this->traerAlumnos();
-        return view('nuevo_padre',['listado' => $listado]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            $listado = $this->traerAlumnos();
+            return view('nuevo_padre',['listado' => $listado]);
+        }else {
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }
     }
     public function nuevoRecibo(){
-        return view('nuevo_recibo', ['listado' => $this->traerAlumnos()]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            return view('nuevo_recibo', ['listado' => $this->traerAlumnos()]);
+        }else {
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }
     }
 
     public function listarPadres(){
-        $listado = $this->traerPadres();       
-        return view('listado_padres', ['listado' => $listado]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            $listado = $this->traerPadres();       
+            return view('listado_padres', ['listado' => $listado]);
+        }else {
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
+        }
     }
     
     public function guardarAlumno(){
@@ -271,16 +324,21 @@ class AlumnosController{
     }
 
     public function editarAlumno(){
-        $nombre_alumno = $_GET['nombre_alumno'];
-        $alumnoModel = new AlumnosModel();
-        $alumno = $alumnoModel->verAlumno($nombre_alumno);
-        if ($alumno == True) {
-            return view('editar_alumno',['datos'=>get_object_vars($alumno[0]),
-                                         'padres' => $this->traerPadres()]);
+        if($this->comprobarSession()){
+            echo("logueado");
+            $nombre_alumno = $_GET['nombre_alumno'];
+            $alumnoModel = new AlumnosModel();
+            $alumno = $alumnoModel->verAlumno($nombre_alumno);
+            if ($alumno == True) {
+                return view('editar_alumno',['datos'=>get_object_vars($alumno[0]),
+                                             'padres' => $this->traerPadres()]);
+            }else {
+                return view('excepciones',["mensaje"=>$alumno]);
+            }
         }else {
-            return view('excepciones',["mensaje"=>$alumno]);
+            echo("USUARIO NO LOGUEADO");
+            return $this->login();
         }
 
-        // return view('editar_alumno');
     }
 }
