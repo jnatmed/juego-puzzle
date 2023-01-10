@@ -14,7 +14,7 @@ $logger = App::get('logger');
 
 
 try {
-    $render = Router::load('app/routes.php')
+    $render = Router::load(__DIR__ . '/../app/routes.php')
         ->direct(Request::uri(), Request::method());
     print("nos fue bien..creo   ");
     $logger->info('Status Code: 200');
