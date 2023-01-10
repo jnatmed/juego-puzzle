@@ -4,10 +4,10 @@ use Monolog\Logger as MonologLogger;
 
 return [
     'database' => [
-        'name' => 'id19108229_escuela',
-        'username' => 'id19108229_juan',#'root',
-        'password' => 'GZ$y7PM=_)!7$p)r',#'Y00s4d14',
-        'connection' => 'www.000webhost.com',#'mysql:host=127.0.0.1',
+        'name' => 'escuela',
+        'username' => 'admin',#'root',
+        'password' => 'admin',#'Y00s4d14',
+        'connection' => 'mysql:host=168.181.185.59',#'mysql:host=127.0.0.1',
         'options' => [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]

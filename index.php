@@ -1,6 +1,8 @@
 <?php
 require 'vendor/autoload.php';
+
 require 'core/bootstrap.php';
+
 
 use App\Core\App;
 use App\Core\Router;
@@ -10,10 +12,12 @@ use App\Core\Exceptions\RouteNotFoundException as RouteNotFoundException;
 
 $logger = App::get('logger');
 
+print("MAS hola ");
 
 try {
     $render = Router::load('app/routes.php')
         ->direct(Request::uri(), Request::method());
+    print("nos fue bien..creo   ");
     $logger->info('Status Code: 200');
 } catch (RouteNotFoundException $e) {
     http_response_code(404);

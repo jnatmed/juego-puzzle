@@ -9,8 +9,8 @@
         "files": ["core/helpers.php"]
     },
     "require": {
-        "monolog/monolog": "^1.23",
-        "twig/twig": "^2.0",
+        "monolog/monolog": "^1.27.1",
+        "twig/twig": "^2.15.1",
         "twig/extensions": "^1.5"
     }
 }

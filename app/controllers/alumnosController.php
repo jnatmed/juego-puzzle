@@ -98,6 +98,7 @@ class AlumnosController{
     }
 
     public function listar(){
+        print("VOY A LISTAR");
         if($this->comprobarSession()){
             echo("logueado");
             return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'']);
