@@ -1,7 +1,7 @@
 <?php
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-require 'core/bootstrap.php';
+require __DIR__ . '/../core/bootstrap.php';
 
 
 use App\Core\App;
@@ -12,7 +12,6 @@ use App\Core\Exceptions\RouteNotFoundException as RouteNotFoundException;
 
 $logger = App::get('logger');
 
-print("MAS hola ");
 
 try {
     $render = Router::load('app/routes.php')
