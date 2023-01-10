@@ -65,6 +65,7 @@ class Router
             return $this->callAction(
                 ...explode('@', $this->routes[$requestType][$uri])
             );
+
         }
 
         throw new RouteNotFoundException('No route defined for this URI.');
@@ -78,8 +79,16 @@ class Router
      */
     protected function callAction($controller, $action)
     {
+        print("hola voy a hacer un callAction de  ".$controller." => ".$action);
         $controller = "App\\Controllers\\{$controller}";
+
+        var_dump($controller);
+        echo("<pre>");
+
         $controller = new $controller;
+
+        // var_dump($controller);
+        // echo("<pre>");
 
         if (! method_exists($controller, $action)) {
             throw new Exception(

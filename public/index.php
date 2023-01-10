@@ -1,6 +1,8 @@
 <?php
-require 'vendor/autoload.php';
-require 'core/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+require __DIR__ . '/../core/bootstrap.php';
+
 
 use App\Core\App;
 use App\Core\Router;
@@ -14,6 +16,7 @@ $logger = App::get('logger');
 try {
     $render = Router::load('app/routes.php')
         ->direct(Request::uri(), Request::method());
+    print("nos fue bien..creo   ");
     $logger->info('Status Code: 200');
 } catch (RouteNotFoundException $e) {
     http_response_code(404);
