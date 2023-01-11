@@ -1,7 +1,7 @@
 <?php
 namespace App\controllers;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use \Monolog\Logger;
 use \Monolog\Handler\RotatingFileHandler;
