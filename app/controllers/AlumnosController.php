@@ -1,7 +1,7 @@
 <?php
 namespace App\controllers;
 
-require '/../../vendor/autoload.php';
+require_once '/var/aplicaciones/juego-puzzle/vendor/autoload.php';
 
 
 
