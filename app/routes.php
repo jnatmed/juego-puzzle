@@ -1,31 +1,31 @@
  <?php
 
    /** login */
-   $router->get('login', 'AlumnosController@login');
-   $router->post('iniciar_session', 'AlumnosController@iniciarSession');
+   $router->get('login', 'alumnosController@login');
+   $router->post('iniciar_session', 'alumnosController@iniciarSession');
    $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
    
-   $router->post('guardar_alumno', 'AlumnosController@guardarAlumno');
-   $router->post('actualizar_alumno', 'AlumnosController@actualizarAlumno');
-   $router->post('guardar_padre', 'AlumnosController@guardarPadre');
-   $router->post('guardar_recibo', 'AlumnosController@guardarRecibo');
-   $router->post('enviar_nombre', 'AlumnosController@buscarAlumno');
+   $router->post('guardar_alumno', 'alumnosController@guardarAlumno');
+   $router->post('actualizar_alumno', 'alumnosController@actualizarAlumno');
+   $router->post('guardar_padre', 'alumnosController@guardarPadre');
+   $router->post('guardar_recibo', 'alumnosController@guardarRecibo');
+   $router->post('enviar_nombre', 'alumnosController@buscarAlumno');
 
   //  Sistema Alumnos
-   $router->get('alumnos', 'AlumnosController@listar'); # tiene comprobacion de sesion
-   $router->get('padres', 'AlumnosController@listarPadres'); # tiene comprobacion de sesion
-   $router->get('imagenes', 'AlumnosController@traerImagenes');# tiene comprobacion de sesion
-   $router->get('ver_alumno', 'AlumnosController@verAlumno');# tiene comprobacion de sesion
-   $router->get('ver_padre', 'AlumnosController@verPadre');# tiene comprobacion de sesion
-   $router->get('ver_recibos', 'AlumnosController@verRecibos');# tiene comprobacion de sesion
-   $router->get('nuevo_alumno', 'AlumnosController@nuevoAlumno');# tiene comprobacion de sesion
-   $router->get('editar_alumno', 'AlumnosController@editarAlumno');# tiene comprobacion de sesion
-   $router->get('nuevo_padre', 'AlumnosController@nuevoPadre');# tiene comprobacion de sesion
-   $router->get('nuevo_recibo', 'AlumnosController@nuevoRecibo');# tiene comprobacion de sesion
+   $router->get('alumnos', 'alumnosController@listar'); # tiene comprobacion de sesion
+   $router->get('padres', 'alumnosController@listarPadres'); # tiene comprobacion de sesion
+   $router->get('imagenes', 'alumnosController@traerImagenes');# tiene comprobacion de sesion
+   $router->get('ver_alumno', 'alumnosController@verAlumno');# tiene comprobacion de sesion
+   $router->get('ver_padre', 'alumnosController@verPadre');# tiene comprobacion de sesion
+   $router->get('ver_recibos', 'alumnosController@verRecibos');# tiene comprobacion de sesion
+   $router->get('nuevo_alumno', 'alumnosController@nuevoAlumno');# tiene comprobacion de sesion
+   $router->get('editar_alumno', 'alumnosController@editarAlumno');# tiene comprobacion de sesion
+   $router->get('nuevo_padre', 'alumnosController@nuevoPadre');# tiene comprobacion de sesion
+   $router->get('nuevo_recibo', 'alumnosController@nuevoRecibo');# tiene comprobacion de sesion
    
    /**juego */
-    $router->get('', 'AlumnosController@listar');# tiene comprobacion de sesion
+    $router->get('', 'alumnosController@listar');# tiene comprobacion de sesion
 
    /**proyecto */
     $router->get('not_found', 'ProjectController@notFound');
