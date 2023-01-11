@@ -16,7 +16,7 @@ return [
         'level' => MonologLogger::INFO
     ],
     'twig' => [
-        'templates_dir' => __DIR__ . '/app/views',
-        'templates_cache_dir' => __DIR__ . '/app/views/cache'
+        'templates_dir' => __DIR__ . '/../app/views',
+        'templates_cache_dir' => __DIR__ . '/../app/views/cache'
     ]
 ];
