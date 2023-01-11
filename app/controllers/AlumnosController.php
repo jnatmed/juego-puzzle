@@ -1,7 +1,9 @@
 <?php
 namespace App\controllers;
 
-require __DIR__ . '/vendor/autoload.php';
+require '/../../vendor/autoload.php';
+
+
 
 use \App\models\AlumnosModel;
 
