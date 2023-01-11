@@ -83,7 +83,7 @@ class Router
         $controller = ucfirst($controller);
         print("Hola este es el controller".$controller);
         print("hola voy a hacer un callAction de  ".$controller." => ".$action);
-        $controller = "App\\Controllers\\{$controller}";
+        $controller = "app\\controllers\\{$controller}";
 
         // var_dump($controller);
         // echo("<pre>");
