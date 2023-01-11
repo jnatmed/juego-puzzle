@@ -1,5 +1,4 @@
 vendor/
-logs/*.log
 app/views/cache
 base-directory-tree
 tutoriales.txt
