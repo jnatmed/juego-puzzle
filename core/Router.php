@@ -84,8 +84,8 @@ class Router
         print("hola voy a hacer un callAction de  ".$controller." => ".$action);
         $controller = "App\\Controllers\\{$controller}";
 
-        var_dump($controller);
-        echo("<pre>");
+        // var_dump($controller);
+        // echo("<pre>");
 
         $controller = new $controller;
 
