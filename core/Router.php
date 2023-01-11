@@ -18,6 +18,7 @@ class Router
     ];
 
     /**
+     * 
      * Load a user's routes file.
      *
      * @param string $file
@@ -86,9 +87,6 @@ class Router
         echo("<pre>");
 
         $controller = new $controller;
-
-        // var_dump($controller);
-        // echo("<pre>");
 
         if (! method_exists($controller, $action)) {
             throw new Exception(
