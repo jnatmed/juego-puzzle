@@ -16,7 +16,7 @@ $logger = App::get('logger');
 try {
     $render = Router::load( __DIR__ . '/../app/routes.php')
         ->direct(Request::uri(), Request::method());
-    print("nos fue bien..creo   ");
+    // print("nos fue bien..creo   ");
     $logger->info('Status Code: 200');
 } catch (RouteNotFoundException $e) {
     http_response_code(404);
