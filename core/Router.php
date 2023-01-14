@@ -92,6 +92,12 @@ class Router
 
         $controller = new $controller;
 
+        echo "++ revisando funcion callAction ++ <br>";
+        var_dump($controller);
+        echo "<pre>";
+        echo "++ revisando funcion callAction ++ <br>";
+
+
         if (! method_exists($controller, $action)) {
             throw new Exception(
                 "{$controller} does not respond to the {$action} action."
