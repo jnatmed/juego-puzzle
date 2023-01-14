@@ -5,6 +5,8 @@ use App\Core\Database\QueryBuilder;
 use App\Core\Database\Connection;
 use App\Core\Logger;
 use Monolog\Logger as MonologLogger;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
 
 // echo(__DIR__);
 // exit();
@@ -30,8 +32,9 @@ App::bind('database', new QueryBuilder(
 /**
  * Load template engine
  */
-$loader = new Twig_Loader_Filesystem(App::get('config')['twig']['templates_dir']);
-$twig = new Twig_Environment($loader, array(
+$loader = new FilesystemLoader(App::get('config')['twig']['templates_dir']);
+// $loader = new Twig_Loader_Filesystem(App::get('config')['twig']['templates_dir']);
+$twig = new Environment($loader, array(
     'cache' => App::get('config')['twig']['templates_cache_dir'],
     'debug' => true,
 ));
