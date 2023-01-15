@@ -1,10 +1,6 @@
 <?php
 namespace App\controllers;
 
-require_once '/var/aplicaciones/juego-puzzle/vendor/autoload.php';
-
-
-
 use \App\models\AlumnosModel;
 
 class AlumnosController{
