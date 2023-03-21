@@ -48,7 +48,8 @@ class QueryBuilder
         try {
             $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
             $statement->execute();
-            return $statement->fetchAll(PDO::FETCH_CLASS);
+            $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
+            return !empty($resultado) ? ['resultado'=>true, 'datos'=> get_object_vars($resultado[0])] : ['resultado'=>false];
         } catch (Exception $e) {
             $this->sendToLog($e);
             echo($e->getMessage());
@@ -97,7 +98,7 @@ class QueryBuilder
             return $result;
         } catch (Exception $e) {
             $this->sendToLog($e);
-            echo($e->getMessage());
+            // echo($e->getMessage());
             return $e->getCode();
         }   
     }

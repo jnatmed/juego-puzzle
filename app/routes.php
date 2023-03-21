@@ -1,8 +1,11 @@
- <?php
+<?php
+/**juego */
+ $router->get('', 'alumnosController@listar');# tiene comprobacion de sesion
 
-   /** login */
-   $router->get('login', 'alumnosController@login');
-   $router->post('iniciar_session', 'alumnosController@iniciarSession');
+/** login */
+   $router->get('login', 'SessionController@login');
+   $router->get('logout', 'SessionController@logout');
+   $router->post('iniciar_session', 'SessionController@iniciarSession');
    $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
    
@@ -15,7 +18,7 @@
   //  Sistema Alumnos
    $router->get('alumnos', 'alumnosController@listar'); # tiene comprobacion de sesion
    $router->get('padres', 'alumnosController@listarPadres'); # tiene comprobacion de sesion
-   $router->get('imagenes', 'alumnosController@traerImagenes');# tiene comprobacion de sesion
+   $router->get('ver_imagenes', 'alumnosController@verImagenes');# tiene comprobacion de sesion
    $router->get('ver_alumno', 'alumnosController@verAlumno');# tiene comprobacion de sesion
    $router->get('ver_padre', 'alumnosController@verPadre');# tiene comprobacion de sesion
    $router->get('ver_recibos', 'alumnosController@verRecibos');# tiene comprobacion de sesion
@@ -24,8 +27,6 @@
    $router->get('nuevo_padre', 'alumnosController@nuevoPadre');# tiene comprobacion de sesion
    $router->get('nuevo_recibo', 'alumnosController@nuevoRecibo');# tiene comprobacion de sesion
    
-   /**juego */
-    $router->get('', 'alumnosController@listar');# tiene comprobacion de sesion
 
    /**proyecto */
     $router->get('not_found', 'ProjectController@notFound');

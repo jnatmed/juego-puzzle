@@ -1,68 +1,10 @@
 <?php
 namespace App\controllers;
 
-require_once '/var/aplicaciones/juego-puzzle/vendor/autoload.php';
-
-
-
 use \App\models\AlumnosModel;
 
 class AlumnosController{
-
-    public function login(){
-        
-        return view('login');
-    }
-
-    public function iniciarSession(){
-        return $this->listar();
-    }
-
-    public function comprobarSession(){
-        session_start();
-
-        // echo("<pre>");
-        // var_dump($_POST);
-
-        if (!isset($_SESSION['id_usuario'])){
-
-            // echo("<pre>");
-            var_dump("1) hay sesion iniciada");
-            var_dump($_POST);
-
-            if(isset($_POST['id_usuario'])){
-                $alumnoModel = new AlumnosModel();
-                $resultado = $alumnoModel->buscarUsuario($_POST['id_usuario']);
-        
-                // echo("<pre>");
-                // var_dump($resultado);
-        
-                if ($resultado){
-        
-                    $listado = get_object_vars($resultado[0]);
-                    // echo("<pre>");
-                    // var_dump($listado);
-            // id_usuario
-                    $_SESSION['id_usuario'] = $listado['id_usuario'];
-                    // return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'SESSION INICIADA']);
-
-                    return True;
-                }else{
-                    $resultado = 'USUARIO NO REGISTRADO';
-                    return view('excepciones',["mensaje"=>$resultado]);
-                }
-            }else {
-                // cuando acceden directamente por url
-                // echo("<pre>");
-                var_dump("no inicio sesion");
-    
-                return False;
-            }
-        }else {
-            echo(session_cache_expire());
-            return True;
-        }
-    }
+    const USUARIO_NO_LOGUEADO = 'USUARIO NO LOGUEADO'; 
 
     public function cargarItem($item, $listado){
         foreach ($item as $key => $value){
@@ -100,19 +42,21 @@ class AlumnosController{
     }
 
     public function listar(){
-        print("VOY A LISTAR");
-        if($this->comprobarSession()){
-            echo("logueado");
+        // print(" - listar() => Listando ");
+        $sesion = new SessionController();
+        if($sesion->comprobarSession()){
+            // echo(" logueado ");
             return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'']);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
+            // return $sesion->login();
         }
     }
 
     public function verAlumno(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             $nombre_alumno = $_GET['nombre_alumno'];
             $alumnoModel = new AlumnosModel();
             $resultado = $alumnoModel->verAlumno($nombre_alumno);
@@ -122,27 +66,28 @@ class AlumnosController{
                 return view('excepciones',["mensaje"=>$resultado]);
             }
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
     
     }
 
     
-    public function traerImagenes(){
-        if($this->comprobarSession()){
-            echo("logueado");
-            return view('lista_imagenes', ['listado' => $this->cargarImagenes(), 'mensaje'=>'Error al cargar Imagenes']);
+    public function verImagenes(){
+        $sesion = new SessionController();
+        if($sesion->comprobarSession()){
+            // echo("logueado");
+            return view('listado_imagenes', ['listado' => $this->cargarImagenes(), 'mensaje'=>'Error al cargar Imagenes']);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
         
     }
 
     public function verPadre(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             $nombre_padre = $_GET['nombre_padre'];
             $alumnoModel = new AlumnosModel();
             $resultado = $alumnoModel->verPadre($nombre_padre);
@@ -152,8 +97,7 @@ class AlumnosController{
                 return view('excepciones',["mensaje"=>$resultado]);
             }
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }        
     }
 
@@ -178,12 +122,13 @@ class AlumnosController{
     }
 
     public function verRecibos(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             return view('listado_recibos', ['listado' => $this->traerRecibos()]);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
         
     }
@@ -199,44 +144,48 @@ class AlumnosController{
     }
 
     public function nuevoAlumno(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             $listado = $this->traerPadres();
             return view('nuevo_alumno', ['listado' => $listado]);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
     }
     
     public function nuevoPadre(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             $listado = $this->traerAlumnos();
             return view('nuevo_padre',['listado' => $listado]);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
     }
     public function nuevoRecibo(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             return view('nuevo_recibo', ['listado' => $this->traerAlumnos()]);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
     }
 
     public function listarPadres(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             $listado = $this->traerPadres();       
             return view('listado_padres', ['listado' => $listado]);
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
     }
     
@@ -244,7 +193,8 @@ class AlumnosController{
         $alumnosModel = new AlumnosModel();
         $_POST['nombre_padre'] = $_POST['nombre_padre'] == '' ? 'NULL' : $_POST['nombre_padre'];
         $resultado = $alumnosModel->guardarAlumno($_POST);
-        if ($resultado<>23000){               
+        
+        if ($resultado<>23000){ // (Error: 23000) ERROR DE MYSQL, CUANDO UN ID YA EXISTE..               
                 return view('listado_alumnos', ['listado' => $this->traerAlumnos(), 'mensaje'=>'alumno agregado']);
            }else{           
             if($resultado==23000){
@@ -269,7 +219,7 @@ class AlumnosController{
         $alumnosModel = new AlumnosModel();
         $_POST['nombre_alumno'] = $_POST['nombre_alumno'] == '' ? 'NULL' : $_POST['nombre_alumno'];
         $resultado = $alumnosModel->guardarPadre($_POST);
-        if ($resultado<>23000){               
+        if ($resultado<>23000){  // (Error: 23000) ERROR DE MYSQL, CUANDO UN ID YA EXISTE..               
                 return view('listado_padres', ['listado' => $this->traerPadres(), 'mensaje'=>'padre agregado']);
            }else{           
             if($resultado==23000){
@@ -327,8 +277,10 @@ class AlumnosController{
     }
 
     public function editarAlumno(){
-        if($this->comprobarSession()){
-            echo("logueado");
+        $sesion = new SessionController();
+
+        if($sesion->comprobarSession()){
+            // echo("logueado");
             $nombre_alumno = $_GET['nombre_alumno'];
             $alumnoModel = new AlumnosModel();
             $alumno = $alumnoModel->verAlumno($nombre_alumno);
@@ -339,8 +291,7 @@ class AlumnosController{
                 return view('excepciones',["mensaje"=>$alumno]);
             }
         }else {
-            echo("USUARIO NO LOGUEADO");
-            return $this->login();
+            return view('excepciones',["mensaje"=>self::USUARIO_NO_LOGUEADO]);
         }
 
     }

@@ -4,7 +4,7 @@ namespace App\models;
 use App\Core\Model;
 use PDO;
 
-class UsuarioModel{
+class UsuarioModel extends Model{
 
     public $dsn;
     public $db;

@@ -33,7 +33,6 @@ App::bind('database', new QueryBuilder(
  * Load template engine
  */
 $loader = new FilesystemLoader(App::get('config')['twig']['templates_dir']);
-// $loader = new Twig_Loader_Filesystem(App::get('config')['twig']['templates_dir']);
 $twig = new Environment($loader, array(
     'cache' => App::get('config')['twig']['templates_cache_dir'],
     'debug' => true,

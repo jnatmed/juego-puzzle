@@ -1,22 +1,29 @@
 <header>
-    <nav>
+    <section>
         <input type="checkbox" id="check">
         <label for="check" class="checkbtn">
-            <img src="/public/imgs/icons/menu.png" alt="icon-menu">
+            <img src="imgs/icons/menu.png" alt="icon-menu">
         </label>
-        <label class="logo">
-            <img src="/public/imgs/icons/logotipo.svg" alt="icono-logotipo">
-        </label>
-        <ul>
-            <li><a class="active" href="/">Principal</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/alumnos">Alumnos</a></li>
-            <li><a href="/padres">Padres</a></li>
-            <li><a href="/imagenes">Imagenes</a></li>
-            <li><a href="/ver_recibos">Recibos</a></li>
-            <li><a href="/nuevo_alumno">Nuevo Alumno</a></li>
-            <li><a href="/nuevo_padre">Nuevo Padre</a></li>
-            <li><a href="/nuevo_recibo">Nuevo Recibo</a></li>
-        </ul>
-    </nav>
+        <div class="logo">
+            <img src="imgs/icons/logotipo.svg" alt="icono-logotipo">
+            <a href="/logout">
+                <img src="imgs/icons/logout.png" alt="icono-logout">
+            </a>
+            
+        </div>
+        <details>
+            <summary></summary>
+            <nav class="menu">
+                <a href="/">Principal</a>
+                <a href="/login">Login</a>
+                <a href="/alumnos">Alumnos</a>
+                <a href="/padres">Padres</a>
+                <a href="/ver_imagenes">Ver Imagenes</a>
+                <a href="/ver_recibos">Recibos</a>
+                <a href="/nuevo_alumno">Nuevo Alumno</a>
+                <a href="/nuevo_padre">Nuevo Padre</a>
+                <a href="/nuevo_recibo">Nuevo Recibo</a>
+            </nav>
+        </details>
+    </section>
 </header>

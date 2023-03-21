@@ -3,6 +3,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 require_once __DIR__ . '/../core/bootstrap.php';
 
+// error_log("Error: ", 3, "my-errors.log");
 
 use App\Core\App;
 use App\Core\Router;
@@ -15,7 +16,7 @@ $logger = App::get('logger');
 
 try {
     $render = Router::load( __DIR__ . '/../app/routes.php')
-        ->direct(Request::uri(), Request::method());
+        ->direct(Request::uri(), Request::method());     
     // print("nos fue bien..creo   ");
     $logger->info('Status Code: 200');
 } catch (RouteNotFoundException $e) {
