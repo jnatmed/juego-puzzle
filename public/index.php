@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
-require_once __DIR__ . '/../core/bootstrap.php';
+require_once '../core/bootstrap.php';
 
 // error_log("Error: ", 3, "my-errors.log");
 
@@ -15,17 +15,22 @@ $logger = App::get('logger');
 
 
 try {
+<<<<<<< HEAD
     $render = Router::load( __DIR__ . '/../app/routes.php')
         ->direct(Request::uri(), Request::method());     
+=======
+    $render = Router::load( '../app/routes.php')
+        ->direct(Request::uri(), Request::method());
+>>>>>>> a0d21a540599bb5cf8efde11737eef656e077d21
     // print("nos fue bien..creo   ");
     $logger->info('Status Code: 200');
 } catch (RouteNotFoundException $e) {
     http_response_code(404);
-    $render = Router::load( __DIR__ . '/../app/routes.php')->direct('not_found', 'GET');
+    $render = Router::load( '../app/routes.php')->direct('not_found', 'GET');
     $logger->debug('Status Code: 404 - Route not found', ["Error" => $e]);
 } catch (Exception $e) {
     http_response_code(500);
-    $render = Router::load( __DIR__ . '/../app/routes.php')->direct('internal_error', 'GET');
+    $render = Router::load( '../app/routes.php')->direct('internal_error', 'GET');
     $logger->error('Status Code: 500 - Internal Server Error', ["Error" => $e]);
 }
 

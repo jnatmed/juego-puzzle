@@ -350,6 +350,7 @@
 [2023-01-15 13:00:20] mvc_logger.INFO: Status Code: 200 [] []
 [2023-01-15 13:02:03] mvc_logger.INFO: Status Code: 200 [] []
 [2023-01-15 13:03:50] mvc_logger.INFO: Status Code: 200 [] []
+<<<<<<< HEAD
 [2023-01-15 13:07:31] mvc_logger.INFO: Status Code: 200 [] []
 [2023-01-22 10:13:59] mvc_logger.INFO: Status Code: 200 [] []
 [2023-01-22 10:14:11] mvc_logger.ERROR: Error {"Error":"[object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'escuela.usuario' doesn't exist at C:\\Users\\FamiliaNatelloMedina\\Documents\\UNLu\\Programacion Web\\juego-puzzle\\core\\database\\QueryBuilder.php:50)"} []
@@ -1161,3 +1162,17 @@
 [2023-03-21 20:43:32] mvc_logger.INFO: Status Code: 200 [] []
 [2023-03-21 20:43:55] mvc_logger.INFO: Status Code: 200 [] []
 [2023-03-21 20:43:55] mvc_logger.INFO: Status Code: 200 [] []
+=======
+[2023-01-15 23:10:07] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:11:54] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:11:55] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:11:58] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:11:58] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:00] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:01] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:03] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:06] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:09] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:11] mvc_logger.INFO: Status Code: 200 [] []
+[2023-01-15 23:12:12] mvc_logger.INFO: Status Code: 200 [] []
+>>>>>>> a0d21a540599bb5cf8efde11737eef656e077d21
