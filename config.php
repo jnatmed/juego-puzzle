@@ -4,10 +4,10 @@ use Monolog\Logger as MonologLogger;
 
 return [
     'database' => [
-        'name' => 'escuela',
-        'username' => 'admin',#'root',
-        'password' => 'admin',#'Y00s4d14',
-        'connection' => 'mysql:host=168.181.185.59',#'mysql:host=127.0.0.1',
+        'name' => 'juego_puzzle',
+        'username' => 'root',#'admin',
+        'password' => 'y00s4d14',#'admin',
+        'connection' => 'mysql:host=127.0.0.1',#'mysql:host=168.181.185.59',
         'options' => [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]
