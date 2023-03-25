@@ -9,7 +9,9 @@ class SessionController extends AlumnosModel{
     public $session;
 
     public function login(){
-        return view('login');
+        return view('login', [ 'enlaces' => [['enlace'=>'/','descripcion'=>'Principal'],
+                                             ['enlace'=>'/login','descripcion'=>'Login']   
+                                            ]]);
     }
 
     public function logout(){

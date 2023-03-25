@@ -9,20 +9,13 @@
             <a href="/logout">
                 <img src="imgs/icons/logout.png" alt="icono-logout">
             </a>
-            
         </div>
         <details>
-            <summary></summary>
+            {# <summary></summary> #}
             <nav class="menu">
-                <a href="/">Principal</a>
-                <a href="/login">Login</a>
-                <a href="/alumnos">Alumnos</a>
-                <a href="/padres">Padres</a>
-                <a href="/ver_imagenes">Ver Imagenes</a>
-                <a href="/ver_recibos">Recibos</a>
-                <a href="/nuevo_alumno">Nuevo Alumno</a>
-                <a href="/nuevo_padre">Nuevo Padre</a>
-                <a href="/nuevo_recibo">Nuevo Recibo</a>
+                {% for item in enlaces %}    
+                    <a href="{{item.enlace}}">{{item.descricion}}</a>
+                {% endfor %}
             </nav>
         </details>
     </section>
