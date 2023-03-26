@@ -1,22 +1,14 @@
 <header>
     <section>
-        <input type="checkbox" id="check">
-        <label for="check" class="checkbtn">
-            <img src="imgs/icons/menu.png" alt="icon-menu">
-        </label>
-        <div class="logo">
-            <img src="imgs/icons/logotipo.svg" alt="icono-logotipo">
-            <a href="/logout">
-                <img src="imgs/icons/logout.png" alt="icono-logout">
-            </a>
-        </div>
         <details>
             {# <summary></summary> #}
-            <nav class="menu">
-                {% for item in enlaces %}    
-                    <a href="{{item.enlace}}">{{item.descricion}}</a>
-                {% endfor %}
-            </nav>
+            {# <nav class="menu"> #}
+                <ul>
+                    {% for item in enlaces %}    
+                        <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 
+                    {% endfor %}
+                </ul>
+            {# </nav> #}
         </details>
     </section>
 </header>
