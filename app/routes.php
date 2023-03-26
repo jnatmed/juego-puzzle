@@ -2,9 +2,11 @@
 /**juego */
  $router->get('', 'SessionController@login');# tiene comprobacion de sesion
 
-/** login */
-   $router->get('login', 'SessionController@login');
-   $router->get('logout', 'SessionController@logout');
+   /**proyecto */
+    $router->get('not_found', 'ProjectController@notFound');
+    $router->get('internal_error', 'ProjectController@internalError');
+
+   /** login */
    $router->post('iniciar_session', 'SessionController@iniciarSession');
    // $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
@@ -27,9 +29,5 @@
    // $router->get('nuevo_padre', 'alumnosController@nuevoPadre');# tiene comprobacion de sesion
    // $router->get('nuevo_recibo', 'alumnosController@nuevoRecibo');# tiene comprobacion de sesion
    
-
-   /**proyecto */
-    $router->get('not_found', 'ProjectController@notFound');
-    $router->get('internal_error', 'ProjectController@internalError');
 
 
