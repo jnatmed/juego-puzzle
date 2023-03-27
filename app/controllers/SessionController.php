@@ -2,9 +2,8 @@
 namespace App\controllers;
 
 use \App\models\UsuarioModel;
-use \App\models\AlumnosModel;
 
-class SessionController extends AlumnosModel{
+class SessionController extends UsuarioModel{
     public $session;
 
     public function login(){
@@ -13,9 +12,9 @@ class SessionController extends AlumnosModel{
                                                          ]]);
     }
 
-    public function iniciarSession(){
-        $this->comprobarSession();
-    }
+    // public function iniciarSession(){
+    //     $this->comprobarSession();
+    // }
 
 
     public function comprobarSession(){
@@ -32,6 +31,7 @@ class SessionController extends AlumnosModel{
 
             if(isset($_POST['id_usuario'])){
                 $alumnoModel = new AlumnosModel();
+                
                 $resultado = $alumnoModel->buscarUsuario($_POST['id_usuario']);
         
                 // echo("<pre>");
