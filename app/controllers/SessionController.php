@@ -30,7 +30,7 @@ class SessionController extends UsuarioModel{
             var_dump($_POST);
 
             if(isset($_POST['id_usuario'])){
-                $alumnoModel = new AlumnosModel();
+                $alumnoModel = new usuarioModel();
                 
                 $resultado = $alumnoModel->buscarUsuario($_POST['id_usuario']);
         
