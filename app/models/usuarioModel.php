@@ -10,19 +10,6 @@ class UsuarioModel extends Model{
     public $db;
     public $params;
 
-    public function __construct(){
-        $this->params = require 'config.php';        
-        $this->dsn = sprintf("%s;dbname=%s", $this->params['database']['connection'], $this->params['database']['name']);
-        try{
-            $this->db = new PDO($this->dsn, $this->params['database']['username'],$this->params['database']['password']);    
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);            
-        }catch(\Throwable $th){
-            echo ("<pre>");
-            var_dump($th);
-            exit(0);   
-        }
-    }
-
     public function buscarUsuario($id_usuario){
         $sql = "SELECT 1 FROM usuario WHERE `id_usuario` =:id_usuario;";   
         $array_consulta = [':id_usuario'=>$id_usuario];
