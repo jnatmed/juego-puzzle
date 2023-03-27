@@ -10,7 +10,7 @@ class SessionController extends AlumnosModel{
     public function login(){
         return view('login', [ 'enlaces' => [['enlace'=>'/','descripcion'=>'Principal'],
                                              ['enlace'=>'/login','descripcion'=>'Login']   
-                                            ]]);
+                                                         ]]);
     }
 
     public function iniciarSession(){
