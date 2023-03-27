@@ -3,3 +3,4 @@ app/views/cache
 base-directory-tree
 tutoriales.txt
 .vscode/
+config.php
