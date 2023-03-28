@@ -6,9 +6,14 @@ use \App\models\UsuarioModel;
 class SessionController extends UsuarioModel{
     public $session;
 
+    public function panelOpciones(){
+        
+    }
+
     public function login(){
-        return view('login', [ 'enlaces' => [['enlace'=>'/','descripcion'=>'Principal'],
-                                             ['enlace'=>'/login','descripcion'=>'Login']   
+        return view('login', [ 'enlaces' => [['enlace'=>'/','descripcion'=>'Ranking'],
+                                             ['enlace'=>'/login','descripcion'=>'Login'],
+                                             ['enlace'=>'/new','descripcion'=>'Nuevo Juego']   
                                                          ]]);
     }
 

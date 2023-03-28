@@ -1,16 +1,18 @@
 <?php
-/**juego */
+/**Sesion */
  $router->get('', 'SessionController@login');# tiene comprobacion de sesion
 
    /**proyecto */
     $router->get('not_found', 'ProjectController@notFound');
     $router->get('internal_error', 'ProjectController@internalError');
 
-   /** login */
+/** login */
    $router->post('iniciar_session', 'SessionController@iniciarSession');
    // $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
 
-   
+/* Juego */  
+  $router->get('new','juegoController@new');
+
    // $router->post('guardar_alumno', 'alumnosController@guardarAlumno');
    // $router->post('actualizar_alumno', 'alumnosController@actualizarAlumno');
    // $router->post('guardar_padre', 'alumnosController@guardarPadre');
