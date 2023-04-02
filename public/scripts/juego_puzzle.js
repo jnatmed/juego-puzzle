@@ -11,3 +11,10 @@ ctx.drawImage(image, 150, //sx:
   100, //dWidth
   604 //dHeight
 );
+
+console.log("Canvas: ANCHO: " + canvas.width + "\n LARGO: " + canvas.height);
+
+canvas.addEventListener('click', function (event) {
+  alert("coord X: " + event.pageX + " - coord Y: " + event.pageY);
+});
+
