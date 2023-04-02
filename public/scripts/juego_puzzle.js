@@ -17,3 +17,4 @@ image.onload = () => {
 
 // Load the sprite sheet from an image file
 image.src = "imgs\/noticia_normal.jpg";
+
