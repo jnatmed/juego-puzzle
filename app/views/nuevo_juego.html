@@ -1,17 +1,10 @@
 {% include 'partials/base.html' %}
 {% include 'partials/nav-puzzle.html' %}
+
 <body>
     <main>
-        <section class="imagen">
-            <img id="imagen" src="imgs\noticia_normal.jpg" alt="" srcset="">
-            <!-- <button id="extraer">EXTRAER BITMAP</button> -->
-            <!-- {% for pieza in imagen %}    
-                <img src="{{pieza.ruta}}" alt="{{pieza.descripcion}}">
-            {% endfor %} -->
-        </section>
-        <canvas id="miLienzo">
-
-        </canvas>
-{% include 'partials/footer.html' %}
-    </main>   
+        <img id="source" src="https://assets.codepen.io/21542/SeedCharacter.xl.png" alt="" width="320" height="320">
+        <canvas id="canvas" width="320" height="320"></canvas>
+        {% include 'partials/footer.html' %}
+    </main>
 </body>
