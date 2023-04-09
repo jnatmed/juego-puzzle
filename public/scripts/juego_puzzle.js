@@ -1,22 +1,26 @@
-let canvas = document.getElementById("canvas");
+let canvas = document.getElementById("canvas_4");
 let ctx = canvas.getContext("2d");
 let image = document.getElementById('imagen');
 
-console.log(image.hidden);
-
-let aux = 10;
-
-ctx.drawImage(image, 
-              0, 0, // hoja de mosaico x, y (esquina superior izquierda de la captura) 
-              aux, aux, //Que tanto va a crecer la imagen
-              0, 0, //Donde quieres que se coloque la imagen
-              aux, aux //dHeight
+ctx.drawImage(image,
+            150,150, //coordenada x e y en imagen origen
+            100,100, //cant pixeles en ancho y alto que quiero tomar
+            0,0, //coordenada x e y en destino
+            100,100//cuanto va a ocupar la imagen en destino
 );
 
-console.log("Image: ANCHO: " + image.width + "\n LARGO: " + image.height);
+console.log("Image: ANCHO: " + imagen.width + "\n LARGO: " + imagen.height);
 console.log("Canvas: ANCHO: " + canvas.width + "\n LARGO: " + canvas.height);
 
-canvas.addEventListener('click', function (event) {
+canvas.addEventListener('click', function (event) { 
+  // alert("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
+  console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
+});
+canvas.addEventListener('ontouch', function (event) { 
+  // alert("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
+  console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
+});
+canvas.addEventListener('down', function (event) { 
   // alert("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
   console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
 });
