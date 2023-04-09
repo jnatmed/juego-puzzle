@@ -1,7 +1,7 @@
 
 class Juego {
 
-    (idCanvas, xOrigen, yOrigen){
+  dibujarImagenEnCanvas(idCanvas, xOrigen, yOrigen){
     let canvas = document.getElementById(idCanvas);
     let ctx = canvas.getContext("2d");
     let image = document.getElementById("imagen");
