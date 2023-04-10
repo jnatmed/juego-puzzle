@@ -22,6 +22,21 @@ function $(idDiv) {
   return document.getElementById(idDiv);
 }
 
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+  console.log(ev.target.children.length);
+}
+
 const juego = new Juego();
 
 const coordXOrigen = [0, 101, 201];
@@ -39,14 +54,21 @@ coordYOrigen.forEach(function (coordY) {
   fila = fila + 3;
 });
 
-let pieza_0 = $("canvas_0");
-let pieza_1 = $("canvas_1");
-let pieza_2 = $("canvas_2");
-let div_8 = $("2");
 
-div_8.appendChild(pieza_0);
-div_8.appendChild(pieza_1);
-div_8.appendChild(pieza_2);
+
+// let pieza_0 = $("canvas_0");
+// let pieza_1 = $("canvas_1");
+// let pieza_2 = $("canvas_2");
+// let div_8 = $("2");
+
+// console.log("CANT HIJOS: " + div_8.children.length);
+// div_8.appendChild(pieza_0);
+// console.log("CANT HIJOS: " + div_8.children.length);
+// div_8.appendChild(pieza_1);
+// console.log("CANT HIJOS: " + div_8.children.length);
+// div_8.appendChild(pieza_2);
+// console.log("CANT HIJOS: " + div_8.children.length);
+
 
 // juego.dibujarImagenEnCanvas("canvas_0",0,0);
 // juego.dibujarImagenEnCanvas("canvas_1",101,0);

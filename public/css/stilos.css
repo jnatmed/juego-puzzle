@@ -8,10 +8,16 @@ body {
     padding: 0;
 
 }
-ul, li {
+
+ul,
+li {
     list-style-type: none;
 }
 
 canvas {
     border: 1px solid #0e0a0a;
+}
+
+*[id^='pieza'] {
+    display: inline-block;
 }
