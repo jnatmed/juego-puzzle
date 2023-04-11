@@ -5,7 +5,8 @@ class Juego {
   */
   dibujarImagenEnCanvas(canvas, xOrigen, yOrigen){
     let ctx = canvas.getContext("2d");
-    let image = document.getElementById("imagen");
+    var image = new Image();
+    image.src = "imgs/paisaje.jpg";
     
     let [anchoOrigen, anchoDestino, altoOrigen, altoDestino] = [100,100,100,100];              
     let [xDestino, yDestino] = [0,0];
@@ -75,8 +76,6 @@ for (let i = 0; i < terminado; i++) {
   puzzle.appendChild(div);
 }
 
-piezas.addEventListener('dragstart', e => {
-  
   e.dataTransfer.setData('id', e.target.id);
 });
 
