@@ -76,6 +76,7 @@ for (let i = 0; i < terminado; i++) {
   puzzle.appendChild(div);
 }
 
+piezas.addEventListener('dragstart', e => { 
   e.dataTransfer.setData('id', e.target.id);
 });
 
