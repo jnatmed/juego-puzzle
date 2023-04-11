@@ -51,6 +51,7 @@ coordYOrigen.forEach(function(coordY){
       const canvas = document.createElement('canvas');
       $create(canvas,100,100);
       canvas.id = "canvas_" + (i + fila);
+      canvas.className = 'pieza';
       juego.dibujarImagenEnCanvas(canvas, coordX, coordY);
       canvas.draggable = true;
       piezas.appendChild(canvas);
@@ -69,11 +70,13 @@ let terminado = imagenes.length;
 for (let i = 0; i < terminado; i++) {
   const div = document.createElement('div');
   div.className = 'placeholder';
-  div.dataset.id = i;
+  div.id = i;
+  console.log("div.id: " + div.id);
   puzzle.appendChild(div);
 }
 
 piezas.addEventListener('dragstart', e => {
+  
   e.dataTransfer.setData('id', e.target.id);
 });
 
@@ -83,14 +86,24 @@ puzzle.addEventListener('dragover', e => {
 });
 
 puzzle.addEventListener('dragleave', e => {
+  // console.log(e.target.id);
   e.target.classList.remove('hover');
 });
 
 puzzle.addEventListener('drop', e => {
   e.target.classList.remove('hover');
   const id = e.dataTransfer.getData('id');
-  // const numero = id.split('-')[1];
-  e.target.appendChild(document.getElementById(id));
+  console.log(id);
+  const numero = id.split('_')[1];
+  console.log("e.target.id: " + e.target.id);
+  if(e.target.id === numero){
+    e.target.appendChild(document.getElementById(id));
+    terminado--;
+
+    if (terminado === 0) {
+      document.body.classList.add('ganaste');
+    }
+  }
 });
 
 

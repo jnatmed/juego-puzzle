@@ -22,6 +22,18 @@ body {
 
 #puzzle {
     height: 300px;
+    border: 1px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.placeholder {
+    background-color: #F2F2F2;
+    outline: 1px solid #333;
+    width: 100px;
+    height: 100px;
+    transition: 1s;
 }
 
 .placeholder.hover {
@@ -32,3 +44,18 @@ body {
     margin: 0;
 }
 
+.ganaste {
+    background-color: #B3D67C;
+}
+
+.ganaste #mensaje {
+    display: block;
+}
+
+.ganaste .placeholder {
+    outline: none;
+}
+
+.ganaste #piezas {
+    display: none;
+}
