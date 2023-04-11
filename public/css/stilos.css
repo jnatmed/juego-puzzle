@@ -3,15 +3,32 @@ body {
     padding: 0;
 }
 
-.panel_juego {
+.container {
     display: flex;
-    padding: 0;
-
-}
-ul, li {
-    list-style-type: none;
 }
 
-canvas {
-    border: 1px solid #0e0a0a;
+#piezas, #puzzle, #imagen {
+    border: 1px solid blue;
+    width: 300px;
+    /* height: 300px; */
+    margin: auto;
 }
+
+#piezas {
+    display: flex;  
+    flex-wrap: wrap;
+    justify-content: center; 
+}
+
+#puzzle {
+    height: 300px;
+}
+
+.placeholder.hover {
+    background-color: orange;
+}
+
+.placeholder .pieza {
+    margin: 0;
+}
+

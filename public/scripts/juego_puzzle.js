@@ -1,8 +1,9 @@
-
 class Juego {
 
-  dibujarImagenEnCanvas(idCanvas, xOrigen, yOrigen){
-    let canvas = document.getElementById(idCanvas);
+  /* @method 
+  *  guardo un parte de la imagen y la devuelvo
+  */
+  dibujarImagenEnCanvas(canvas, xOrigen, yOrigen){
     let ctx = canvas.getContext("2d");
     let image = document.getElementById("imagen");
     
@@ -15,7 +16,20 @@ class Juego {
                 xDestino, yDestino, //coordenada x e y en destino
                 anchoDestino, altoDestino//cuanto va a ocupar la imagen en destino
     );
+    return canvas;
   }
+
+}
+
+function $(idElement) {
+  return document.getElementById(idElement);
+}
+
+function $create(idElement,width, height) {
+  idElement.width = width;
+  idElement.height = height;
+  idElement.margin = 0;
+  return idElement;
 }
 
 const juego = new Juego();
@@ -25,28 +39,62 @@ const coordYOrigen = [0,101,201];
 
 let fila = 0;
 
-coordYOrigen.forEach(function(coordY){
-    // console.log('[foreach] y:', coordY);
-    coordXOrigen.forEach(function(coordX, i){
+const puzzle = $('puzzle');
+const piezas = $('piezas');
+const mensaje = $('mensaje');
 
-      // console.log('canvas_'+ (i + fila) +' (' +  coordX + "," + coordY + ')');
-      juego.dibujarImagenEnCanvas("canvas_" + (i + fila), coordX, coordY);
+
+coordYOrigen.forEach(function(coordY){
+
+    coordXOrigen.forEach(function(coordX, i){
+      
+      const canvas = document.createElement('canvas');
+      $create(canvas,100,100);
+      canvas.id = "canvas_" + (i + fila);
+      juego.dibujarImagenEnCanvas(canvas, coordX, coordY);
+      canvas.draggable = true;
+      piezas.appendChild(canvas);
     });
     fila = fila + 3;
-  });
-  
-  
-// juego.dibujarImagenEnCanvas("canvas_0",0,0);
-// juego.dibujarImagenEnCanvas("canvas_1",101,0);
-// juego.dibujarImagenEnCanvas("canvas_2",201,0);
+});
 
-// juego.dibujarImagenEnCanvas("canvas_3",0,101);
-// juego.dibujarImagenEnCanvas("canvas_4",101,101);
-// juego.dibujarImagenEnCanvas("canvas_5",201,101);
+const imagenes = [
+  'canvas_0', 'canvas_1', 'canvas_2', 
+  'canvas_3', 'canvas_4', 'canvas_5', 
+  'canvas_6','canvas_7', 'canvas_8'
+];
 
-// juego.dibujarImagenEnCanvas("canvas_6",0,201);
-// juego.dibujarImagenEnCanvas("canvas_7",101,201);
-// juego.dibujarImagenEnCanvas("canvas_8",201,201);
+let terminado = imagenes.length;
+
+for (let i = 0; i < terminado; i++) {
+  const div = document.createElement('div');
+  div.className = 'placeholder';
+  div.dataset.id = i;
+  puzzle.appendChild(div);
+}
+
+piezas.addEventListener('dragstart', e => {
+  e.dataTransfer.setData('id', e.target.id);
+});
+
+puzzle.addEventListener('dragover', e => {
+  e.preventDefault();
+  e.target.classList.add('hover');
+});
+
+puzzle.addEventListener('dragleave', e => {
+  e.target.classList.remove('hover');
+});
+
+puzzle.addEventListener('drop', e => {
+  e.target.classList.remove('hover');
+  const id = e.dataTransfer.getData('id');
+  // const numero = id.split('-')[1];
+  e.target.appendChild(document.getElementById(id));
+});
+
+
+
 
 
 // console.log("Image: ANCHO: " + imagen.width + "\n LARGO: " + imagen.height);
