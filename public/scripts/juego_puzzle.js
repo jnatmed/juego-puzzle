@@ -22,6 +22,23 @@ class Juego {
 
 }
 
+class GestorDeEventos {
+  handleEvent(ev) {
+    if (ev.type == 'dragstart') {
+      this.dragStart(ev.type, ev.target);
+    } else if(ev.type == 'dragover') {
+      this.dragOver(ev.target);
+    }
+  }
+  dragStart(type, element){
+    type.dataTransfer.setData('id', element.id);  
+  }
+  dragOver(element){
+    element.preventDefault();
+    element.classList.add('hover');
+  }
+}
+
 function $(idElement) {
   return document.getElementById(idElement);
 }
