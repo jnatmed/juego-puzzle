@@ -37,6 +37,16 @@ class GestorDeEventos {
     element.preventDefault();
     element.classList.add('hover');
   }
+
+}
+
+function sayHello(ev){
+    alert("msj");
+}
+
+function $class(idClass){
+  console.log("Crear clase: "+ idClass);
+  return document.getElementsByClassName(idClass);
 }
 
 function $(idElement) {
@@ -70,6 +80,11 @@ coordYOrigen.forEach(function(coordY){
       $create(canvas,100,100);
       canvas.id = "canvas_" + (i + fila);
       canvas.className = 'pieza';
+
+      canvas.addEventListener('touchstart',function(ev){
+        console.log('id: ' +  ev.target.id);
+      },{capture: true});
+
       juego.dibujarImagenEnCanvas(canvas, coordX, coordY);
       canvas.draggable = true;
       piezas.appendChild(canvas);
