@@ -1,5 +1,6 @@
 class Juego {
 
+
   /* @method 
   *  guardo un parte de la imagen y la devuelvo
   */
@@ -22,33 +23,6 @@ class Juego {
 
 }
 
-class GestorDeEventos {
-  handleEvent(ev) {
-    if (ev.type == 'dragstart') {
-      this.dragStart(ev.type, ev.target);
-    } else if(ev.type == 'dragover') {
-      this.dragOver(ev.target);
-    }
-  }
-  dragStart(type, element){
-    type.dataTransfer.setData('id', element.id);  
-  }
-  dragOver(element){
-    element.preventDefault();
-    element.classList.add('hover');
-  }
-
-}
-
-function sayHello(ev){
-    alert("msj");
-}
-
-function $class(idClass){
-  console.log("Crear clase: "+ idClass);
-  return document.getElementsByClassName(idClass);
-}
-
 function $(idElement) {
   return document.getElementById(idElement);
 }
@@ -62,8 +36,11 @@ function $create(idElement,width, height) {
 
 const juego = new Juego();
 
+
 const coordXOrigen = [0,101,201];
 const coordYOrigen = [0,101,201];
+
+let moving = null;
 
 let fila = 0;
 
@@ -80,11 +57,6 @@ coordYOrigen.forEach(function(coordY){
       $create(canvas,100,100);
       canvas.id = "canvas_" + (i + fila);
       canvas.className = 'pieza';
-
-      canvas.addEventListener('touchstart',function(ev){
-        console.log('id: ' +  ev.target.id);
-      },{capture: true});
-
       juego.dibujarImagenEnCanvas(canvas, coordX, coordY);
       canvas.draggable = true;
       piezas.appendChild(canvas);
@@ -109,23 +81,28 @@ for (let i = 0; i < terminado; i++) {
 }
 
 piezas.addEventListener('dragstart', e => { 
+  // e.stopImmediatePropagation();
+  console.log('id DragStart: ' + e.target.id);
   e.dataTransfer.setData('id', e.target.id);
 });
 
 puzzle.addEventListener('dragover', e => {
-  e.preventDefault();
+  // e.stopImmediatePropagation();
+  // console.log("id DragOver sobre =>" + e.target.id);
   e.target.classList.add('hover');
 });
 
 puzzle.addEventListener('dragleave', e => {
-  // console.log(e.target.id);
+  // console.log("id DragLeave sobre =>" + e.target.id);
+  // e.stopImmediatePropagation();
   e.target.classList.remove('hover');
 });
 
 puzzle.addEventListener('drop', e => {
+  // e.stopImmediatePropagation();
   e.target.classList.remove('hover');
   const id = e.dataTransfer.getData('id');
-  console.log(id);
+  console.log("id Drop sobre =>" + e.target.id);
   const numero = id.split('_')[1];
   console.log("e.target.id: " + e.target.id);
   if(e.target.id === numero){
@@ -135,26 +112,7 @@ puzzle.addEventListener('drop', e => {
     if (terminado === 0) {
       document.body.classList.add('ganaste');
     }
+  }else{
+    console.log("equivocado")
   }
 });
-
-
-
-
-
-// console.log("Image: ANCHO: " + imagen.width + "\n LARGO: " + imagen.height);
-// console.log("Canvas: ANCHO: " + canvas.width + "\n LARGO: " + canvas.height);
-
-// canvas.addEventListener('click', function (event) { 
-//   // alert("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
-//   console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
-// });
-// canvas.addEventListener('ontouch', function (event) { 
-//   // alert("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
-//   console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
-// });
-// canvas.addEventListener('down', function (event) { 
-//   // alert("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
-//   console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
-// });
-
