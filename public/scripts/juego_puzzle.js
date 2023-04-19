@@ -33,6 +33,10 @@ function $create(idElement,width, height) {
   return idElement;
 }
 
+function consola(msj){
+  console.log(msj)
+}
+
 const juego = new Juego();
 
 const coordXOrigen = [0,101,201];
@@ -44,6 +48,7 @@ const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
 
+let currentCanvas = null;
 
 coordYOrigen.forEach(function(coordY){
 
@@ -55,6 +60,24 @@ coordYOrigen.forEach(function(coordY){
       canvas.className = 'pieza';
       juego.dibujarImagenEnCanvas(canvas, coordX, coordY);
       canvas.draggable = true;
+
+      canvas.addEventListener('touchstart', e => {
+        const canvaSeccionado = $(e.changedTouches[0].target.id);
+        canvaSeccionado.style.position = 'fixed';
+        canvaSeccionado.style.left = `${e.targetTouches[0].clientX - canvaSeccionado.clientWidth/2}px`;
+        canvaSeccionado.style.top = `${e.targetTouches[0].clientX - canvaSeccionado.clientheigh/2}px`;
+        currentCanvas = canvaSeccionado.id; 
+      })
+      canvas.addEventListener('touchmove', e => {
+        consola(currentCanvas.id);
+        [...e.changedTouches].forEach(touch => {
+          const dot = $(currentCanvas);
+          dot.style.top = `${touch.clientY - dot.clientHeight/2}px`
+          dot.style.left = `${touch.clientX - dot.clientWidth/2}px`
+        })
+
+      })
+
       piezas.appendChild(canvas);
     });
     fila = fila + 3;
@@ -68,14 +91,30 @@ const imagenes = [
 
 let terminado = imagenes.length;
 
+document.addEventListener('touchstart', e => {
+    let nameTouched = e.targetTouches[0].target.id;
+    if(nameTouched = "canvas_"){
+        const dot = document.getElementById(nameTouched);    
+        // consola("dot : " + dot)
+        // dot.style.position = 'fixed';
+        // // [xini, yini] = [dot.style.left, dot.style.top];
+        // dot.style.left = `${e.targetTouches[0].clientX - dot.clientWidth/2}px`;
+        // dot.style.top = `${e.targetTouches[0].clientY - dot.clientHeight/2}px`;
+        // iden = e.targetTouches[0].target.id;
+    }
+})
+
+
+
 for (let i = 0; i < terminado; i++) {
   const div = document.createElement('div');
   div.className = 'placeholder';
   div.id = i;
-  console.log("div.id: " + div.id);
+  // console.log("div.id: " + div.id);
   puzzle.appendChild(div);
 }
 
+puzzle.addEventListener('dragstart', e => {
   e.dataTransfer.setData('id', e.target.id);
 });
 
@@ -84,21 +123,19 @@ puzzle.addEventListener('dragover', e => {
   e.target.classList.add('hover');
 });
 
-puzzle.addEventListener('dragleave', e => {
-  // console.log(e.target.id);
+puzzle.addEventListener('dragleave', e => { 
   e.target.classList.remove('hover');
 });
 
 puzzle.addEventListener('drop', e => {
   e.target.classList.remove('hover');
   const id = e.dataTransfer.getData('id');
-  console.log(id);
+  // console.log(id);
   const numero = id.split('_')[1];
-  console.log("e.target.id: " + e.target.id);
+  // console.log("e.target.id: " + e.target.id);
   if(e.target.id === numero){
     e.target.appendChild(document.getElementById(id));
     terminado--;
-
     if (terminado === 0) {
       document.body.classList.add('ganaste');
     }
@@ -125,3 +162,4 @@ puzzle.addEventListener('drop', e => {
 //   console.log("coord X: " + event.offsetX + " - coord Y: " + event.offsetY);
 // });
 
+ 
