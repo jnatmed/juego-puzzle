@@ -48,6 +48,8 @@ const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
 
+
+
 let currentCanvas = null;
 
 coordYOrigen.forEach(function(coordY){
@@ -62,11 +64,11 @@ coordYOrigen.forEach(function(coordY){
       canvas.draggable = true;
 
       canvas.addEventListener('touchstart', e => {
-        const canvaSeccionado = $(e.changedTouches[0].target.id);
-        canvaSeccionado.style.position = 'fixed';
-        canvaSeccionado.style.left = `${e.targetTouches[0].clientX - canvaSeccionado.clientWidth/2}px`;
-        canvaSeccionado.style.top = `${e.targetTouches[0].clientX - canvaSeccionado.clientheigh/2}px`;
-        currentCanvas = canvaSeccionado.id; 
+        const canvaSeccionado = $(e.changedTouches[0].target.id).id;
+        consola("canvas seleccionado : " + canvaSeccionado)
+        consola("0 " + e)
+        currentCanvas = canvaSeccionado;
+        // e.dataTransfer.setData('Text', e.target.id); 
       })
       canvas.addEventListener('touchmove', e => {
         consola(currentCanvas.id);
@@ -77,11 +79,13 @@ coordYOrigen.forEach(function(coordY){
         })
 
       })
-
+      consola("1 " + currentCanvas);
       piezas.appendChild(canvas);
     });
     fila = fila + 3;
 });
+
+consola("2 " + currentCanvas);
 
 const imagenes = [
   'canvas_0', 'canvas_1', 'canvas_2', 
@@ -91,27 +95,25 @@ const imagenes = [
 
 let terminado = imagenes.length;
 
-document.addEventListener('touchstart', e => {
-    let nameTouched = e.targetTouches[0].target.id;
-    if(nameTouched = "canvas_"){
-        const dot = document.getElementById(nameTouched);    
-        // consola("dot : " + dot)
-        // dot.style.position = 'fixed';
-        // // [xini, yini] = [dot.style.left, dot.style.top];
-        // dot.style.left = `${e.targetTouches[0].clientX - dot.clientWidth/2}px`;
-        // dot.style.top = `${e.targetTouches[0].clientY - dot.clientHeight/2}px`;
-        // iden = e.targetTouches[0].target.id;
-    }
-})
-
-
-
 for (let i = 0; i < terminado; i++) {
   const div = document.createElement('div');
   div.className = 'placeholder';
   div.id = i;
-  // console.log("div.id: " + div.id);
   puzzle.appendChild(div);
+  placeHolder = $(i);
+
+  placeHolder.addEventListener('touchstart', e => {
+    const placeHolderSeccionado = $(e.changedTouches[0].target.id);
+    consola("placeHolder seleccionado : " + placeHolderSeccionado.id)
+    // consola("currentCanvas : " + e.dataTransfer.getData('id'))
+    if ($(currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
+        placeHolderSeccionado.appendChild($(currentCanvas))
+    }
+
+    // if(currentCanvas){
+    //   placeHolderSeccionado.appendChild(currentCanvas)
+    // }
+  })
 }
 
 puzzle.addEventListener('dragstart', e => {
