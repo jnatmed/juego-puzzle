@@ -66,7 +66,11 @@ coordYOrigen.forEach(function(coordY){
         consola("canvas seleccionado : " + canvaSeccionado)
         consola("0 " + e)
         currentCanvas = canvaSeccionado;
-        // e.dataTransfer.setData('Text', e.target.id); 
+        let ctx = $(canvaSeccionado).getContext("2d");
+        let cartel = "Seleccionado";
+        ctx.fillText(cartel,
+                    20,
+                    $(canvaSeccionado).clientHeight/2)
       })
       canvas.addEventListener('touchmove', e => {
         consola(currentCanvas.id);
@@ -103,7 +107,6 @@ for (let i = 0; i < terminado; i++) {
   placeHolder.addEventListener('touchstart', e => {
     const placeHolderSeccionado = $(e.changedTouches[0].target.id);
     consola("placeHolder seleccionado : " + placeHolderSeccionado.id)
-    // consola("currentCanvas : " + e.dataTransfer.getData('id'))
     if ($(currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
         placeHolderSeccionado.appendChild($(currentCanvas))
     }
@@ -117,11 +120,8 @@ for (let i = 0; i < terminado; i++) {
 
 
 piezas.addEventListener('dragstart', e => {
-  consola("START DRAG EVENT ");
   e.dataTransfer.setData('id', e.target.id);
 });
-
-consola(puzzle)
 
 puzzle.addEventListener('dragover', e => {
   e.preventDefault();
@@ -129,12 +129,10 @@ puzzle.addEventListener('dragover', e => {
 });
 
 puzzle.addEventListener('dragleave', e => { 
-  consola("LEAVE DRAG EVENT ");
   e.target.classList.remove('hover');
 });
 
 puzzle.addEventListener('drop', e => {
-  consola("DROP EVENT ");
   e.target.classList.remove('hover');
   const id = e.dataTransfer.getData('id');
   console.log(`Id : ${id}`);
