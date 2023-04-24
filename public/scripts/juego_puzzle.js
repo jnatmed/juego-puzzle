@@ -48,8 +48,6 @@ const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
 
-
-
 let currentCanvas = null;
 
 coordYOrigen.forEach(function(coordY){
@@ -116,9 +114,14 @@ for (let i = 0; i < terminado; i++) {
   })
 }
 
-puzzle.addEventListener('dragstart', e => {
+
+
+piezas.addEventListener('dragstart', e => {
+  consola("START DRAG EVENT ");
   e.dataTransfer.setData('id', e.target.id);
 });
+
+consola(puzzle)
 
 puzzle.addEventListener('dragover', e => {
   e.preventDefault();
@@ -126,15 +129,17 @@ puzzle.addEventListener('dragover', e => {
 });
 
 puzzle.addEventListener('dragleave', e => { 
+  consola("LEAVE DRAG EVENT ");
   e.target.classList.remove('hover');
 });
 
 puzzle.addEventListener('drop', e => {
+  consola("DROP EVENT ");
   e.target.classList.remove('hover');
   const id = e.dataTransfer.getData('id');
-  // console.log(id);
+  console.log(`Id : ${id}`);
   const numero = id.split('_')[1];
-  // console.log("e.target.id: " + e.target.id);
+  console.log(`e.target.id: ${e.target.id}`);
   if(e.target.id === numero){
     e.target.appendChild(document.getElementById(id));
     terminado--;

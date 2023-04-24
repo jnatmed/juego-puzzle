@@ -11,6 +11,7 @@ class SessionController extends UsuarioModel{
     }
 
     public function login(){
+        
         return view('login', [ 'enlaces' => [['enlace'=>'/','descripcion'=>'Ranking'],
                                              ['enlace'=>'/login','descripcion'=>'Login'],
                                              ['enlace'=>'/new','descripcion'=>'Nuevo Juego']   
