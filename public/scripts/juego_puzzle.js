@@ -120,96 +120,69 @@ class Juego {
     for(let i = 0; i < coordYOrigen.length; i = i + 1 ) {
             
       for(let j = 0; j < coordXOrigen.length; j = j + 1 ) {
-        // coordXOrigen[j]
-                  // creo un canvas
-                  const canvas = document.createElement('canvas');
-                  // configuro las dimensiones: alto, ancho y margen
-                  $create(canvas,100,100);
-                  // le asigno un id
-                  /**
-                   * la cuenta seria asi: 
-                   *   i = [0, 1, 2]
-                   *   fila = [0, 3, 6]  
-                   *         [iteracion 0] => (0 + 0) = 0, (1 + 0) = 1, (2 + 0) = 2
-                   *         [iteracion 1] => (0 + 3) = 4, (1 + 3) = 4, (2 + 3) = 5
-                   *         [iteracion 2] => (0 + 6) = 6, (1 + 6) = 7, (2 + 6) = 8
-                   */
-                  canvas.id = "canvas_" + (j + fila);
-                  console.log(`(j = ${j} + fila = ${fila}) = ${j + fila}`)
-                  // console.log("canvas_id : " + canvas.id);
-                  // console.log("fila : " + fila)
-                  // console.log("J : " + j)
-                  // le asigno una clase
-                  canvas.className = 'pieza';
-                  // dibujo un fragmento de la imagen en ese canvas
-                  this.dibujarImagenEnCanvas(canvas, coordXOrigen[j], coordYOrigen[i]);
-                  /**
-                   * SECTOR DE PRUEBA
-                   */
-                  // let ctx  = canvas.getContext('2d'); 
-                  // var image = new Image();
-                  // image.src = "imgs/paisaje.jpg";
-        
-                  // let [anchoOrigen, anchoDestino, altoOrigen, altoDestino] = [100,100,100,100];              
-                  // let [xDestino, yDestino] = [0,0];     
-        
-                  // ctx.drawImage(image,
-                  //   coordXOrigen[j], coordYOrigen[i], //coordenada x e y en imagen origen
-                  //   anchoOrigen, altoOrigen, //cant pixeles en ancho y alto que quiero tomar
-                  //   xDestino, yDestino, //coordenada x e y en destino
-                  //   anchoDestino, altoDestino//cuanto va a ocupar la imagen en destino
-                  // );
-                  /**
-                   * FIN SECTOR PRUEBA
-                   */
-        
-                  // lo hago arrastrable
-                  canvas.draggable = true;
-                  // asigno un evento de tactil para cuando se toca un canvas
-                  canvas.addEventListener('touchstart', e => {
-                    // al comenzar a arrastrar, identifico el canvas tocado
-                    const canvaSeccionado = $(e.changedTouches[0].target.id).id;
-                    consola("canvas seleccionado : " + canvaSeccionado)
-                    consola("0 " + e)
-                    // guardo temporalmente el canvas tocado
-                    this.currentCanvas = canvaSeccionado;
-                    let ctx = $(canvaSeccionado).getContext("2d");
-                    // muestro un cartel de canvas seleccionado
-                    let cartel = "Seleccionado";
-                    ctx.fillText(cartel,
-                                20,
-                                $(canvaSeccionado).clientHeight/2)
-                  })
-                  // asigno un evento tactil para cuando se mueve el canvas
-                  canvas.addEventListener('touchmove', e => {
-                    consola(this.currentCanvas.id);
-                    /**
-                     * por cada evento de toque en la pantalla, tomo al 
-                     * canvas selecionado, siendo el mismo el que guarde en 
-                     * el currentCanvas y le voy asignando las coordenadas 
-                     * de los eventos de toque, en la medida que se van creando. 
-                     */
-                    [...e.changedTouches].forEach(touch => {
-                      const dot = $(this.currentCanvas);
-                      dot.style.top = `${touch.clientY - dot.clientHeight/2}px`
-                      dot.style.left = `${touch.clientX - dot.clientWidth/2}px`
-                    })
-            
-                  })
-                  // agrego el canvas a contenedor de piezas
-                  console.log(canvas)
-                  console.log(this.getPiezas);
-                  this.getPiezas.appendChild(canvas);
-                // });
-                // });   
-                
-      }
+
+            // creo un canvas
+            const canvas = document.createElement('canvas');
+            // configuro las dimensiones: alto, ancho y margen
+            $create(canvas,100,100);
+            // le asigno un id
+            /**
+             * la cuenta seria asi: 
+             *   i = [0, 1, 2]
+             *   fila = [0, 3, 6]  
+             *         [iteracion 0] => (0 + 0) = 0, (1 + 0) = 1, (2 + 0) = 2
+             *         [iteracion 1] => (0 + 3) = 4, (1 + 3) = 4, (2 + 3) = 5
+             *         [iteracion 2] => (0 + 6) = 6, (1 + 6) = 7, (2 + 6) = 8
+             */
+            canvas.id = "canvas_" + (j + fila);
+            console.log(`(j = ${j} + fila = ${fila}) = ${j + fila}`)
+            // le asigno una clase
+            canvas.className = 'pieza';
+            // dibujo un fragmento de la imagen en ese canvas
+            this.dibujarImagenEnCanvas(canvas, coordXOrigen[j], coordYOrigen[i]);
+            // lo hago arrastrable
+            canvas.draggable = true;
+            // asigno un evento de tactil para cuando se toca un canvas
+            canvas.addEventListener('touchstart', e => {
+              // al comenzar a arrastrar, identifico el canvas tocado
+              const canvaSeccionado = $(e.changedTouches[0].target.id).id;
+              consola("canvas seleccionado : " + canvaSeccionado)
+              consola("0 " + e)
+              // guardo temporalmente el canvas tocado
+              this.currentCanvas = canvaSeccionado;
+              let ctx = $(canvaSeccionado).getContext("2d");
+              // muestro un cartel de canvas seleccionado
+              let cartel = "Seleccionado";
+              ctx.fillText(cartel,
+                          20,
+                          $(canvaSeccionado).clientHeight/2)
+            })
+            // asigno un evento tactil para cuando se mueve el canvas
+            canvas.addEventListener('touchmove', e => {
+              consola(this.currentCanvas.id);
+              /**
+               * por cada evento de toque en la pantalla, tomo al 
+               * canvas selecionado, siendo el mismo el que guarde en 
+               * el currentCanvas y le voy asignando las coordenadas 
+               * de los eventos de toque, en la medida que se van creando. 
+               */
+              [...e.changedTouches].forEach(touch => {
+                const dot = $(this.currentCanvas);
+                dot.style.top = `${touch.clientY - dot.clientHeight/2}px`
+                dot.style.left = `${touch.clientX - dot.clientWidth/2}px`
+              })
+      
+            })
+            // agrego el canvas a contenedor de piezas
+            console.log(canvas)
+            console.log(this.getPiezas);
+            this.getPiezas.appendChild(canvas);                
+      } // FIN FOR j
       fila = fila + 3;
       console.log(`fila = ${fila}`)
-    }
-        
+    } // FIN FOR i
           
-  } // FIN FOR 
+  } // FIN METODO  
 
 } // FIN CLASE
 
