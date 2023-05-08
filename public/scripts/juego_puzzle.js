@@ -112,14 +112,14 @@ class Juego {
     }
   }
   crearCanvasyAsignarPiezas(){
+
     const coordXOrigen = [0,101,201];
     const coordYOrigen = [0,101,201];
     let fila = 0;
 
-    // coordYOrigen.forEach(function(coordY){
-    for(let j = 0; j < coordXOrigen.length; j = j + 1 ) {
-      // coordYOrigen[i]
-      for(let i = 0; i < coordYOrigen.length; i = i + 1 ) {
+    for(let i = 0; i < coordYOrigen.length; i = i + 1 ) {
+            
+      for(let j = 0; j < coordXOrigen.length; j = j + 1 ) {
         // coordXOrigen[j]
                   // creo un canvas
                   const canvas = document.createElement('canvas');
@@ -134,7 +134,11 @@ class Juego {
                    *         [iteracion 1] => (0 + 3) = 4, (1 + 3) = 4, (2 + 3) = 5
                    *         [iteracion 2] => (0 + 6) = 6, (1 + 6) = 7, (2 + 6) = 8
                    */
-                  canvas.id = "canvas_" + (i + fila);
+                  canvas.id = "canvas_" + (j + fila);
+                  console.log(`(j = ${j} + fila = ${fila}) = ${j + fila}`)
+                  // console.log("canvas_id : " + canvas.id);
+                  // console.log("fila : " + fila)
+                  // console.log("J : " + j)
                   // le asigno una clase
                   canvas.className = 'pieza';
                   // dibujo un fragmento de la imagen en ese canvas
@@ -197,15 +201,17 @@ class Juego {
                   console.log(this.getPiezas);
                   this.getPiezas.appendChild(canvas);
                 // });
-                fila = fila + 3;
-            // });   
-        
+                // });   
+                
       }
+      fila = fila + 3;
+      console.log(`fila = ${fila}`)
     }
-        // coordXOrigen.forEach(function(coordX, i){
+        
           
-  }
-}
+  } // FIN FOR 
+
+} // FIN CLASE
 
 const puzzle = $('puzzle');
 const piezas = $('piezas');
