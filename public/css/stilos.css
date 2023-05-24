@@ -3,10 +3,26 @@ body {
     padding: 0;
 }
 
-.container {
+li {
+    background: #B3D67C;
+    border-radius: 5px;
+    border-color: red;
+    list-style: none;
+    text-decoration: none;
+
+}
+
+ul {
     display: flex;
     justify-content: space-around;
-    
+    align-items: center;
+    background: #B3D67C;
+    height: 30px;
+}
+.container {
+    display: flex;
+    /* justify-content: space-around; */
+    align-items: center;
 }
 
 #imagen {

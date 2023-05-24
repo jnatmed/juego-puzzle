@@ -8,7 +8,9 @@ class JuegoController{
 
     public function new(){
         $sesion = new SessionController();
-        // return $sesion->login();
-        return view('nuevo_juego');
+        return view('nuevo_juego', [ 'enlaces' => [['enlace'=>'/','descripcion'=>'Ranking'],
+                                             ['enlace'=>'/login','descripcion'=>'Login'],
+                                             ['enlace'=>'/new','descripcion'=>'Nuevo Juego']   
+                                                         ]]);
     }
 }

@@ -1,6 +1,8 @@
 <?php
 /**Sesion */
  $router->get('', 'SessionController@login');# tiene comprobacion de sesion
+ $router->get('login', 'SessionController@login');# tiene comprobacion de sesion
+
 
    /**proyecto */
     $router->get('not_found', 'ProjectController@notFound');
