@@ -46,11 +46,15 @@ class Juego {
    * @param {*} puzzle 
    */
   setPuzzle(puzzle) { this.puzzle = puzzle; }
+  getPuzzle() {return this.puzzle; }
   setPiezas(piezas) { this.piezas = piezas; }
-  get getPiezas() { return this.piezas; }
+  getPiezas() { return this.piezas; }
   setCurrentCanvas(cCanvas) { this.currentCanvas = cCanvas; }
   setTerminado(terminado) { this.terminado = terminado; }
   
+  getHijos(element){
+    return $(element).childNodes;
+  }
 
   crearEventosDeMouse(){
 
@@ -175,14 +179,20 @@ class Juego {
             })
             // agrego el canvas a contenedor de piezas
             console.log(canvas)
-            console.log(this.getPiezas);
-            this.getPiezas.appendChild(canvas);                
+            console.log(this.getPiezas());
+            this.getPiezas().appendChild(canvas);                
       } // FIN FOR j
       fila = fila + 3;
       console.log(`fila = ${fila}`)
     } // FIN FOR i
           
   } // FIN METODO  
+
+  guardarEstadoJuego(){
+    console.log(this.getPiezas().childNodes[1].childNodes);
+    console.log(this.getPuzzle().childNodes);
+    
+  } // FIN METODO guardarEstadoJuego
 
 } // FIN CLASE
 
@@ -213,6 +223,7 @@ juego.setPiezas(piezas);
 juego.setPuzzle(puzzle);
 juego.crearEventosDeMouse();
 
+juego.guardarEstadoJuego();
 
 
 
