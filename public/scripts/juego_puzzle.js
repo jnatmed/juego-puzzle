@@ -15,8 +15,6 @@ function consola(msj){
 
 class Juego {
 
-    
-
   constructor(piezas, puzzle, terminado){
     this.piezas = piezas;
     this.puzzle = puzzle;
@@ -52,7 +50,7 @@ class Juego {
   get getPiezas() { return this.piezas; }
   setCurrentCanvas(cCanvas) { this.currentCanvas = cCanvas; }
   setTerminado(terminado) { this.terminado = terminado; }
-  getTerminado(){ return this.terminado; }
+  
 
   crearEventosDeMouse(){
 
@@ -69,22 +67,17 @@ class Juego {
     this.puzzle.addEventListener('dragleave', e => { 
       e.target.classList.remove('hover');
     });
-
+    
     this.puzzle.addEventListener('drop', e => {
       e.target.classList.remove('hover');
-      console.log(e);
       const id = e.dataTransfer.getData('id');
       console.log(`Id : ${id}`);
       const numero = id.split('_')[1];
       console.log(`e.target.id: ${e.target.id}`);
       if(e.target.id === numero){
         e.target.appendChild(document.getElementById(id));
-
         terminado--;
-        this.setTerminado(terminado);
-  
-        consola(`terminado : ${this.getTerminado()}`);
-        if (this.getTerminado() === 0) {
+        if (terminado === 0) {
           document.body.classList.add('ganaste');
         }
       }
