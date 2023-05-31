@@ -9,6 +9,14 @@ body {
     
 }
 
+.divCanva {
+    margin : 0;
+    padding: 0;
+    width: 100px;
+    height: 100px;
+    outline: 1px solid #333;
+}
+
 #imagen {
     display: none;
     width : 300px;

@@ -80,6 +80,7 @@ class Juego {
       console.log(`e.target.id: ${e.target.id}`);
       if(e.target.id === numero){
         e.target.appendChild(document.getElementById(id));
+        this.guardarEstadoJuego();
         terminado--;
         if (terminado === 0) {
           document.body.classList.add('ganaste');
@@ -111,6 +112,7 @@ class Juego {
          */
         if ($(this.currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
             placeHolderSeccionado.appendChild($(this.currentCanvas))
+            this.guardarEstadoJuego();
         }
       })
     }
@@ -180,7 +182,10 @@ class Juego {
             // agrego el canvas a contenedor de piezas
             console.log(canvas)
             console.log(this.getPiezas());
-            this.getPiezas().appendChild(canvas);                
+            const divCanva = document.createElement('div');
+            divCanva.className = 'divCanva';
+            divCanva.appendChild(canvas);
+            this.getPiezas().appendChild(divCanva); 
       } // FIN FOR j
       fila = fila + 3;
       console.log(`fila = ${fila}`)
@@ -189,9 +194,39 @@ class Juego {
   } // FIN METODO  
 
   guardarEstadoJuego(){
-    console.log(this.getPiezas().childNodes[1].childNodes);
-    console.log(this.getPuzzle().childNodes);
     
+    let estadoPieza = new Array();  
+    let estadoPuzzle = new Array();  
+
+    console.log('SECCION Piezas');
+    this.getPiezas().childNodes.forEach((pieza, i) => {    
+    
+      if(i != 0){
+        console.log(`pieza : ${pieza.id} // i = ${i}`);
+        if (pieza.childNodes.length > 0) {
+          // console.log(`TIENE ${pieza.childNodes.length} hijos`)
+          estadoPieza[pieza.id] = pieza.childNodes[0].id; 
+        }else{
+          // console.log(`no tiene hijos n = ${pieza.childNodes.length}`);
+          estadoPieza[pieza.id] = -1;
+        }
+      }
+    });
+    console.table(estadoPieza);
+    console.log('SECCION Puzzle : ');
+    this.getPuzzle().childNodes.forEach((celda, j) => {
+        if(j != 0){
+          // console.log(`pieza : ${celda.id} // j = ${j}`);
+          if(celda.childNodes.length > 0){
+            // console.log(`TIENE ${celda.childNodes.length} hijos`)
+            estadoPuzzle[celda.id] = celda.childNodes[0].id; 
+          }else{
+            // console.log(`no tiene hijos n = ${celda.childNodes.length}`);
+            estadoPuzzle[celda.id] = -1;
+          }
+        }
+    });
+    console.table(estadoPuzzle);
   } // FIN METODO guardarEstadoJuego
 
 } // FIN CLASE
