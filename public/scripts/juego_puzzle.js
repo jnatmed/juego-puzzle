@@ -198,17 +198,21 @@ class Juego {
     let estadoPieza = new Array();  
     let estadoPuzzle = new Array();  
 
+    console.log(this.getPiezas());
+    console.log(this.getPiezas().childNodes);
+    console.log(this.getPuzzle());
+    console.log(this.getPuzzle().childNodes);
     console.log('SECCION Piezas');
-    this.getPiezas().childNodes.forEach((pieza, i) => {    
+    this.getPiezas().childNodes.forEach((divCanva, i) => {    
     
       if(i != 0){
-        console.log(`pieza : ${pieza.id} // i = ${i}`);
-        if (pieza.childNodes.length > 0) {
+        console.log(`pieza : ${divCanva.id} // i = ${i}`);
+        if (divCanva.childNodes.length > 0) {
           // console.log(`TIENE ${pieza.childNodes.length} hijos`)
-          estadoPieza[pieza.id] = pieza.childNodes[0].id; 
+          estadoPieza[divCanva.id] = divCanva.childNodes[0].id; 
         }else{
           // console.log(`no tiene hijos n = ${pieza.childNodes.length}`);
-          estadoPieza[pieza.id] = -1;
+          estadoPieza[divCanva.id] = -1;
         }
       }
     });
