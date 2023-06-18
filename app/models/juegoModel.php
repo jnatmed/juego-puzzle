@@ -9,8 +9,6 @@ use App\Core\App;
 class JuegoModel extends Model{
 
     public $log;
-    public $db;
-    public $params;
 
     public function addEstado($parameters){
         $log = App::get('logger');
