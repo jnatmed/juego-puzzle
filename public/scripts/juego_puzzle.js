@@ -228,8 +228,8 @@ class Juego {
           }
         return response.json();
         })
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error)); 
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error)); 
 
   }
 

@@ -3,26 +3,19 @@ namespace App\models;
 
 use App\Core\Model;
 use App\Core\App;
-use PDO;
+// use PDO;
+// use PDOException;
 
 class JuegoModel extends Model{
 
     public $log;
+    public $db;
+    public $params;
 
     public function addEstado($parameters){
         $log = App::get('logger');
-        $sql = "INSERT INTO partida(id_usuario, estados_del_juego) VALUES(".implode(",", array_values($parameters)).")";
-        $log->info($sql);
-        try {
-            $statement = $db->prepare($sql);
-            foreach(array_keys($parameters) as $param){
-                $statement->bindValue(":$param", $parameters[$param], PDO::PARAM_STR);
-            }            
-            $statement->execute();
-        }catch (PDOException $e) {
-            echo $e->getMessage();
-            $log->info($e->getMessage());
-        }
+                
+        $log->info($this->db->insertEstado($parameters));
     }
 
 }

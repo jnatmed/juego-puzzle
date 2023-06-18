@@ -3,6 +3,7 @@ namespace App\models;
 
 use App\Core\Model;
 use PDO;
+use PDOException;
 
 class UsuarioModel extends Model{
 
@@ -77,8 +78,9 @@ class UsuarioModel extends Model{
         ];
         
         try {
-            $sql = $this->db->prepare($consulta);
-            $sql->execute($array_consulta); 
+            $statement = $this->db->prepare($consulta);
+            $statement->execute($array_consulta); 
+            
             /**
              * comprobar, si insertó correctamente, devolver true
              * sino false

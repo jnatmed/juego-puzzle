@@ -4,6 +4,8 @@ namespace App\Core\Database;
 
 use PDO;
 use Exception;
+use App\Core\App;
+use PDOException;
 
 class QueryBuilder
 {
@@ -13,6 +15,7 @@ class QueryBuilder
      * @var PDO
      */
     protected $pdo;
+    protected $logger;
 
     /**
      * Create a new QueryBuilder instance.
@@ -21,6 +24,7 @@ class QueryBuilder
      */
     public function __construct($pdo, $logger = null)
     {
+        
         $this->pdo = $pdo;
         $this->logger = ($logger) ? $logger : null;
     }
@@ -55,6 +59,33 @@ class QueryBuilder
             echo($e->getMessage());
             return $e->getCode();
         } 
+    }
+
+    public function insertEstado($parameters){
+
+        $sql = "INSERT INTO `partida`(`id_usuario`, `estados_del_juego`) VALUES(:id_usuario, :estados_del_juego)";
+
+        $array_consulta = [
+            ':id_usuario' => $parameters['id_usuario'],
+            ':estados_del_juego' => $parameters['estados_del_juego']
+        ];
+
+        $this->logger->info($sql);
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($array_consulta);
+
+            if($statement->rowCount()>0){
+                return ['registro_exitoso'=> true];
+            }else{
+                return ['registro_exitoso'=>false];
+            }
+
+        }catch (PDOException $e) {
+            echo $e->getMessage();
+            $this->logger->info($e->getMessage());
+        }
+
     }
 
     /**
