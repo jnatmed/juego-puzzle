@@ -20,6 +20,10 @@ class Juego {
     this.puzzle = puzzle;
     this.terminado = terminado;
     this.currentCanvas = null;
+    this.estadoPiezas = [];
+    this.estadoPiezas.fill(-1);
+    this.estadoPuzzle = [];
+    this.estadoPuzzle.fill(-1);
   }
   /* @method 
   *  guardo un parte de la imagen y la devuelvo
@@ -45,6 +49,10 @@ class Juego {
    * 
    * @param {*} puzzle 
    */
+  getEstadoPiezas(){return this.estadoPiezas;}
+  setEstadoPiezas(estadoPiezas) { this.estadoPiezas = estadoPiezas; }
+  getEstadoPuzzle(){return this.estadoPuzzle;}
+  setEstadoPuzzle(estadoPuzzle) { this.estadoPuzzle = estadoPuzzle; }
   setPuzzle(puzzle) { this.puzzle = puzzle; }
   getPuzzle() {return this.puzzle; }
   setPiezas(piezas) { this.piezas = piezas; }
@@ -193,10 +201,52 @@ class Juego {
           
   } // FIN METODO  
 
+
+  enviarMensaje(dato) {
+
+      if(dato['estado_puzzle'] !== undefined){
+        console.log("contenido estado puzzle")
+        console.table(dato['estado_puzzle']);
+      }else{
+        console.log("contenido estado piezas")
+        console.table(dato['estado_piezas']);
+      }
+      
+      fetch("/enviarEstado", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(dato)
+      })
+
+      .then((response) => {
+        // response.ok sera true con respuestas 2xx
+        if (!response.ok) {
+            throw new Error(`Hubo un Error HTTP : ${response.status}`);
+          }
+        return response.json();
+        })
+        .then((data) => console.log(data))
+        .catch((error) => console.log(error)); 
+
+  }
+
+  /**
+   * SECTOR PUZZLE : 
+   * ESTA MATRIZ ES LA QUE MANDO AL BACKEND PARA GUARDAR EL ESTADO DEL 
+   * JUEGO ACTUAL
+   *  - ENVIO LAS MATRICES : PUZZLE Y PIEZAS
+   * PUZZLE : TIENE EL ESTADO DE AVANCE DE LA PARTIDA ACTUAL
+   * PIEZAS : TIENE LAS PIEZAS QUE TODAVIA NO FUERON 
+   * UBICADAS EN EL PUZZLE 
+   */
+
   guardarEstadoJuego(){
     
-    let estadoPieza = new Array();  
-    let estadoPuzzle = new Array();  
+    let estadoPieza = this.getEstadoPiezas();   
+    let estadoPuzzle = this.getEstadoPuzzle();  
 
     console.log(this.getPiezas());
     console.log(this.getPiezas().childNodes);
@@ -204,33 +254,55 @@ class Juego {
     console.log(this.getPuzzle().childNodes);
     console.log('SECCION Piezas');
     this.getPiezas().childNodes.forEach((divCanva, i) => {    
-    
+    // SECTOR PIEZAS
       if(i != 0){
         console.log(`pieza : ${divCanva.id} // i = ${i}`);
+        // SI TIENE HIJOS ENTONCES 
         if (divCanva.childNodes.length > 0) {
           // console.log(`TIENE ${pieza.childNodes.length} hijos`)
           estadoPieza[divCanva.id] = divCanva.childNodes[0].id; 
+          this.setEstadoPiezas(estadoPieza);
+          /** 
+           * envio del estado al backend
+           */
+          console.log("PREVIO A MANDAR EL AJAXs")
+          console.table(estadoPieza); 
+
+          this.enviarMensaje({'estado_piezas': estadoPieza});
+
         }else{
           // console.log(`no tiene hijos n = ${pieza.childNodes.length}`);
           estadoPieza[divCanva.id] = -1;
+          this.setEstadoPiezas(estadoPieza);
         }
       }
     });
     console.table(estadoPieza);
     console.log('SECCION Puzzle : ');
+    // SECTOR PUZZLE
     this.getPuzzle().childNodes.forEach((celda, j) => {
         if(j != 0){
           // console.log(`pieza : ${celda.id} // j = ${j}`);
+          // SI TIENE HIJOS ENTONCES
           if(celda.childNodes.length > 0){
             // console.log(`TIENE ${celda.childNodes.length} hijos`)
             estadoPuzzle[celda.id] = celda.childNodes[0].id; 
+            this.setEstadoPuzzle(estadoPuzzle);
+            /** 
+             * envio del estado al backend
+             */
+          this.enviarMensaje({'estado_puzzle': estadoPuzzle});
+
           }else{
             // console.log(`no tiene hijos n = ${celda.childNodes.length}`);
             estadoPuzzle[celda.id] = -1;
+            this.setEstadoPuzzle(estadoPuzzle);
           }
         }
     });
     console.table(estadoPuzzle);
+
+
   } // FIN METODO guardarEstadoJuego
 
 } // FIN CLASE

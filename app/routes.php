@@ -12,7 +12,8 @@
 
 /* Juego */  
   $router->get('new','juegoController@new');
-
+  
+  $router->post('enviarEstado','juegoController@reciboEstado');
    // $router->post('guardar_alumno', 'alumnosController@guardarAlumno');
    // $router->post('actualizar_alumno', 'alumnosController@actualizarAlumno');
    // $router->post('guardar_padre', 'alumnosController@guardarPadre');
