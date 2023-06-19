@@ -112,11 +112,16 @@ class Juego {
       let placeHolder = $(i); 
     
       placeHolder.addEventListener('touchstart', e => {
+        // seleccionar el contenedor que identifica 
+        // al placeHolder. 
         const placeHolderSeccionado = $(e.changedTouches[0].target.id);
         consola("placeHolder seleccionado : " + placeHolderSeccionado.id)
         /**
          *  variables externa: 
          *      - currentCanvas
+         * el identificador del currentCanvas es xejemplo 
+         * canvas_1 con el split se conviete en ['canvas', '1']
+         * la posicion [1] tiene el numero de canvas
          */
         if ($(this.currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
             placeHolderSeccionado.appendChild($(this.currentCanvas))
@@ -267,13 +272,12 @@ class Juego {
            */
           console.log("PREVIO A MANDAR EL AJAXs")
           console.table(estadoPieza); 
-
           this.enviarMensaje({'estado_piezas': estadoPieza});
-
         }else{
           // console.log(`no tiene hijos n = ${pieza.childNodes.length}`);
           estadoPieza[divCanva.id] = -1;
           this.setEstadoPiezas(estadoPieza);
+          this.enviarMensaje({'estado_piezas': estadoPieza});
         }
       }
     });
@@ -297,6 +301,7 @@ class Juego {
             // console.log(`no tiene hijos n = ${celda.childNodes.length}`);
             estadoPuzzle[celda.id] = -1;
             this.setEstadoPuzzle(estadoPuzzle);
+          this.enviarMensaje({'estado_puzzle': estadoPuzzle});            
           }
         }
     });
