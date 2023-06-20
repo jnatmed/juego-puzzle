@@ -30,7 +30,7 @@ class Juego {
   */
   dibujarImagenEnCanvas(canvas, xOrigen, yOrigen){
     let ctx = canvas.getContext("2d");
-    var image = new Image();
+    let image = new Image();
     image.src = "imgs/paisaje.jpg";
     
     let [anchoOrigen, anchoDestino, altoOrigen, altoDestino] = [100,100,100,100];              
@@ -272,15 +272,20 @@ class Juego {
            */
           console.log("PREVIO A MANDAR EL AJAXs")
           console.table(estadoPieza); 
-          this.enviarMensaje({'estado_piezas': estadoPieza});
+          // this.enviarMensaje({'estado_piezas': estadoPieza});
         }else{
           // console.log(`no tiene hijos n = ${pieza.childNodes.length}`);
           estadoPieza[divCanva.id] = -1;
           this.setEstadoPiezas(estadoPieza);
-          this.enviarMensaje({'estado_piezas': estadoPieza});
         }
       }
     });
+    /**
+     * envio del estado de las piezas al backend
+     */
+
+    this.enviarMensaje({'estado_piezas': estadoPieza});
+
     console.table(estadoPieza);
     console.log('SECCION Puzzle : ');
     // SECTOR PUZZLE
@@ -292,19 +297,17 @@ class Juego {
             // console.log(`TIENE ${celda.childNodes.length} hijos`)
             estadoPuzzle[celda.id] = celda.childNodes[0].id; 
             this.setEstadoPuzzle(estadoPuzzle);
-            /** 
-             * envio del estado al backend
-             */
-          this.enviarMensaje({'estado_puzzle': estadoPuzzle});
-
           }else{
             // console.log(`no tiene hijos n = ${celda.childNodes.length}`);
             estadoPuzzle[celda.id] = -1;
             this.setEstadoPuzzle(estadoPuzzle);
-          this.enviarMensaje({'estado_puzzle': estadoPuzzle});            
           }
         }
-    });
+      });
+    /**
+     * envio del estado del puzzle al backend
+     */
+    this.enviarMensaje({'estado_puzzle': estadoPuzzle});            
     console.table(estadoPuzzle);
 
 

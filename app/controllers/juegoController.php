@@ -23,14 +23,23 @@ class JuegoController extends JuegoModel{
         $juegoModel = new JuegoModel();
         $juegoModel->addEstado($estado);
     }    
-
+    /*
+     * recibo el nombre de la matriz
+     * y la matriz
+     */
     public function guardar($type, $param){
         $this->log->info("insertando {$type}");
         $array = '['.implode(",", $param).']';
         $this->log->info("method reciboEstado() {$array}");
+        /*
+         * unifico los dos parametros recibidos
+         * y los guardo en uno.
+         */
         $this->guardarEstado([
             "id_usuario" => 1,
-            "estados_del_juego" => $array
+            "estados_del_juego" => implode(",",[
+                "nombre_matriz" => $type,
+                "matriz" => $array])
         ]);
 
     }    
@@ -39,7 +48,7 @@ class JuegoController extends JuegoModel{
         
         $_post = json_decode(file_get_contents('php://input'),true);
 
-        //este es un array
+        //recibo el array asociativo
         if(isset($_post['estado_puzzle'])){
         
             $this->guardar('estado_puzzle', $_post['estado_puzzle']);
