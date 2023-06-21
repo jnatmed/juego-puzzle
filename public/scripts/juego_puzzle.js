@@ -197,6 +197,7 @@ class Juego {
             console.log(this.getPiezas());
             const divCanva = document.createElement('div');
             divCanva.className = 'divCanva';
+            divCanva.id = `${j + fila}` ;
             divCanva.appendChild(canvas);
             this.getPiezas().appendChild(divCanva); 
       } // FIN FOR j
@@ -233,7 +234,7 @@ class Juego {
           }
         return response.json();
         })
-      .then((data) => console.log(data))
+      .then((data) => console.log(`data : ${data}`))
       .catch((error) => console.log(error)); 
 
   }
@@ -253,28 +254,15 @@ class Juego {
     let estadoPieza = this.getEstadoPiezas();   
     let estadoPuzzle = this.getEstadoPuzzle();  
 
-    console.log(this.getPiezas());
-    console.log(this.getPiezas().childNodes);
-    console.log(this.getPuzzle());
-    console.log(this.getPuzzle().childNodes);
     console.log('SECCION Piezas');
     this.getPiezas().childNodes.forEach((divCanva, i) => {    
     // SECTOR PIEZAS
       if(i != 0){
-        console.log(`pieza : ${divCanva.id} // i = ${i}`);
         // SI TIENE HIJOS ENTONCES 
         if (divCanva.childNodes.length > 0) {
-          // console.log(`TIENE ${pieza.childNodes.length} hijos`)
           estadoPieza[divCanva.id] = divCanva.childNodes[0].id; 
           this.setEstadoPiezas(estadoPieza);
-          /** 
-           * envio del estado al backend
-           */
-          console.log("PREVIO A MANDAR EL AJAXs")
-          console.table(estadoPieza); 
-          // this.enviarMensaje({'estado_piezas': estadoPieza});
         }else{
-          // console.log(`no tiene hijos n = ${pieza.childNodes.length}`);
           estadoPieza[divCanva.id] = -1;
           this.setEstadoPiezas(estadoPieza);
         }
@@ -283,33 +271,28 @@ class Juego {
     /**
      * envio del estado de las piezas al backend
      */
-
     this.enviarMensaje({'estado_piezas': estadoPieza});
-
     console.table(estadoPieza);
+
     console.log('SECCION Puzzle : ');
     // SECTOR PUZZLE
     this.getPuzzle().childNodes.forEach((celda, j) => {
         if(j != 0){
-          // console.log(`pieza : ${celda.id} // j = ${j}`);
           // SI TIENE HIJOS ENTONCES
           if(celda.childNodes.length > 0){
-            // console.log(`TIENE ${celda.childNodes.length} hijos`)
             estadoPuzzle[celda.id] = celda.childNodes[0].id; 
             this.setEstadoPuzzle(estadoPuzzle);
           }else{
-            // console.log(`no tiene hijos n = ${celda.childNodes.length}`);
             estadoPuzzle[celda.id] = -1;
             this.setEstadoPuzzle(estadoPuzzle);
           }
         }
       });
     /**
-     * envio del estado del puzzle al backend
+     * envio el estado del puzzle al backend
      */
     this.enviarMensaje({'estado_puzzle': estadoPuzzle});            
     console.table(estadoPuzzle);
-
 
   } // FIN METODO guardarEstadoJuego
 
