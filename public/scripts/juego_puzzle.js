@@ -235,9 +235,24 @@ class Juego {
         return response.json();
         })
       .then((data) => console.log(`data : ${data}`))
-      .catch((error) => console.log(error)); 
+      .catch((error) => console.log(`error : ${error}`)); 
 
   }
+
+  actualizarMatriz(array, estadoMatriz){
+
+    array.childNodes.forEach((div, cont) => {
+        if(cont != 0){
+            if (div.childNodes.length > 0){
+                estadoMatriz[div.id] = div.childNodes[0].id;
+            }else{
+                estadoMatriz[div.id] = -1;
+            }
+        }
+    });
+
+    return estadoMatriz;
+  } 
 
   /**
    * SECTOR PUZZLE : 
@@ -251,23 +266,14 @@ class Juego {
 
   guardarEstadoJuego(){
     
-    let estadoPieza = this.getEstadoPiezas();   
-    let estadoPuzzle = this.getEstadoPuzzle();  
+    let estadoPieza = [];   
+    let estadoPuzzle = [];  
+
+    estadoPieza = this.actualizarMatriz(this.getPiezas(), this.getEstadoPiezas());
+
+    this.setEstadoPiezas(estadoPieza);
 
     console.log('SECCION Piezas');
-    this.getPiezas().childNodes.forEach((divCanva, i) => {    
-    // SECTOR PIEZAS
-      if(i != 0){
-        // SI TIENE HIJOS ENTONCES 
-        if (divCanva.childNodes.length > 0) {
-          estadoPieza[divCanva.id] = divCanva.childNodes[0].id; 
-          this.setEstadoPiezas(estadoPieza);
-        }else{
-          estadoPieza[divCanva.id] = -1;
-          this.setEstadoPiezas(estadoPieza);
-        }
-      }
-    });
     /**
      * envio del estado de las piezas al backend
      */
@@ -276,18 +282,11 @@ class Juego {
 
     console.log('SECCION Puzzle : ');
     // SECTOR PUZZLE
-    this.getPuzzle().childNodes.forEach((celda, j) => {
-        if(j != 0){
-          // SI TIENE HIJOS ENTONCES
-          if(celda.childNodes.length > 0){
-            estadoPuzzle[celda.id] = celda.childNodes[0].id; 
-            this.setEstadoPuzzle(estadoPuzzle);
-          }else{
-            estadoPuzzle[celda.id] = -1;
-            this.setEstadoPuzzle(estadoPuzzle);
-          }
-        }
-      });
+
+    estadoPuzzle = this.actualizarMatriz(this.getPuzzle(), this.getEstadoPuzzle());
+    
+    this.setEstadoPuzzle(estadoPuzzle);
+
     /**
      * envio el estado del puzzle al backend
      */
