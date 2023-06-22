@@ -239,6 +239,11 @@ class Juego {
 
   }
 
+  /**
+   * @param {*} array 
+   * @param {*} estadoMatriz 
+   * @returns {*} estadoMatriz
+   */
   actualizarMatriz(array, estadoMatriz){
 
     array.childNodes.forEach((div, cont) => {
@@ -263,32 +268,40 @@ class Juego {
    * PIEZAS : TIENE LAS PIEZAS QUE TODAVIA NO FUERON 
    * UBICADAS EN EL PUZZLE 
    */
-
   guardarEstadoJuego(){
     
     let estadoPieza = [];   
     let estadoPuzzle = [];  
 
+    /**
+     * SECTOR PIEZAS
+     * aca actualizo la matriz cada vez que se realiza un movimiento
+     * 1) uso una matriz auxiliar y luego seteo la matriz
+     */
     estadoPieza = this.actualizarMatriz(this.getPiezas(), this.getEstadoPiezas());
 
     this.setEstadoPiezas(estadoPieza);
 
     console.log('SECCION Piezas');
     /**
-     * envio del estado de las piezas al backend
+     * 2) envio del estado de las piezas al backend
+     * para que se guarde en la base de datos
      */
     this.enviarMensaje({'estado_piezas': estadoPieza});
     console.table(estadoPieza);
 
     console.log('SECCION Puzzle : ');
-    // SECTOR PUZZLE
-
+    /**
+     * SECTOR PUZZLE
+     * aca actualizo la matriz cada vez que se realiza un movimiento
+     * 3) uso una matriz auxiliar y luego seteo la matriz
+     */
     estadoPuzzle = this.actualizarMatriz(this.getPuzzle(), this.getEstadoPuzzle());
     
     this.setEstadoPuzzle(estadoPuzzle);
 
     /**
-     * envio el estado del puzzle al backend
+     * 4) envio el estado del puzzle al backend
      */
     this.enviarMensaje({'estado_puzzle': estadoPuzzle});            
     console.table(estadoPuzzle);
