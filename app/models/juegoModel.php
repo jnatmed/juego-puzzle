@@ -12,8 +12,10 @@ class JuegoModel extends Model{
 
     public function addEstado($parameters){
         $log = App::get('logger');
-                
-        $log->info($this->db->insertEstado($parameters));
+
+        $resultado = $this->db->insertEstado($parameters);
+
+        $log->info("3) {$resultado['registro_exitoso']}", ['resultado del registro' , 'juegoModel']);
     }
 
 }

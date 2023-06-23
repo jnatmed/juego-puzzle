@@ -161,7 +161,7 @@ class Juego {
             this.dibujarImagenEnCanvas(canvas, coordXOrigen[j], coordYOrigen[i]);
             // lo hago arrastrable
             canvas.draggable = true;
-            // asigno un evento de tactil para cuando se toca un canvas
+            // asigno un evento de tactil para el evento touch de de los div canvas
             canvas.addEventListener('touchstart', e => {
               // al comenzar a arrastrar, identifico el canvas tocado
               const canvaSeccionado = $(e.changedTouches[0].target.id).id;

@@ -70,20 +70,21 @@ class QueryBuilder
             ':estados_del_juego' => $parameters['estados_del_juego']
         ];
 
-        $this->logger->info($sql);
+        $this->logger->info("2) {$sql}", ['sentencia sql', 'QueryBuilder']);
+
         try {
             $statement = $this->pdo->prepare($sql);
             $statement->execute($array_consulta);
 
             if($statement->rowCount()>0){
-                return ['registro_exitoso'=> true];
+                return ['registro_exitoso'=> 'insertado !'];
             }else{
-                return ['registro_exitoso'=>false];
+                return ['registro_exitoso'=> 'no insertado...' ];
             }
 
         }catch (PDOException $e) {
             echo $e->getMessage();
-            $this->logger->info($e->getMessage());
+            $this->logger->info("2-error) {$e->getMessage()}");
         }
 
     }

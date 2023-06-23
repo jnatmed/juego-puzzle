@@ -28,9 +28,9 @@ class JuegoController extends JuegoModel{
      * y la matriz
      */
     public function guardar($type, $param){
-        $this->log->info("insertando {$type}");
+        
         $array = '['.implode(",", $param).']';
-        $this->log->info("method reciboEstado() {$array}");
+        $this->log->info("1) method reciboEstado() {$array}", ["insertando {$type}"]);
         /*
          * unifico los dos parametros recibidos
          * y los guardo en uno.
@@ -53,7 +53,7 @@ class JuegoController extends JuegoModel{
         
             $this->guardar('estado_puzzle', $_post['estado_puzzle']);
 
-            $this->log->info("puzzle : INSERTADO CON EXITO");
+            $this->log->info("4) PUZZLE : INSERTADO CON EXITO" , ['reciboEstado']);
             return(json_encode(['pieza' => 'INSERTADO CON EXITO',
                                 "id_usuario" => "1" ]));            
         }
@@ -61,7 +61,7 @@ class JuegoController extends JuegoModel{
             
             $this->guardar('estado_piezas', $_post['estado_piezas']);        
 
-            $this->log->info("pieza : INSERTADO CON EXITO");
+            $this->log->info("4) PIEZA : INSERTADO CON EXITO" , ['reciboEstado']);
             return(json_encode(['pieza' => 'INSERTADO CON EXITO',
                                 "id_usuario" => "1" ]));
         }
