@@ -13,9 +13,10 @@ function consola(msj){
   console.log(msj)
 }
 
+
 class Juego {
 
-  constructor(piezas, puzzle, terminado){
+  constructor(piezas, puzzle, terminado, url_data){
     this.piezas = piezas;
     this.puzzle = puzzle;
     this.terminado = terminado;
@@ -24,14 +25,15 @@ class Juego {
     this.estadoPiezas.fill(-1);
     this.estadoPuzzle = [];
     this.estadoPuzzle.fill(-1);
+    this.url_data = url_data;
   }
-  /* @method 
+  /* 
   *  guardo un parte de la imagen y la devuelvo
   */
   dibujarImagenEnCanvas(canvas, xOrigen, yOrigen){
     let ctx = canvas.getContext("2d");
     let image = new Image();
-    image.src = "imgs/paisaje.jpg";
+    image.src = this.getUrl_data();  
     
     let [anchoOrigen, anchoDestino, altoOrigen, altoDestino] = [100,100,100,100];              
     let [xDestino, yDestino] = [0,0];
@@ -46,8 +48,7 @@ class Juego {
   }
 
   /**
-   * 
-   * @param {*} puzzle 
+   *  GETTERs/SETTERs
    */
   getEstadoPiezas(){return this.estadoPiezas;}
   setEstadoPiezas(estadoPiezas) { this.estadoPiezas = estadoPiezas; }
@@ -57,9 +58,12 @@ class Juego {
   getPuzzle() {return this.puzzle; }
   setPiezas(piezas) { this.piezas = piezas; }
   getPiezas() { return this.piezas; }
+  getUrl_data() { return this.url_data; }
   setCurrentCanvas(cCanvas) { this.currentCanvas = cCanvas; }
+  getTerminado() { return this.terminado; }
   setTerminado(terminado) { this.terminado = terminado; }
-  
+
+
   getHijos(element){
     return $(element).childNodes;
   }
@@ -68,16 +72,23 @@ class Juego {
 
     this.piezas.addEventListener('dragstart', e => {
       e.dataTransfer.setData('id', e.target.id);
+      e.target.style = 'cursor: move';
       consola(`id ${e.target.id}`);
     });
     
+    this.piezas.addEventListener('mouseover', e => {
+      e.target.style = 'cursor: move';
+    });
+
     this.puzzle.addEventListener('dragover', e => {
       e.preventDefault();
       e.target.classList.add('hover');
+      e.target.style = 'cursor: pointer';
     });
     
     this.puzzle.addEventListener('dragleave', e => { 
       e.target.classList.remove('hover');
+      e.target.style = 'cursor: pointer';
     });
     
     this.puzzle.addEventListener('drop', e => {
@@ -89,8 +100,8 @@ class Juego {
       if(e.target.id === numero){
         e.target.appendChild(document.getElementById(id));
         this.guardarEstadoJuego();
-        terminado--;
-        if (terminado === 0) {
+        this.setTerminado(this.getTerminado() - 1 );
+        if (this.getTerminado() === 0) {
           document.body.classList.add('ganaste');
         }
       }
@@ -130,6 +141,7 @@ class Juego {
       })
     }
   }
+
   crearCanvasyAsignarPiezas(){
 
     const coordXOrigen = [0,101,201];
@@ -141,7 +153,7 @@ class Juego {
       for(let j = 0; j < coordXOrigen.length; j = j + 1 ) {
 
             // creo un canvas
-            const canvas = document.createElement('canvas');
+            let canvas = document.createElement('canvas');
             // configuro las dimensiones: alto, ancho y margen
             $create(canvas,100,100);
             // le asigno un id
@@ -158,10 +170,10 @@ class Juego {
             // le asigno una clase
             canvas.className = 'pieza';
             // dibujo un fragmento de la imagen en ese canvas
-            this.dibujarImagenEnCanvas(canvas, coordXOrigen[j], coordYOrigen[i]);
+            canvas = this.dibujarImagenEnCanvas(canvas, coordXOrigen[j], coordYOrigen[i]);
             // lo hago arrastrable
             canvas.draggable = true;
-            // asigno un evento de tactil para el evento touch de de los div canvas
+            // asigno un evento de tactil para cuando se toca un canvas
             canvas.addEventListener('touchstart', e => {
               // al comenzar a arrastrar, identifico el canvas tocado
               const canvaSeccionado = $(e.changedTouches[0].target.id).id;
@@ -208,6 +220,7 @@ class Juego {
   } // FIN METODO  
 
 
+
   enviarMensaje(dato) {
 
       if(dato['estado_puzzle'] !== undefined){
@@ -240,9 +253,6 @@ class Juego {
   }
 
   /**
-   * @param {*} array 
-   * @param {*} estadoMatriz 
-   * @returns {*} estadoMatriz
    */
   actualizarMatriz(array, estadoMatriz){
 
@@ -310,35 +320,45 @@ class Juego {
 
 } // FIN CLASE
 
+
+
 const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
 
+while (puzzle.firstChild){
+  piezas.firstChild.remove;
+}
 
-const imagenes = [
-  'canvas_0', 'canvas_1', 'canvas_2', 
-  'canvas_3', 'canvas_4', 'canvas_5', 
-  'canvas_6','canvas_7', 'canvas_8'
-];
+// $('btn_cargar').addEventListener('click', e => {
+  // let url_data = $('url_data').value;
+  let url_data = 'https://cdn.pixabay.com/photo/2017/10/25/16/54/african-lion-2888519_1280.jpg';
 
-const juego = new Juego(puzzle, piezas, 0);
+  let imagenes = [];
+  const cantidad_fragmentos = 9;
+  for (let index = 0; index < (cantidad_fragmentos); index++) {
+    const nombre_canva = 'canvas_' + index;
+    imagenes.push(nombre_canva);  
+  }
 
-let currentCanvas = null;
-juego.setCurrentCanvas(null);
-juego.setPiezas(piezas);
-juego.crearCanvasyAsignarPiezas();
+  const juego = new Juego(puzzle, piezas, 0, url_data);
 
-let terminado = imagenes.length;
+  // let currentCanvas = null;
+  juego.setCurrentCanvas(null);
+  juego.setPiezas(piezas);
+  juego.crearCanvasyAsignarPiezas();
 
-juego.setTerminado(terminado);
-juego.setPuzzle(puzzle);
-juego.crearPlaceHolder();
-juego.setPiezas(piezas);
-juego.setPuzzle(puzzle);
-juego.crearEventosDeMouse();
+  let terminado = imagenes.length;
 
-juego.guardarEstadoJuego();
+  juego.setTerminado(terminado);
+  juego.setPuzzle(puzzle);
+  juego.crearPlaceHolder();
+  juego.setPiezas(piezas);
+  juego.setPuzzle(puzzle);
+  juego.crearEventosDeMouse();
 
+  // juego.guardarEstadoJuego();
 
+// });
 
  

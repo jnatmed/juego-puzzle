@@ -17,6 +17,18 @@ body {
     outline: 1px solid #333;
 }
 
+.busqueda {
+    display: flex;
+    align-items: center;
+    width: 80vw;
+}
+
+.url_img {
+    border : 1px solid black;
+    margin-bottom: 20px; 
+    width: 40%;
+}
+
 #imagen {
     display: none;
     width : 300px;

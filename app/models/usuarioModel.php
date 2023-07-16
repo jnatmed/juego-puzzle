@@ -10,6 +10,26 @@ class UsuarioModel extends Model{
     public $dsn;
     public $db;
     public $params;
+    private $id_usuario;
+
+    public function setIdUsuario($id_usuario){$this->id_usuario=$id_usuario;}
+    public function getIdUsuario(){return $this->id_usuario;}
+
+    public function existeUsuario($id_usuario){
+        $resultado = $this->db->selectOne('usuario','id_usuario',$id_usuario);        
+        if($resultado['resultado']) {
+            $this->setIdUsuario($id_usuario);
+            return true;
+        }else{
+            return false;
+        }  
+    }   
+
+    public function contraseniaCorrecta($contrasenia){
+        $resultado = $this->db->existOne('usuario',$this->getIdUsuario(), $contrasenia);
+        return $resultado['resultado'] ? true : false;
+    }
+
 
     public function buscarUsuario($id_usuario){
         $sql = "SELECT 1 FROM usuario WHERE `id_usuario` =:id_usuario;";   

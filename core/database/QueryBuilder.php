@@ -43,14 +43,24 @@ class QueryBuilder
 
     public function selectOne($table, $column, $searched)
     {
-        // SELECT * FROM `escuela`.`alumno` WHERE `nombre_alumno` = 'dante natello medina'
-        // $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
-        // $statement->execute();
-        // return $statement->fetchAll(PDO::FETCH_CLASS);
-
-        // echo("entre");
         try {
             $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
+            $statement->execute();
+            $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
+            return !empty($resultado) ? ['resultado'=>true, 'datos'=> get_object_vars($resultado[0])] : ['resultado'=>false];
+        } catch (Exception $e) {
+            $this->sendToLog($e);
+            echo($e->getMessage());
+            return $e->getCode();
+        } 
+    }
+
+    public function existOne($table, $column, $searched)
+    {
+        try {
+            $statement = $this->pdo->prepare("SELECT 1 FROM `usuario` WHERE `id_usuario` = `:usuario` AND `contrasenia` = `:contrasenia`;");
+            $statement->bindParam(':usuario', $usuario);
+            $statement->bindParam(':contrasenia', $contrasenia);
             $statement->execute();
             $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
             return !empty($resultado) ? ['resultado'=>true, 'datos'=> get_object_vars($resultado[0])] : ['resultado'=>false];
@@ -70,21 +80,20 @@ class QueryBuilder
             ':estados_del_juego' => $parameters['estados_del_juego']
         ];
 
-        $this->logger->info("2) {$sql}", ['sentencia sql', 'QueryBuilder']);
-
+        $this->logger->info($sql);
         try {
             $statement = $this->pdo->prepare($sql);
             $statement->execute($array_consulta);
 
             if($statement->rowCount()>0){
-                return ['registro_exitoso'=> 'insertado !'];
+                return ['registro_exitoso'=> true];
             }else{
-                return ['registro_exitoso'=> 'no insertado...' ];
+                return ['registro_exitoso'=>false];
             }
 
         }catch (PDOException $e) {
             echo $e->getMessage();
-            $this->logger->info("2-error) {$e->getMessage()}");
+            $this->logger->info($e->getMessage());
         }
 
     }

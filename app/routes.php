@@ -1,10 +1,15 @@
 <?php
-/**Sesion */
+/**
+ * el login llama al view `login.html`.
+ * del `login.html` pasa a los post: 
+ *    -> `iniciar_session` 
+ *    -> `registrar_usuario`   
+ */
  $router->get('', 'SessionController@login');# tiene comprobacion de sesion
 
-   /**proyecto */
-    $router->get('not_found', 'ProjectController@notFound');
-    $router->get('internal_error', 'ProjectController@internalError');
+/**proyecto */
+$router->get('not_found', 'ProjectController@notFound');
+$router->get('internal_error', 'ProjectController@internalError');
 
 /** login */
    $router->post('iniciar_session', 'SessionController@iniciarSession');

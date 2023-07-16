@@ -5,10 +5,16 @@
 
     <main>
         
+        <section id="busqueda">
+            <label for="url">Ingresa la URL de una imagen:</label>    
+            <input id="url_data" type="url" name="url" class="url_img" placeholder="https://example.com" pattern="https://.*" size="30"required>        
+            <input id="btn_cargar" type="button" value="Cargar">
+        </section>
+        
         
         <section class="container">
             
-            <img alt="paisaje-random" id="imagen" src="imgs/paisaje.jpg">
+            <!-- <img alt="paisaje-random" id="imagen" src="imgs/paisaje.jpg"> -->
 
             <section id="puzzle">
 
@@ -21,6 +27,6 @@
         <h1 id="mensaje">
             ¡Ganaste!
         </h1>
-</body>
-{% include 'partials/footer.html' %}
+    </body>
+    {% include 'partials/footer.html' %}
 </main>
