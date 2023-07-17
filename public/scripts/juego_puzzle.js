@@ -1,16 +1,22 @@
-function $(idElement) {
-  return document.getElementById(idElement);
+function $(idpiezas) {
+  return document.getElementById(idpiezas);
 }
 
-function $create(idElement,width, height) {
-  idElement.width = width;
-  idElement.height = height;
-  idElement.margin = 0;
-  return idElement;
+function $create(idpiezas,width, height) {
+  idpiezas.width = width;
+  idpiezas.height = height;
+  idpiezas.margin = 0;
+  return idpiezas;
 }
 
 function consola(msj){
   console.log(msj)
+}
+
+function eliminarHijos(id){
+  while (id.firstChild) {
+    id.removeChild(id.firstChild);
+  }
 }
 
 
@@ -64,8 +70,8 @@ class Juego {
   setTerminado(terminado) { this.terminado = terminado; }
 
 
-  getHijos(element){
-    return $(element).childNodes;
+  getHijos(piezas){
+    return $(piezas).childNodes;
   }
 
   crearEventosDeMouse(){
@@ -98,7 +104,7 @@ class Juego {
       const numero = id.split('_')[1];
       console.log(`e.target.id: ${e.target.id}`);
       if(e.target.id === numero){
-        e.target.appendChild(document.getElementById(id));
+        e.target.appendChild($(id));
         this.guardarEstadoJuego();
         this.setTerminado(this.getTerminado() - 1 );
         if (this.getTerminado() === 0) {
@@ -326,13 +332,13 @@ const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
 
-while (puzzle.firstChild){
-  piezas.firstChild.remove;
-}
 
-// $('btn_cargar').addEventListener('click', e => {
+$('btn_cargar').addEventListener('click', e => {
   // let url_data = $('url_data').value;
   let url_data = 'https://cdn.pixabay.com/photo/2017/10/25/16/54/african-lion-2888519_1280.jpg';
+  // let url_data = 'imgs/paisaje.jpg';
+  eliminarHijos(piezas);
+  eliminarHijos(puzzle);
 
   let imagenes = [];
   const cantidad_fragmentos = 9;
@@ -357,8 +363,8 @@ while (puzzle.firstChild){
   juego.setPuzzle(puzzle);
   juego.crearEventosDeMouse();
 
-  // juego.guardarEstadoJuego();
+  juego.guardarEstadoJuego();
 
-// });
+});
 
  
