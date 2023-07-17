@@ -57,39 +57,44 @@ class JuegoController extends JuegoModel{
             $matriz = $sesion->getMatriz();
             $id_partida = $sesion->getIdPartida();
 
+            $this->log->info(`success : {$id_usuario}`);
+
             return(json_encode(
-                            ['status' => 'success',
-                             'data' => ['id_sesion' => $id_usuario,
-                            'matriz' => $matriz,
-                            'id_partida' => $id_partida]
+                            ["status" => "success",
+                             "data" => ["id_sesion" => $id_usuario,
+                            "matriz" => $matriz,
+                            "id_partida" => $id_partida]
                         ]));
 
         }else{
+
+            $this->log->info(`error : error`);
+            
             return(json_encode(
-                            ['status' => 'error',
-                             'data' => []
+                            ["status" => "error",
+                             "data" => []
                         ]));
         }
 
-        $_post = json_decode(file_get_contents('php://input'),true);
+        // $_post = json_decode(file_get_contents('php://input'),true);
 
         //recibo el array asociativo
-        if(isset($_post['estado_puzzle'])){
+        // if(isset($_post['estado_puzzle'])){
         
-            $this->guardar('estado_puzzle', $_post['estado_puzzle']);
+        //     $this->guardar('estado_puzzle', $_post['estado_puzzle']);
 
-            $this->log->info("puzzle : INSERTADO CON EXITO");
-            return(json_encode(['pieza' => 'INSERTADO CON EXITO',
-                                "id_usuario" => "1" ]));            
-        }
-        if(isset($_post['estado_piezas'])){
+        //     $this->log->info("puzzle : INSERTADO CON EXITO");
+        //     return(json_encode(['pieza' => 'INSERTADO CON EXITO',
+        //                         "id_usuario" => "1" ]));            
+        // }
+        // if(isset($_post['estado_piezas'])){
             
-            $this->guardar('estado_piezas', $_post['estado_piezas']);        
+        //     $this->guardar('estado_piezas', $_post['estado_piezas']);        
 
-            $this->log->info("pieza : INSERTADO CON EXITO");
-            return(json_encode(['pieza' => 'INSERTADO CON EXITO',
-                                "id_usuario" => "1" ]));
-        }
+        //     $this->log->info("pieza : INSERTADO CON EXITO");
+        //     return(json_encode(['pieza' => 'INSERTADO CON EXITO',
+        //                         "id_usuario" => "1" ]));
+        // }
 
     }
 }
