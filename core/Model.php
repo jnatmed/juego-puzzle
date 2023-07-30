@@ -12,7 +12,11 @@ abstract class Model
     protected $db = null;
 
     public function __construct()
-    {
+    {       
         $this->db = App::get('database');
+    }
+
+    protected function getDb(){
+        return $this->db;
     }
 }

@@ -43,6 +43,9 @@ class QueryBuilder
 
     public function selectOne($table, $column, $searched)
     {
+        // echo("<pre>");
+        // var_dump($this);
+
         try {
             $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
             $statement->execute();
@@ -55,7 +58,9 @@ class QueryBuilder
         } 
     }
 
-    public function existOne($table, $column, $searched)
+    
+
+    public function existOne($table, $usuario, $contrasenia)
     {
         try {
             $statement = $this->pdo->prepare("SELECT 1 FROM `usuario` WHERE `id_usuario` = `:usuario` AND `contrasenia` = `:contrasenia`;");
@@ -95,6 +100,47 @@ class QueryBuilder
             echo $e->getMessage();
             $this->logger->info($e->getMessage());
         }
+
+    }
+
+    public function buscarUsuario($datosBusqueda){
+
+    try {
+        $consultaSQL = "SELECT * FROM usuario WHERE ";
+
+        // Inicializar el array para almacenar los valores que se vincularán a la consulta
+        $valores = array();
+
+        // Recorrer el arreglo asociativo de datos de búsqueda para construir la consulta
+        foreach ($datosBusqueda as $campo => $valor) {
+            // Agregar el campo y su valor a la consulta
+            $consultaSQL .= "$campo = :$campo AND ";
+            // Agregar el valor a la lista de valores para vincular
+            $valores[":$campo"] = $valor;
+        }
+
+        // Eliminar el último "AND" de la consulta SQL
+        $consultaSQL = rtrim($consultaSQL, "AND ");
+
+        // Preparar la consulta
+        $stmt = $this->pdo->prepare($consultaSQL);
+
+        // Ejecutar la consulta con los valores vinculados
+        $stmt->execute($valores);
+
+        // Obtener los resultados (si los hay)
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Retornar los resultados
+        return $result[0];
+    } catch (PDOException $e) {
+        // Manejo de errores
+        echo "Error: " . $e->getMessage();
+        return array(); // En caso de error, retornar un array vacío o false, según convenga
+    } finally {
+        // Cerrar la conexión a la base de datos
+        $this->pdo = null;
+    }
 
     }
 
