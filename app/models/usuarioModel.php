@@ -14,7 +14,10 @@ class UsuarioModel extends Model{
 
         $resultadoConsulta = $this->db->selectOne('usuario','id_usuario',$id_usuario);        
 
-        if($resultado['resultado']) {
+        // echo("<pre>");
+        // var_dump($resultadoConsulta);
+
+        if(!empty($resultadoConsulta)) {
             $_SESSION = [
                 'id_usuario' => $id_usuario,
                 'tipo_usuario' => $resultadoConsulta['tipo_usuario'],

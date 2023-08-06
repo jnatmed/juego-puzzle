@@ -1,0 +1,35 @@
+/* Estilos para la sección de búsqueda */
+#busqueda {
+    text-align: center; /* Alinear al centro horizontalmente */
+    margin-top: 25px; /* Espacio superior */
+    padding: 20px; /* Espaciado interno */
+    background-color: #333; /* Cambiado a un tono más grisáceo */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#busqueda label {
+    display: block; /* Convertir en bloque */
+    margin-bottom: 10px; /* Espacio inferior */
+    font-weight: bold; /* Texto en negrita */
+    color: white;
+}
+
+#url_data {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+#btn_cargar {
+    margin-top: 10px; /* Espacio superior */
+    padding: 10px 20px; /* Espaciado interno */
+    background-color: #007bff; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+}

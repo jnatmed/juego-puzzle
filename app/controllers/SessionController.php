@@ -19,8 +19,7 @@ class SessionController extends UsuarioModel{
     private $id_partida;
     private $matriz = array();
 
-    public function login(){
-
+    public function cargarPanelNavegacion(){
         $usuarioModel = new UsuarioModel();
 
         $sesion = $this->tieneSesionActiva();
@@ -34,12 +33,20 @@ class SessionController extends UsuarioModel{
             $tipoUsuario = $_SESSION['tipo_usuario'];
 
             // echo("<pre>");
-            // var_dump($tipoUsuario);
-
-             return view('login' , ['enlaces' => $this->opciones_navbar[$tipoUsuario] ]);
+            // var_dump($this->opciones_navbar[$tipoUsuario]);
+             return ['enlaces' => $this->opciones_navbar[$tipoUsuario] ];
         }
 
-        return view('login' , ['enlaces' => $this->opciones_navbar['jugador'] ]);
+        return ['enlaces' => $this->opciones_navbar['jugador'] ];
+
+    }
+
+    public function login(){
+        return view('login' , $this->cargarPanelNavegacion());
+    }
+
+    public function registro() {
+        return view('registrar_usuario' , $this->cargarPanelNavegacion());
     }
 
     public function iniciarSession(){
@@ -73,8 +80,11 @@ class SessionController extends UsuarioModel{
 
         session_start();
 
-        // echo("<pre>");
         // var_dump($id_usuario);
+        // echo("<br>tieneSesionActiva");
+        // echo("<pre>");
+        var_dump($_SESSION);
+        var_dump(isset($_SESSION['id_usuario']));
 
         if(isset($_SESSION['id_usuario'])){
 
@@ -82,7 +92,7 @@ class SessionController extends UsuarioModel{
 
             if($usuarioModel->existeUsuario($_SESSION['id_usuario'])){
 
-                    $this->setIdUsuario($_SESSION['id_usuario']);
+                    // $this->setIdUsuario($_SESSION['id_usuario']);
                     // $this->setMatriz[$_SESSION['matriz']];
                     // $this->setIdPartida($_SESSION['id_partida']);
 
@@ -104,11 +114,21 @@ class SessionController extends UsuarioModel{
     }
 
     public function cerrarSesion() {
-        // session_destroy();
         session_unset();
-        return view('login');
+        session_destroy();
+        setcookie(session_name(), '', time() - 3600);
+
+        // echo("cerrarSesion");
+        // echo("<pre>");
+        // var_dump($_SESSION);
+
+        return $this->login();
     }
-    
+
+    public function registrar_usuario(){
+        
+    }
+
 }
 
 ?>

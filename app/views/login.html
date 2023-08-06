@@ -24,35 +24,14 @@
               <input class="submit" type="submit" name="login" value="Loguearse">
 
           </form>
+
+          <label id="registro" for="registro">
+            No tiene usuario ? <a href="/nuevo_usuario">Registrarse</a>  
+          </label>
+
           <p>{{ mensaje_error_log }}</p>
       </fieldset>
       
-      <section class="registro">
-      <fieldset>
-          <legend>Registro</legend>
-          <form action="registrar_usuario" method="POST">
-            <article class="inputform">
-              <label for="usuario">Usuario</label>
-              <input type="text" name="id_usuario">
-            </article>  
-            <article class="inputform">
-              <label for="contraseña">Contraseña</label>
-              <input type="password" name="contrasenia">
-            </article>
-            <article class="inputform">
-              <label for="alias">Alias</label>
-              <input type="text" name="alias" id="alias">
-            </article>   
-            <article class="inputform">
-              <label for="email">Correo Electrónico</label>
-              <input type="text" name="email" id="email">
-            </article>   
-            <article class="inputform">
-              <input class="submit" type="submit" name="login" value="Registrar">
-            </article>  
-          </form>
-          <p>{{ mensaje_error_registro }}</p>
-        </fieldset>
        
   </section>
   </main>

@@ -16,8 +16,7 @@ class JuegoController extends JuegoModel{
 
     public function new(){
         $sesion = new SessionController();
-        // return $sesion->login();
-        return view('nuevo_juego');
+        return view('nuevo_juego', $sesion->cargarPanelNavegacion());
     }
 
     public function guardarEstado($estado){

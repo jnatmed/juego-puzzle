@@ -12,8 +12,10 @@ $router->get('not_found', 'ProjectController@notFound');
 $router->get('internal_error', 'ProjectController@internalError');
 
 /** login */
+   $router->get('login', 'SessionController@login');
+   $router->get('nuevo_usuario', 'SessionController@registro');
    $router->post('iniciar_session', 'SessionController@iniciarSession');
-   // $router->post('registrar_usuario', 'SessionController@registrarUsuarioNuevo');
+   $router->post('registrar_usuario', 'SessionController@registrar_usuario');
 /** logout */
 $router->get('cerrar_sesion', 'SessionController@cerrarSesion');
 

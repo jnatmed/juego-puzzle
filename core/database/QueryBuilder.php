@@ -50,7 +50,7 @@ class QueryBuilder
             $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
             $statement->execute();
             $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
-            return !empty($resultado) ? ['resultado'=>true, 'datos'=> get_object_vars($resultado[0])] : ['resultado'=>false];
+            return get_object_vars($resultado[0]);
         } catch (Exception $e) {
             $this->sendToLog($e);
             echo($e->getMessage());
@@ -68,7 +68,7 @@ class QueryBuilder
             $statement->bindParam(':contrasenia', $contrasenia);
             $statement->execute();
             $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
-            return !empty($resultado) ? ['resultado'=>true, 'datos'=> get_object_vars($resultado[0])] : ['resultado'=>false];
+            return $resultado[0];
         } catch (Exception $e) {
             $this->sendToLog($e);
             echo($e->getMessage());
@@ -137,10 +137,7 @@ class QueryBuilder
         // Manejo de errores
         echo "Error: " . $e->getMessage();
         return array(); // En caso de error, retornar un array vacío o false, según convenga
-    } finally {
-        // Cerrar la conexión a la base de datos
-        $this->pdo = null;
-    }
+    } 
 
     }
 

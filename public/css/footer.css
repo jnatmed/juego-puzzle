@@ -1,0 +1,17 @@
+/* Estilos para el pie de página */
+footer {
+    background-color: #333; /* Color de fondo del pie de página */
+    color: #fff; /* Color del texto */
+    padding: 10px; /* Espaciado interno */
+    text-align: center; /* Alinear en el centro horizontalmente */
+}
+
+footer a {
+    color: #fff; /* Color del enlace */
+    text-decoration: none; /* Eliminar subrayado del enlace */
+    transition: color 0.3s; /* Transición de color suave */
+}
+
+footer a:hover {
+    color: #f00; /* Cambiar color al pasar el cursor sobre el enlace */
+}
