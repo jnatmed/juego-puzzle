@@ -14,6 +14,7 @@ class JuegoModel extends Model{
         $log = App::get('logger');
                 
         $log->info($this->db->insertEstado($parameters));
+        
     }
 
 }

@@ -11,16 +11,18 @@
 $router->get('not_found', 'ProjectController@notFound');
 $router->get('internal_error', 'ProjectController@internalError');
 
-/** login */
+/** sesionController */
    $router->get('login', 'SessionController@login');
    $router->get('nuevo_usuario', 'SessionController@registro');
+   $router->get('listado_usuarios', 'SessionController@listadoUsuarios');
    $router->post('iniciar_session', 'SessionController@iniciarSession');
    $router->post('registrar_usuario', 'SessionController@registrar_usuario');
 /** logout */
 $router->get('cerrar_sesion', 'SessionController@cerrarSesion');
 
-/* Juego */  
+/* JuegoController */  
   $router->get('new','juegoController@new');
+  $router->get('ranking', 'juegoController@ranking');
   
   $router->post('enviarEstado','juegoController@reciboEstado');
    // $router->post('guardar_alumno', 'alumnosController@guardarAlumno');

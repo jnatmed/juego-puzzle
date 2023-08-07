@@ -1,0 +1,23 @@
+{% include 'partials/base.html' %}
+
+<body>
+    {% include 'partials/nav-puzzle.html' %}  
+    <main>
+        <h1>Tabla de Usuarios</h1>
+        <table>
+            <tr>
+                <th>Usuario</th>
+                <th>Alias</th>
+                <th>Email</th>
+            </tr>
+            {% for fila in listado_usuarios %}
+                <tr>
+                    <td>{{ fila.id_usuario|capitalize }}</td>
+                    <td>{{ fila.alias|capitalize }}</td>
+                    <td>{{ fila.email }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </main>
+    {% include 'partials/footer.html' %}
+</body>

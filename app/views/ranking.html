@@ -1,0 +1,23 @@
+{% include 'partials/base.html' %}
+
+<body>
+    {% include 'partials/nav-puzzle.html' %}  
+    <main>
+        <h1>Ranking de Jugadores</h1>
+        <table>
+            <tr>
+                <th>Usuario</th>
+                <th>Alias</th>
+                <th>Puntaje</th>
+            </tr>
+            {% for jugador in ranking_jugadores %}
+                <tr>
+                    <td>{{ jugador.id_usuario|capitalize }}</td>
+                    <td>{{ jugador.alias|capitalize }}</td>
+                    <td>{{ jugador.puntaje }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </main>
+    {% include 'partials/footer.html' %}
+</body>

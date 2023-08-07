@@ -5,13 +5,13 @@ use \App\models\UsuarioModel;
 
 class SessionController extends UsuarioModel{
     public $opciones_navbar = array(
-            'jugador' => [['enlace'=>'/','descripcion'=>'Ranking'],
+            'jugador' => [['enlace'=>'/ranking','descripcion'=>'Ranking'],
                         ['enlace'=>'/login','descripcion'=>'Login'],
                         ['enlace'=>'/new','descripcion'=>'Nuevo Juego']],
-            'admin' => [['enlace'=>'/','descripcion'=>'Ranking'],
+            'admin' => [['enlace'=>'/ranking','descripcion'=>'Ranking'],
                         ['enlace'=>'/login','descripcion'=>'Login'],
                         ['enlace'=>'/new','descripcion'=>'Nuevo Juego'],
-                        ['enlace'=>'/usuarios','descripcion'=>'Listado Usuarios'],
+                        ['enlace'=>'/listado_usuarios','descripcion'=>'Listado Usuarios'],
                         ['enlace'=>'/partidas','descripcion'=>'Partidas Activas']]
     );        
     public $session;
@@ -20,28 +20,39 @@ class SessionController extends UsuarioModel{
     private $matriz = array();
 
     public function cargarPanelNavegacion(){
+
         $usuarioModel = new UsuarioModel();
 
         $sesion = $this->tieneSesionActiva();
 
         // echo("<pre>");
         // var_dump($sesion);
-
+        
         if ($sesion['estado'] == 'ok') {
-
-
+            
             $tipoUsuario = $_SESSION['tipo_usuario'];
-
+            
             // echo("<pre>");
             // var_dump($this->opciones_navbar[$tipoUsuario]);
-             return ['enlaces' => $this->opciones_navbar[$tipoUsuario] ];
+            
+            $datos['enlaces'] = $this->opciones_navbar[$tipoUsuario];
+            $datos['username'] = $_SESSION['id_usuario'];
+            $datos['tipo_usuario'] = $tipoUsuario;
+            // echo("<pre>");
+            // var_dump($datos);            
+            
+            return $datos;
         }
-
-        return ['enlaces' => $this->opciones_navbar['jugador'] ];
+        
+        $datos['enlaces'] = $this->opciones_navbar['jugador'];
+        $datos['username'] = 'No hay sesion iniciada';
+         
+        return $datos;
 
     }
 
     public function login(){
+
         return view('login' , $this->cargarPanelNavegacion());
     }
 
@@ -71,9 +82,9 @@ class SessionController extends UsuarioModel{
 
         if($estado['estado'] == 'ok'){
             $tipoUsuario = $_SESSION['tipo_usuario'];
-            return view('login' , ['enlaces' => $this->opciones_navbar[$tipoUsuario] ]);
+            return view('login' , $this->cargarPanelNavegacion());
         }
-        return view('login' , ['enlaces' => $this->opciones_navbar['jugador'] ]);
+        return view('login' , $this->cargarPanelNavegacion());
     }
 
     public function tieneSesionActiva(){
@@ -83,8 +94,8 @@ class SessionController extends UsuarioModel{
         // var_dump($id_usuario);
         // echo("<br>tieneSesionActiva");
         // echo("<pre>");
-        var_dump($_SESSION);
-        var_dump(isset($_SESSION['id_usuario']));
+        // var_dump($_SESSION);
+        // var_dump(isset($_SESSION['id_usuario']));
 
         if(isset($_SESSION['id_usuario'])){
 
@@ -113,6 +124,50 @@ class SessionController extends UsuarioModel{
         }
     }
 
+    public function registrar_usuario(){
+
+        $sesion = new UsuarioModel(); 
+
+        $datosUsuario = [
+            'id_usuario' => $_POST['id_usuario'],
+            'contrasenia' => $_POST['contrasenia'],
+            'alias' => $_POST['alias'],
+            'email' => $_POST['email'],
+            'tipo_usuario' => 'jugador'
+        ];
+
+        $resultado = $sesion->registrarNuevo($datosUsuario);
+
+        // echo("<pre>");
+        // var_dump($resultado);
+
+        $datos = $this->cargarPanelNavegacion();
+        $datos['msj_estado_registro'] = $resultado['descripcion'];
+
+        if($resultado['estado']=='ok') {
+            return view('login', $datos );
+        }else{
+            return view('registrar_usuario', $datos );
+        }
+    }
+
+    public function listadoUsuarios(){
+        $sesion = new UsuarioModel();
+
+        $listadoUsuarios = $sesion->listadoUsuarios();
+
+        $panel = $this->cargarPanelNavegacion();
+        $listado = [
+            // 'listado_usuarios' => [['usuario' => 'juan', 'alias' => 'juanman','email' => 'juan@example.com']],
+            'listado_usuarios' => $listadoUsuarios,
+            'enlaces' => $panel['enlaces'],
+            'username' => $panel['username'],
+            'tipo_usuario' => $panel['tipo_usuario']
+        ];
+
+        return view('listado_usuarios', $listado);
+    }
+
     public function cerrarSesion() {
         session_unset();
         session_destroy();
@@ -125,9 +180,6 @@ class SessionController extends UsuarioModel{
         return $this->login();
     }
 
-    public function registrar_usuario(){
-        
-    }
 
 }
 

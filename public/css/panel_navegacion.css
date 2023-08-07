@@ -1,3 +1,8 @@
+#username, #tipo_usuario {
+    color: white;
+    text-decoration: underline;
+}
+
 /* Estilos para el panel de navegación */
 .menu {
     background-color: #333; /* Color de fondo del menú */
@@ -6,7 +11,7 @@
     position: fixed; /* Hacer el menú fijo */
     top: -10; /* Alinear en la parte superior */
     width: 100%; /* Ancho completo */
-    z-index: 1000; /* Capa superior */
+    /* z-index: 1000; Capa superior */
 }
 
 .menu ul {

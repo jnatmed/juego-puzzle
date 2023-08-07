@@ -2,6 +2,14 @@
     <section>
             <summary></summary> 
             <nav class="menu"> 
+                <section id="user_info">
+                    <label id="username" for="username">
+                        Usuario : {{ username|capitalize  }}                         
+                    </label>
+                    <label id="tipo_usuario" for="tipo_usuario">
+                        Tipo Usuario : {{ tipo_usuario}}
+                    </label>
+                </section>
                 <ul>
                     {% for item in enlaces %}    
                         <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 

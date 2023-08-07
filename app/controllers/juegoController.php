@@ -14,6 +14,28 @@ class JuegoController extends JuegoModel{
         $this->log = App::get('logger');
     }
 
+    public function ranking(){
+
+        $sesion = new SessionController();
+
+        $panel = $sesion->cargarPanelNavegacion();
+
+        $juegoModel = new JuegoModel();
+
+        $rankingJugador = $juegoModel->getRankingJugador($_SESSION['id_usuario']);
+
+        $listado = [
+            'ranking_jugadores' => [['id_usuario' => 'juan', 'alias' => 'juanman','puntaje' => 10]],
+            // 'ranking_jugadores' => $rankingJugadores,
+            'enlaces' => $panel['enlaces'],
+            'username' => $panel['username'],
+            'tipo_usuario' => $panel['tipo_usuario']
+        ];
+
+        return view('ranking', $listado);
+    }        
+    
+
     public function new(){
         $sesion = new SessionController();
         return view('nuevo_juego', $sesion->cargarPanelNavegacion());
@@ -28,6 +50,7 @@ class JuegoController extends JuegoModel{
      * y la matriz
      */
     public function guardar($type, $param){
+        
         $this->log->info("insertando {$type}");
         $array = '['.implode(",", $param).']';
         $this->log->info("method reciboEstado() {$array}");

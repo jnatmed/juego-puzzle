@@ -70,40 +70,18 @@ class UsuarioModel extends Model{
         }
     }
 
-    public function registrarUsuario($datos_registro){
-
-        // var_dump($datos_registro);
-        $consulta = "INSERT INTO `usuario`(`id_usuario`,
-                                           `contrasenia`,
-                                           `alias`,
-                                           `email` ) VALUES (
-                                                            :id_usuario,
-                                                            :contrasenia,
-                                                            :alias,
-                                                            :email)";
-        $array_consulta = [
-            ':id_consulta' => $datos_registro['id_usuario'],
-            ':contrasenia' => $datos_registro['contrasenia'],
-            ':alias' => $datos_registro['alias'],
-            ':email' => $datos_registro['email']
-        ];
-        
-        try {
-            $statement = $this->db->prepare($consulta);
-            $statement->execute($array_consulta); 
-            
-            /**
-             * comprobar, si insertó correctamente, devolver true
-             * sino false
-             */
-            if($statement->rowCount()>0){
-                return ['registro_exitoso'=> true];
-            }else{
-                return ['registro_exitoso'=>false];
-            }
-        } catch (PDOException $e) {
-            echo("Error al registrar Usuario: ".$e);
+    public function registrarNuevo($datos_registro){
+        if(!$this->existeUsuario($datos_registro['id_usuario'])){
+            return $this->db->insert("usuario", $datos_registro);
+        }else {
+            return ['estado' => 'error',
+                    'codigo' => 1,
+                    'descripcion' => 'el usuario ya existe en la base'];
         }
+    }
+
+    public function listadoUsuarios(){
+        return $this->db->selectAll('usuario');
     }
 }
 

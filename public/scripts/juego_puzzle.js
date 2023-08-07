@@ -334,8 +334,8 @@ const mensaje = $('mensaje');
 
 
 $('btn_cargar').addEventListener('click', e => {
-  // let url_data = $('url_data').value;
-  let url_data = 'https://cdn.pixabay.com/photo/2017/10/25/16/54/african-lion-2888519_1280.jpg';
+  let url_data = $('url_data').value;
+  // let url_data = 'https://cdn.pixabay.com/photo/2017/10/25/16/54/african-lion-2888519_1280.jpg';
   // let url_data = 'imgs/paisaje.jpg';
   eliminarHijos(piezas);
   eliminarHijos(puzzle);

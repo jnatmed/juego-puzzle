@@ -24,7 +24,6 @@ class QueryBuilder
      */
     public function __construct($pdo, $logger = null)
     {
-        
         $this->pdo = $pdo;
         $this->logger = ($logger) ? $logger : null;
     }
@@ -36,7 +35,7 @@ class QueryBuilder
      */
     public function selectAll($table)
     {
-        $statement = $this->pdo->prepare("select * from {$table}");
+        $statement = $this->pdo->prepare("select id_usuario, alias, email from {$table}");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
@@ -50,15 +49,18 @@ class QueryBuilder
             $statement = $this->pdo->prepare("select * from {$table} where `{$column}`='{$searched}'");
             $statement->execute();
             $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
-            return get_object_vars($resultado[0]);
+
+            if(!$resultado) {
+                return false;
+            }else{
+                return get_object_vars($resultado[0]);
+            }
         } catch (Exception $e) {
             $this->sendToLog($e);
             echo($e->getMessage());
             return $e->getCode();
         } 
     }
-
-    
 
     public function existOne($table, $usuario, $contrasenia)
     {
@@ -149,41 +151,27 @@ class QueryBuilder
      */
     public function insert($table, $parameters)
     {
+        // Generar la sentencia SQL y ejecutarla
+        $columns = implode(", ", array_keys($parameters));
+        $values = ":" . implode(", :", array_keys($parameters));
 
-        // echo("<pre>");
-        // var_dump($parameters);
-        $aux = array_values($parameters);
-        // echo("<pre>");
-        // var_dump($aux);
-        if ($aux['3']=='NULL'){
-            $aux = array_slice($aux,0,3);
-            $values = implode("','", $aux);
-            $values = "'".$values."',"."NULL";  
-            // echo($values);
-        }else{
-            $values = implode("','", array_values($parameters));
-            $values = "'".$values."'";    
-            // echo("<pre>");
-            // var_dump($values);
-        }
-        $parameters = $this->cleanParameterName($parameters);
-        $sql = sprintf(
-            'insert into %s (%s) values (%s)',
-            $table,
-            implode(', ', array_keys($parameters)),
-            $values
-        );
-        // echo("<pre>");
-        // var_dump($sql);
+        $sql = "INSERT INTO $table ($columns) VALUES ($values)";
 
         try {
-            $statement = $this->pdo->prepare($sql);
-            $result = $statement->execute();
-            return $result;
-        } catch (Exception $e) {
-            $this->sendToLog($e);
-            // echo($e->getMessage());
-            return $e->getCode();
+            $stmt = $this->pdo->prepare($sql);
+            $inserted = $stmt->execute($parameters);
+
+            if ($inserted) {
+                    return ['estado' => 'ok',
+                            'codigo' => 200,
+                            'descripcion' => 'insercion exitosa'];
+            } else {
+                return ['estado' => 'error',
+                        'codigo' => 2,
+                        'descripcion' => 'fallo al insertar'];
+            }
+        } catch (PDOException $e) {
+            echo "Error al insertar el registro: " . $e->getMessage();
         }   
     }
 
