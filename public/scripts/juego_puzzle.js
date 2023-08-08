@@ -148,35 +148,40 @@ class Juego {
     }
   }
 
-  crearCanvasyAsignarPiezas(){
+  async crearCanvasyAsignarPiezas(){
 
-    const coordXOrigen = [0,101,201];
-    const coordYOrigen = [0,101,201];
-    let fila = 0;
+    const dimensionesCanva = 100;
+    const numCanvases = 9;
 
-    for(let i = 0; i < coordYOrigen.length; i = i + 1 ) {
-            
-      for(let j = 0; j < coordXOrigen.length; j = j + 1 ) {
+    const response = await fetch(this.getUrl_data());
+    const blob = await response.blob();
+
+    const dataURI = await this.blobToDataURI(blob);
+
+    const img = new Image();
+    img.src = dataURI;
+    await img.decode(); // Esperar a que la imagen se cargue completamente en memoria
+
+    const anchoDelFragmento = img.width / 3;
+    const altoDelFragmento = img.height / 3;
+
+      for(let j = 0; j < numCanvases; j++ ) {
 
             // creo un canvas
             let canvas = document.createElement('canvas');
-            // configuro las dimensiones: alto, ancho y margen
-            $create(canvas,100,100);
-            // le asigno un id
-            /**
-             * la cuenta seria asi: 
-             *   i = [0, 1, 2]
-             *   fila = [0, 3, 6]  
-             *         [iteracion 0] => (0 + 0) = 0, (1 + 0) = 1, (2 + 0) = 2
-             *         [iteracion 1] => (0 + 3) = 4, (1 + 3) = 4, (2 + 3) = 5
-             *         [iteracion 2] => (0 + 6) = 6, (1 + 6) = 7, (2 + 6) = 8
-             */
-            canvas.id = "canvas_" + (j + fila);
-            console.log(`(j = ${j} + fila = ${fila}) = ${j + fila}`)
+            canvas.id = "canvas_" + j;
             // le asigno una clase
             canvas.className = 'pieza';
             // dibujo un fragmento de la imagen en ese canvas
-            canvas = this.dibujarImagenEnCanvas(canvas, coordXOrigen[j], coordYOrigen[i]);
+            const origenX = (j % 3) * anchoDelFragmento; 
+            const origenY = Math.floor(j / 3) * altoDelFragmento;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.drawImage(img, origenX, origenY, 
+                          anchoDelFragmento, altoDelFragmento, 0, 0, 
+                          dimensionesCanva, dimensionesCanva);
+
             // lo hago arrastrable
             canvas.draggable = true;
             // asigno un evento de tactil para cuando se toca un canvas
@@ -211,21 +216,24 @@ class Juego {
       
             })
             // agrego el canvas a contenedor de piezas
-            console.log(canvas)
-            console.log(this.getPiezas());
             const divCanva = document.createElement('div');
             divCanva.className = 'divCanva';
-            divCanva.id = `${j + fila}` ;
+            divCanva.id = j ;
             divCanva.appendChild(canvas);
             this.getPiezas().appendChild(divCanva); 
       } // FIN FOR j
-      fila = fila + 3;
-      console.log(`fila = ${fila}`)
-    } // FIN FOR i
           
   } // FIN METODO  
 
-
+  async blobToDataURI(blob) {
+      return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = event => {
+              resolve(event.target.result);
+          };
+          reader.readAsDataURL(blob);
+      });
+  }
 
   enviarMensaje(dato) {
 

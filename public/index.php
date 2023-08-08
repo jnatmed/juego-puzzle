@@ -3,6 +3,10 @@ require_once '../vendor/autoload.php';
 
 require_once '../core/bootstrap.php';
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
+
 // error_log("Error: ", 3, "my-errors.log");
 
 use App\Core\App;
