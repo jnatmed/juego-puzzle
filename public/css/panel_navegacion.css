@@ -1,35 +1,53 @@
-#username, #tipo_usuario {
-    color: white;
-    text-decoration: underline;
-}
-
-/* Estilos para el panel de navegación */
-.menu {
-    background-color: #333; /* Color de fondo del menú */
-    padding: 10px 0; /* Espaciado interno vertical */
-    text-align: center; /* Alinear en el centro horizontalmente */
-    position: fixed; /* Hacer el menú fijo */
-    top: -10; /* Alinear en la parte superior */
-    width: 100%; /* Ancho completo */
-    /* z-index: 1000; Capa superior */
-}
-
-.menu ul {
-    list-style: none; /* Eliminar viñetas de la lista */
+body {
+    background-color: #f2f2f2;
+    color: #333333;
+    font-family: Arial, sans-serif;
+    margin: 0;
     padding: 0;
 }
 
-.menu ul li {
-    display: inline-block; /* Mostrar elementos en línea */
-    margin: 0 15px; /* Espaciado entre elementos */
+#menu_general {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #dddddd;
+    padding: 10px 20px;
 }
 
-.menu ul li a {
-    color: #fff; /* Color del texto del enlace */
-    text-decoration: none; /* Eliminar subrayado del enlace */
-    transition: color 0.3s; /* Transición de color suave */
+#user_info {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
 }
 
-.menu ul li a:hover {
-    color: #f00; /* Cambiar color al pasar el cursor sobre el enlace */
+.user_info label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.menu_nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.menu_nav li {
+    margin-right: 20px;
+}
+
+.menu_nav a {
+    text-decoration: none;
+    color: #333333;
+    transition: color 0.3s ease;
+}
+
+.menu_nav a:hover {
+    color: #666666;
+}
+
+.menu_nav ul {
+    display: flex;
+    justify-content: space-between;
 }

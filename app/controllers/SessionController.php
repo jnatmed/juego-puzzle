@@ -38,6 +38,7 @@ class SessionController extends UsuarioModel{
             $datos['enlaces'] = $this->opciones_navbar[$tipoUsuario];
             $datos['username'] = $_SESSION['id_usuario'];
             $datos['tipo_usuario'] = $tipoUsuario;
+            $datos['sesion_activa'] = true;
             // echo("<pre>");
             // var_dump($datos);            
             
@@ -45,7 +46,7 @@ class SessionController extends UsuarioModel{
         }
         
         $datos['enlaces'] = $this->opciones_navbar['jugador'];
-        $datos['username'] = 'No hay sesion iniciada';
+        $datos['sesion_activa'] = false;
          
         return $datos;
 
@@ -156,13 +157,9 @@ class SessionController extends UsuarioModel{
 
         $listadoUsuarios = $sesion->listadoUsuarios();
 
-        $panel = $this->cargarPanelNavegacion();
         $listado = [
-            // 'listado_usuarios' => [['usuario' => 'juan', 'alias' => 'juanman','email' => 'juan@example.com']],
             'listado_usuarios' => $listadoUsuarios,
-            'enlaces' => $panel['enlaces'],
-            'username' => $panel['username'],
-            'tipo_usuario' => $panel['tipo_usuario']
+            ...$this->cargarPanelNavegacion()
         ];
 
         return view('listado_usuarios', $listado);

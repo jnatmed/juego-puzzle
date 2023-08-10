@@ -1,7 +1,13 @@
 <header>
-    <section>
-            <summary></summary> 
-            <nav class="menu"> 
+    <section id="menu_general">
+        <nav class="menu_nav"> 
+            <ul>
+                {% for item in enlaces %}    
+                    <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 
+                {% endfor %}
+            </ul>
+        </nav> 
+            {% if sesion_activa %}
                 <section id="user_info">
                     <label id="username" for="username">
                         Usuario : {{ username|capitalize  }}                         
@@ -10,11 +16,6 @@
                         Tipo Usuario : {{ tipo_usuario}}
                     </label>
                 </section>
-                <ul>
-                    {% for item in enlaces %}    
-                        <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 
-                    {% endfor %}
-                </ul>
-            </nav> 
+            {% endif %}
     </section>
 </header>

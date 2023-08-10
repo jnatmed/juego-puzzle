@@ -18,8 +18,6 @@ class JuegoController extends JuegoModel{
 
         $sesion = new SessionController();
 
-        $panel = $sesion->cargarPanelNavegacion();
-
         $juegoModel = new JuegoModel();
 
         $rankingJugador = $juegoModel->getRankingJugador($_SESSION['id_usuario']);
@@ -27,9 +25,7 @@ class JuegoController extends JuegoModel{
         $listado = [
             'ranking_jugadores' => [['id_usuario' => 'juan', 'alias' => 'juanman','puntaje' => 10]],
             // 'ranking_jugadores' => $rankingJugadores,
-            'enlaces' => $panel['enlaces'],
-            'username' => $panel['username'],
-            'tipo_usuario' => $panel['tipo_usuario']
+            ...$sesion->cargarPanelNavegacion()
         ];
 
         return view('ranking', $listado);
