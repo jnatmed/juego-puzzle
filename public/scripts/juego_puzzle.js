@@ -19,6 +19,15 @@ function eliminarHijos(id){
   }
 }
 
+async function blobToDataURI(blob) {
+    return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = event => {
+            resolve(event.target.result);
+        };
+        reader.readAsDataURL(blob);
+    });
+}
 
 class Juego {
 
@@ -108,7 +117,13 @@ class Juego {
         this.guardarEstadoJuego();
         this.setTerminado(this.getTerminado() - 1 );
         if (this.getTerminado() === 0) {
-          document.body.classList.add('ganaste');
+          const ganasteCartel = $('ganaste_cartel');
+
+          ganasteCartel.style.display = 'block';
+
+          setTimeout(() => {
+            ganasteCartel.style.display = 'none';
+          }, 3000); // Mostrar durante 3 segundos
         }
       }
     });
@@ -148,16 +163,14 @@ class Juego {
     }
   }
 
-  async crearCanvasyAsignarPiezas(){
+  /**
+   * 
+   * @param {*} dataURI 
+   */
+  async crearCanvasyAsignarPiezas(dataURI){
 
     const dimensionesCanva = 100;
     const numCanvases = 9;
-
-    const response = await fetch(this.getUrl_data());
-    const blob = await response.blob();
-
-    const dataURI = await this.blobToDataURI(blob);
-
     const img = new Image();
     img.src = dataURI;
     await img.decode(); // Esperar a que la imagen se cargue completamente en memoria
@@ -224,16 +237,6 @@ class Juego {
       } // FIN FOR j
           
   } // FIN METODO  
-
-  async blobToDataURI(blob) {
-      return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = event => {
-              resolve(event.target.result);
-          };
-          reader.readAsDataURL(blob);
-      });
-  }
 
   enviarMensaje(dato) {
 
@@ -334,45 +337,71 @@ class Juego {
 
 } // FIN CLASE
 
-
-
 const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
+const label_error = $('msj_error_url_imagen');
 
+$('btn_cargar').addEventListener('click', async (e) => {
 
-$('btn_cargar').addEventListener('click', e => {
-  let url_data = $('url_data').value;
-  // let url_data = 'https://cdn.pixabay.com/photo/2017/10/25/16/54/african-lion-2888519_1280.jpg';
-  // let url_data = 'imgs/paisaje.jpg';
-  eliminarHijos(piezas);
-  eliminarHijos(puzzle);
+  try {
+    let url_data = $('url_data').value;
+    /**
+     * estos procesos deben deben ejecutarse
+     * con await a fin de asegurar que la
+     * siguiente variable contenga el valor
+     * esperado.
+     */
+    const response = await fetch(url_data);
 
-  let imagenes = [];
-  const cantidad_fragmentos = 9;
-  for (let index = 0; index < (cantidad_fragmentos); index++) {
-    const nombre_canva = 'canvas_' + index;
-    imagenes.push(nombre_canva);  
+    if (!response.ok) {
+      label_error.innerHTML = 'La solicitud no fue exitosa: ' + response.status;
+      throw new Error(label_error);
+    }else{
+      label_error.innerHTML = '';
+    }
+
+    const blob = await response.blob();
+    const dataURI = await blobToDataURI(blob);
+
+    eliminarHijos(piezas);
+    eliminarHijos(puzzle);
+
+    const juego = new Juego(puzzle, piezas, 0, url_data);
+
+    juego.setCurrentCanvas(null);
+    juego.setPiezas(piezas);
+    juego.crearCanvasyAsignarPiezas(dataURI);
+
+    let terminado = 9;
+
+    juego.setTerminado(terminado);
+    juego.setPuzzle(puzzle);
+    juego.crearPlaceHolder();
+    juego.setPiezas(piezas);
+    juego.setPuzzle(puzzle);
+    juego.crearEventosDeMouse();
+
+    juego.guardarEstadoJuego();
+
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'TypeError') {
+      label_error.innerHTML = 'Error de CORS:', error.message;
+      console.error('Error de CORS:', error.message);
+
+    } else {
+      
+      const CORs = '<a href="https://developer.mozilla.org/es/docs/Web/HTTP/CORS">CORs</a>'
+
+      label_error.innerHTML = `Error en la solicitud: ${error.message} - 
+                               Prueba con otra URL. Esta fué bloqueada por politicas de ${CORs}`;
+      console.error(`Error en la solicitud: ${error.message}`);
+
+      label_error.classList.add('vibrating-label');
+
+      setTimeout(() => {
+        label_error.classList.remove('vibrating-label');
+      }, 1000); // Detiene la vibración después de 2 segundos
+    }
   }
-
-  const juego = new Juego(puzzle, piezas, 0, url_data);
-
-  // let currentCanvas = null;
-  juego.setCurrentCanvas(null);
-  juego.setPiezas(piezas);
-  juego.crearCanvasyAsignarPiezas();
-
-  let terminado = imagenes.length;
-
-  juego.setTerminado(terminado);
-  juego.setPuzzle(puzzle);
-  juego.crearPlaceHolder();
-  juego.setPiezas(piezas);
-  juego.setPuzzle(puzzle);
-  juego.crearEventosDeMouse();
-
-  juego.guardarEstadoJuego();
-
 });
-
- 

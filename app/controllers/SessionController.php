@@ -5,7 +5,7 @@ use \App\models\UsuarioModel;
 
 class SessionController extends UsuarioModel{
     public $opciones_navbar = array(
-            'jugador' => [['enlace'=>'/ranking','descripcion'=>'Ranking'],
+            'jugador' => [['enlace'=>'/ranking','descripcion'=>'Mi Ranking'],
                         ['enlace'=>'/login','descripcion'=>'Login'],
                         ['enlace'=>'/new','descripcion'=>'Nuevo Juego']],
             'admin' => [['enlace'=>'/ranking','descripcion'=>'Ranking'],
@@ -83,8 +83,9 @@ class SessionController extends UsuarioModel{
 
         if($estado['estado'] == 'ok'){
             $tipoUsuario = $_SESSION['tipo_usuario'];
-            return view('login' , $this->cargarPanelNavegacion());
+            return view('nuevo_juego' , $this->cargarPanelNavegacion());
         }
+        
         return view('login' , $this->cargarPanelNavegacion());
     }
 
@@ -92,21 +93,11 @@ class SessionController extends UsuarioModel{
 
         session_start();
 
-        // var_dump($id_usuario);
-        // echo("<br>tieneSesionActiva");
-        // echo("<pre>");
-        // var_dump($_SESSION);
-        // var_dump(isset($_SESSION['id_usuario']));
-
         if(isset($_SESSION['id_usuario'])){
 
             $usuarioModel = new usuarioModel(); 
 
             if($usuarioModel->existeUsuario($_SESSION['id_usuario'])){
-
-                    // $this->setIdUsuario($_SESSION['id_usuario']);
-                    // $this->setMatriz[$_SESSION['matriz']];
-                    // $this->setIdPartida($_SESSION['id_partida']);
 
                     return ['estado' => 'ok',
                             'codigo' => 200,

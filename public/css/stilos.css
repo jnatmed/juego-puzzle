@@ -9,6 +9,10 @@ body {
     background-repeat: no-repeat; /* Evitar repetición de la imagen */
 }
 
+#puntaje {
+    color: white;
+}
+
 .container {
     display: flex;
     justify-content: space-around;

@@ -1,9 +1,12 @@
 <header>
-    <section id="menu_general">
+    <div id="menu_icon" class="hidden">&#9776;</div> <!-- Icono de menú (hamburguesa) -->
+    <section id="menu_general" class="hidden">
         <nav class="menu_nav"> 
             <ul>
                 {% for item in enlaces %}    
-                    <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 
+                    {% if item.descripcion != "Login" or not sesion_activa %}
+                        <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 
+                    {% endif %}
                 {% endfor %}
             </ul>
         </nav> 
