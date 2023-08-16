@@ -53,3 +53,21 @@
 .vibrating-label {
   animation: vibration .1s infinite;
 }
+
+.transicion-div {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  background-color: lightblue;
+  overflow: hidden;
+}
+
+.boton-icono {
+  position: relative;
+  padding: 5px 10px; /* Ajusta el espaciado interno del botón */
+  background-color: black;
+  color: white;
+  border: none;
+  font-size: 20px;
+  transition: transform 0.5s ease;
+}

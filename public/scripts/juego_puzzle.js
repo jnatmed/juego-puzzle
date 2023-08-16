@@ -1,3 +1,31 @@
+// Función para actualizar el temporizador
+function actualizarTemporizador() {
+  segundos++;
+  if (segundos == 60) {
+    segundos = 0;
+    minutos++;
+  }
+
+  // Formatear el tiempo en formato MM:SS
+  const tiempoFormateado = (minutos < 10 ? "0" : "") + minutos + ":" + (segundos < 10 ? "0" : "") + segundos;
+
+  // Actualizar el contenido del elemento del temporizador
+  timerElement.textContent = tiempoFormateado;
+}
+
+function obtenerTiempoEnSegundos() {
+  // Obtener el contenido del elemento que muestra el tiempo (por ejemplo, "03:45")
+  const tiempoTexto = timerElement.textContent;
+
+  // Dividir el tiempo en minutos y segundos
+  const partesTiempo = tiempoTexto.split(":");
+  const minutos = parseInt(partesTiempo[0], 10); // Convertir a número base 10
+  const segundos = parseInt(partesTiempo[1], 10); // Convertir a número base 10
+
+  // Calcular el tiempo total en segundos
+  return minutos * 60 + segundos;  
+}
+
 function $(idpiezas) {
   return document.getElementById(idpiezas);
 }
@@ -31,7 +59,7 @@ async function blobToDataURI(blob) {
 
 class Juego {
 
-  constructor(piezas, puzzle, terminado, url_data){
+  constructor(piezas, puzzle, terminado, url_data, intervalId){
     this.piezas = piezas;
     this.puzzle = puzzle;
     this.terminado = terminado;
@@ -41,25 +69,12 @@ class Juego {
     this.estadoPuzzle = [];
     this.estadoPuzzle.fill(-1);
     this.url_data = url_data;
-  }
-  /* 
-  *  guardo un parte de la imagen y la devuelvo
-  */
-  dibujarImagenEnCanvas(canvas, xOrigen, yOrigen){
-    let ctx = canvas.getContext("2d");
-    let image = new Image();
-    image.src = this.getUrl_data();  
-    
-    let [anchoOrigen, anchoDestino, altoOrigen, altoDestino] = [100,100,100,100];              
-    let [xDestino, yDestino] = [0,0];
-  
-    ctx.drawImage(image,
-                xOrigen, yOrigen, //coordenada x e y en imagen origen
-                anchoOrigen, altoOrigen, //cant pixeles en ancho y alto que quiero tomar
-                xDestino, yDestino, //coordenada x e y en destino
-                anchoDestino, altoDestino//cuanto va a ocupar la imagen en destino
-    );
-    return canvas;
+    this.aciertos = 0;
+    this.errores = 0;
+
+    this.minutos = 0;
+    this.segundos = 0;
+    this.intervalId = intervalId;
   }
 
   /**
@@ -77,6 +92,24 @@ class Juego {
   setCurrentCanvas(cCanvas) { this.currentCanvas = cCanvas; }
   getTerminado() { return this.terminado; }
   setTerminado(terminado) { this.terminado = terminado; }
+  getAciertos() { return this.aciertos; }
+  setAciertos(aciertos) { this.aciertos = aciertos; }
+  getErrores() { return this.errores; }
+  setErrores(errores) { this.errores = errores}
+  
+  actualizarTemporizador() {
+    this.segundos++;
+    if (this.segundos == 60) {
+      this.segundos = 0;
+      this.minutos++;
+    }
+
+    // Formatear el tiempo en formato MM:SS
+    const tiempoFormateado = (this.minutos < 10 ? "0" : "") + this.minutos + ":" + (this.segundos < 10 ? "0" : "") + this.segundos;
+
+    // Actualizar el contenido del elemento del temporizador
+    timerElement.textContent = tiempoFormateado;
+  }   
 
 
   getHijos(piezas){
@@ -112,8 +145,14 @@ class Juego {
       console.log(`Id : ${id}`);
       const numero = id.split('_')[1];
       console.log(`e.target.id: ${e.target.id}`);
+
       if(e.target.id === numero){
         e.target.appendChild($(id));
+        e.target.style.opacity = '1';
+        
+        this.setAciertos(this.getAciertos() + 1);
+        $('aciertos').innerHTML = `Aciertos: ${this.getAciertos()}`;
+
         this.guardarEstadoJuego();
         this.setTerminado(this.getTerminado() - 1 );
         if (this.getTerminado() === 0) {
@@ -124,17 +163,41 @@ class Juego {
           setTimeout(() => {
             ganasteCartel.style.display = 'none';
           }, 3000); // Mostrar durante 3 segundos
+
+          const cartelPuntaje = $('puntaje_actual');
+          cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+
+          // Detener el intervalo
+          clearInterval(this.intervalId);
+
         }
+      }else{
+          this.setErrores(this.getErrores() + 1);
+          $('errores').innerHTML = `Errores: ${this.getErrores()}`;
       }
     });
     
   }
 
-  crearPlaceHolder(){
+  async crearPlaceHolder(dataURI){
+
+    const img = new Image();
+    img.src = dataURI;
+    await img.decode(); // Esperar a que la imagen se cargue completamente en memoria
+
+    // this.puzzle.style.cssText = `
+    //   background-image: url('${img.src}');
+    //   background-size: cover;
+    //   background-repeat: no-repeat;
+    //   background-position: center;
+    //   opacity: .5;
+    // `;
+
     for (let i = 0; i < this.terminado; i++) {
       const div = document.createElement('div');
       div.className = 'placeholder';
       div.id = i;
+      // div.style.opacity = '.1';
       /**
        *  variable externa:
        *        - puzzle
@@ -156,11 +219,39 @@ class Juego {
          * la posicion [1] tiene el numero de canvas
          */
         if ($(this.currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
+            placeHolderSeccionado.style.opacity = '1';
             placeHolderSeccionado.appendChild($(this.currentCanvas))
+            /**
+             * incremento el puntaje en 1
+             */
+            this.setAciertos(this.getAciertos() + 1);
+            $('aciertos').innerHTML = `Puntaje: ${this.getAciertos()}`;
             this.guardarEstadoJuego();
+
+            if (this.getTerminado() === 0) {
+              const ganasteCartel = $('ganaste_cartel');
+
+              ganasteCartel.style.display = 'block';
+
+              // Detener el intervalo
+              clearInterval(this.intervalId);
+
+              const cartelPuntaje = $('puntaje_actual');
+              cartelPuntaje.value = `Puntaje Final: ${this.calcularPuntaje()}`;
+
+              setTimeout(() => {
+                ganasteCartel.style.display = 'none';
+              }, 3000); // Mostrar durante 3 segundos
+
+            }
+
+        }else {
+              this.setErrores(this.getErrores() + 1);
+              $('errores').innerHTML = `Errores: ${this.getErrores()}`;
         }
-      })
+      })     
     }
+
   }
 
   /**
@@ -174,6 +265,7 @@ class Juego {
     const img = new Image();
     img.src = dataURI;
     await img.decode(); // Esperar a que la imagen se cargue completamente en memoria
+    const piezasDiv = this.getPiezas();
 
     const anchoDelFragmento = img.width / 3;
     const altoDelFragmento = img.height / 3;
@@ -228,14 +320,32 @@ class Juego {
               })
       
             })
+
             // agrego el canvas a contenedor de piezas
             const divCanva = document.createElement('div');
             divCanva.className = 'divCanva';
             divCanva.id = j ;
             divCanva.appendChild(canvas);
-            this.getPiezas().appendChild(divCanva); 
+            this.getPiezas().appendChild(divCanva);
+            
       } // FIN FOR j
-          
+
+
+      
+      const piezasArray = Array.from(piezasDiv.children); // Convierto a un array para mezclar
+
+      // Mezclo las piezas aleatoriamente usando el algoritmo Fisher-Yates
+      for (let i = piezasArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [piezasArray[i], piezasArray[j]] = [piezasArray[j], piezasArray[i]];
+      }
+
+      // Agrego las piezas mezcladas al div 'piezas'
+      piezasArray.forEach((divCanva, index) => {
+        piezasDiv.appendChild(divCanva);
+      });
+
+
   } // FIN METODO  
 
   enviarMensaje(dato) {
@@ -335,14 +445,40 @@ class Juego {
 
   } // FIN METODO guardarEstadoJuego
 
+  /**
+   * El calculo del puntaje es de la siguiente manera:
+   * Por cada acierto, ganas 10 puntos.
+   * Por cada error, pierdes 5 puntos.
+   * El tiempo se resta de la puntuación, donde cada segundo reduce la puntuación en 1 punto.
+   * @returns {BigInteger}
+   */
+  calcularPuntaje(){
+    // Calcular el puntaje
+    const puntosPorAcierto = this.aciertos * 10;
+    const puntosPorError = this.errores * -5;
+    const puntosPorTiempo = obtenerTiempoEnSegundos() * -1; // Corrección: sin multiplicar por -1
+
+    return puntosPorAcierto + puntosPorError + puntosPorTiempo;
+
+  }
+
 } // FIN CLASE
 
+// Obtener el elemento del temporizador
+const timerElement = $('tiempo');
 const puzzle = $('puzzle');
 const piezas = $('piezas');
 const mensaje = $('mensaje');
 const label_error = $('msj_error_url_imagen');
 
+// Inicializar variables para el temporizador
+let segundos = 0;
+let minutos = 0;
+
 $('btn_cargar').addEventListener('click', async (e) => {
+
+  // Iniciar el temporizador
+  const intervalo = setInterval(actualizarTemporizador, 1000); // Cada segundo (1000 ms)
 
   try {
     let url_data = $('url_data').value;
@@ -367,7 +503,7 @@ $('btn_cargar').addEventListener('click', async (e) => {
     eliminarHijos(piezas);
     eliminarHijos(puzzle);
 
-    const juego = new Juego(puzzle, piezas, 0, url_data);
+    const juego = new Juego(puzzle, piezas, 0, url_data, intervalo);
 
     juego.setCurrentCanvas(null);
     juego.setPiezas(piezas);
@@ -377,7 +513,7 @@ $('btn_cargar').addEventListener('click', async (e) => {
 
     juego.setTerminado(terminado);
     juego.setPuzzle(puzzle);
-    juego.crearPlaceHolder();
+    juego.crearPlaceHolder(dataURI);
     juego.setPiezas(piezas);
     juego.setPuzzle(puzzle);
     juego.crearEventosDeMouse();

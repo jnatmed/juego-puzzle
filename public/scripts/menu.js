@@ -10,3 +10,20 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+
+document.getElementById("boton_achicar_div").addEventListener("click", function() {
+  var div = document.getElementById("busqueda");
+  var boton_achicar_div = document.getElementById("boton_achicar_div");
+
+  if (div.style.height == "10px"){
+      div.style.height = "20%"; 
+      boton_achicar_div.style.transform = "rotate(180deg)"; // Rota el botón al presionarlo
+    }else{
+      div.style.height = "10px"; 
+      boton_achicar_div.style.transform = "rotate(180deg)"; // Rota el botón al presionarlo
+  }
+});
+
+
+
+

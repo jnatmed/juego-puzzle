@@ -12,7 +12,8 @@ class SessionController extends UsuarioModel{
                         ['enlace'=>'/login','descripcion'=>'Login'],
                         ['enlace'=>'/new','descripcion'=>'Nuevo Juego'],
                         ['enlace'=>'/listado_usuarios','descripcion'=>'Listado Usuarios'],
-                        ['enlace'=>'/partidas','descripcion'=>'Partidas Activas']]
+                        ['enlace'=>'/partidas','descripcion'=>'Partidas Activas'],
+                        ['enlace'=>'/nuevo_admin','descripcion'=>'Registrar Nuevo Administrator']]
     );        
     public $session;
     private $id_usuario;
@@ -85,7 +86,7 @@ class SessionController extends UsuarioModel{
             $tipoUsuario = $_SESSION['tipo_usuario'];
             return view('nuevo_juego' , $this->cargarPanelNavegacion());
         }
-        
+
         return view('login' , $this->cargarPanelNavegacion());
     }
 
@@ -165,7 +166,7 @@ class SessionController extends UsuarioModel{
         // echo("<pre>");
         // var_dump($_SESSION);
 
-        return $this->login();
+        return view('login' , $this->cargarPanelNavegacion());
     }
 
 

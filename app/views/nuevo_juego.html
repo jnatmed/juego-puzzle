@@ -5,23 +5,24 @@
 
     <main>
         
-        <section id="busqueda">
-            <label id="url" for="url">Ingresa la URL de una imagen:</label>    
-            <input id="url_data" type="url" name="url" class="url_img" placeholder="https://example.com" pattern="https://.*" size="30"required>        
-            <label for="msj_error_url_imagen" id="msj_error_url_imagen" class="vibrating-label"></label>
-            <input id="btn_cargar" type="button" value="Cargar">
-        </section>
+        {% include 'panel_input_url_imagen.html' %}
+
         <section id="puntaje" >
-           <label for="puntaje">Puntaje: {{ puntaje }}</label>     
+           <label for="aciertos" id="aciertos" class="metricas">Aciertos: {{ aciertos | default("00")}}</label>     
+           <label for="tiempo" id="tiempo" class="metricas">Tiempo: {{ tiempo | default("00:00") }}</label>     
+           <label for="errores" id="errores" class="metricas">Errores: {{ errores | default("00") }}</label>     
+           <label for="puntaje_actual" id="puntaje_actual" class="metricas">Puntaje: {{ puntaje_actual | default("00") }}</label>     
         </section>
         
         <section class="container">
 
-
+            <!-- en puzzle es donde el jugador 
+                va a colocar las piezas -->
             <section id="puzzle">
 
             </section>
             
+            <!-- en piezas van las piezas cargadas -->
             <section id="piezas">
 
             </section>
@@ -31,7 +32,7 @@
         <h2>Ganaste</h2>
         <div class="lights"></div>
     </div>
-    
+
     </main>
     {% include 'partials/footer.html' %}
 </body>
