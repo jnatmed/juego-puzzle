@@ -26,8 +26,8 @@ function obtenerTiempoEnSegundos() {
   return minutos * 60 + segundos;  
 }
 
-function $(idpiezas) {
-  return document.getElementById(idpiezas);
+function $(id_element) {
+  return document.getElementById(id_element);
 }
 
 function $create(idpiezas,width, height) {
@@ -75,6 +75,8 @@ class Juego {
     this.minutos = 0;
     this.segundos = 0;
     this.intervalId = intervalId;
+
+    this.movimientos = 0;
   }
 
   /**
@@ -146,14 +148,19 @@ class Juego {
       const numero = id.split('_')[1];
       console.log(`e.target.id: ${e.target.id}`);
 
+      const cartelPuntaje = $('puntaje_actual');
+
       if(e.target.id === numero){
         e.target.appendChild($(id));
         e.target.style.opacity = '1';
         
         this.setAciertos(this.getAciertos() + 1);
         $('aciertos').innerHTML = `Aciertos: ${this.getAciertos()}`;
+        $('aciertos').setAttribute('data-value', this.getAciertos());
+        cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+        cartelPuntaje.setAttribute('data-value', this.calcularPuntaje());
 
-        this.guardarEstadoJuego();
+        this.guardarEstadoJuego('jugando');
         this.setTerminado(this.getTerminado() - 1 );
         if (this.getTerminado() === 0) {
           const ganasteCartel = $('ganaste_cartel');
@@ -166,14 +173,19 @@ class Juego {
 
           const cartelPuntaje = $('puntaje_actual');
           cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+          cartelPuntaje.setAttribute('data-value', this.calcularPuntaje());
 
           // Detener el intervalo
           clearInterval(this.intervalId);
-
+          this.guardarEstadoJuego('terminado');
         }
       }else{
           this.setErrores(this.getErrores() + 1);
           $('errores').innerHTML = `Errores: ${this.getErrores()}`;
+          $('errores').setAttribute('data-value', this.getErrores());
+          cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+          cartelPuntaje.setAttribute('data-value', this.calcularPuntaje());
+          this.guardarEstadoJuego('jugando');
       }
     });
     
@@ -185,14 +197,6 @@ class Juego {
     img.src = dataURI;
     await img.decode(); // Esperar a que la imagen se cargue completamente en memoria
 
-    // this.puzzle.style.cssText = `
-    //   background-image: url('${img.src}');
-    //   background-size: cover;
-    //   background-repeat: no-repeat;
-    //   background-position: center;
-    //   opacity: .5;
-    // `;
-
     for (let i = 0; i < this.terminado; i++) {
       const div = document.createElement('div');
       div.className = 'placeholder';
@@ -203,7 +207,7 @@ class Juego {
        *        - puzzle
        */
       this.puzzle.appendChild(div);
-      console.log(this.puzzle);
+      // console.log(this.puzzle);
       let placeHolder = $(i); 
     
       placeHolder.addEventListener('touchstart', e => {
@@ -218,6 +222,8 @@ class Juego {
          * canvas_1 con el split se conviete en ['canvas', '1']
          * la posicion [1] tiene el numero de canvas
          */
+        const cartelPuntaje = $('puntaje_actual');
+
         if ($(this.currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
             placeHolderSeccionado.style.opacity = '1';
             placeHolderSeccionado.appendChild($(this.currentCanvas))
@@ -226,7 +232,10 @@ class Juego {
              */
             this.setAciertos(this.getAciertos() + 1);
             $('aciertos').innerHTML = `Puntaje: ${this.getAciertos()}`;
-            this.guardarEstadoJuego();
+            $('aciertos').setAttribute('data-value', this.getAciertos());
+            cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+            cartelPuntaje.setAttribute('data-value', this.calcularPuntaje());
+            this.guardarEstadoJuego('jugando');
 
             if (this.getTerminado() === 0) {
               const ganasteCartel = $('ganaste_cartel');
@@ -236,8 +245,11 @@ class Juego {
               // Detener el intervalo
               clearInterval(this.intervalId);
 
-              const cartelPuntaje = $('puntaje_actual');
-              cartelPuntaje.value = `Puntaje Final: ${this.calcularPuntaje()}`;
+              this.guardarEstadoJuego('terminado');
+
+              
+              cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+              cartelPuntaje.setAttribute('data-value', this.calcularPuntaje());
 
               setTimeout(() => {
                 ganasteCartel.style.display = 'none';
@@ -248,6 +260,10 @@ class Juego {
         }else {
               this.setErrores(this.getErrores() + 1);
               $('errores').innerHTML = `Errores: ${this.getErrores()}`;
+              $('errores').setAttribute('data-value', this.getErrores());
+              this.guardarEstadoJuego('jugando');
+              cartelPuntaje.innerHTML = `Puntaje Final: ${this.calcularPuntaje()}`;
+              cartelPuntaje.setAttribute('data-value', this.calcularPuntaje());
         }
       })     
     }
@@ -267,8 +283,8 @@ class Juego {
     await img.decode(); // Esperar a que la imagen se cargue completamente en memoria
     const piezasDiv = this.getPiezas();
 
-    const anchoDelFragmento = img.width / 3;
-    const altoDelFragmento = img.height / 3;
+    const anchoDelFragmento = img.width / Math.sqrt(numCanvases);
+    const altoDelFragmento = img.height / Math.sqrt(numCanvases);
 
       for(let j = 0; j < numCanvases; j++ ) {
 
@@ -278,8 +294,8 @@ class Juego {
             // le asigno una clase
             canvas.className = 'pieza';
             // dibujo un fragmento de la imagen en ese canvas
-            const origenX = (j % 3) * anchoDelFragmento; 
-            const origenY = Math.floor(j / 3) * altoDelFragmento;
+            const origenX = (j % Math.sqrt(numCanvases)) * anchoDelFragmento; 
+            const origenY = Math.floor(j / Math.sqrt(numCanvases)) * altoDelFragmento;
 
             const ctx = canvas.getContext("2d");
 
@@ -348,101 +364,89 @@ class Juego {
 
   } // FIN METODO  
 
-  enviarMensaje(dato) {
-
-      if(dato['estado_puzzle'] !== undefined){
-        console.log("contenido estado puzzle")
-        console.table(dato['estado_puzzle']);
-      }else{
-        console.log("contenido estado piezas")
-        console.table(dato['estado_piezas']);
-      }
-      
-      fetch("/enviarEstado", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(dato)
-      })
-
-      .then((response) => {
-        // response.ok sera true con respuestas 2xx
-        if (!response.ok) {
-            throw new Error(`Hubo un Error HTTP : ${response.status}`);
-          }
-        return response.json();
-        })
-      .then((data) => console.log(`data : ${data}`))
-      .catch((error) => console.log(`error : ${error}`)); 
-
+  
+  serializeDivContent(divId){
+    const divElement = $(divId);
+    console.log(divElement.innerHTML);
+    return divElement.outerHTML;
   }
 
-  /**
-   */
-  actualizarMatriz(array, estadoMatriz){
+  guardarImagesCanvas(){
 
-    array.childNodes.forEach((div, cont) => {
-        if(cont != 0){
-            if (div.childNodes.length > 0){
-                estadoMatriz[div.id] = div.childNodes[0].id;
-            }else{
-                estadoMatriz[div.id] = -1;
-            }
-        }
+    const canvasImages = [];
+    const canvasElements = this.getPiezas().querySelectorAll('canvas');
+    /**
+     * 
+     * Recorro todos los elementos canvas del div 
+     * piezas, de cada canvas obtengo el id del nodo padre
+     * y lo guardo junto con la img el id del padre y la imagen en si
+     * todo esto dentro de un json que contiene la informacion 
+     * de todas las imagenes y eso es lo que voy a devolver
+     */
+    console.log(canvasElements);
+    canvasElements.forEach( canvas => {
+      const imageDataUrl = canvas.toDataURL();
+      canvasImages.push({
+        idCanva : canvas.id.split('_')[1],
+        imageDataUrl : imageDataUrl
+      })
+    })
+    
+    return canvasImages;
+  }
+
+  guardarEstadoJuego(progreso_partida){
+
+    this.movimientos++;
+
+
+    let estadoPartida = JSON.stringify({
+      divPiezasDesordenadas: this.serializeDivContent('piezas'),
+      divPiezasCompletadas: this.serializeDivContent('puzzle'),
+      aciertos: $('aciertos').getAttribute('data-value'), 
+      errores: $('errores').getAttribute('data-value'), 
+      tiempoTranscurrido: $('tiempo').innerHTML 
     });
 
-    return estadoMatriz;
-  } 
+    // console.log(estadoPartida);
 
-  /**
-   * SECTOR PUZZLE : 
-   * ESTA MATRIZ ES LA QUE MANDO AL BACKEND PARA GUARDAR EL ESTADO DEL 
-   * JUEGO ACTUAL
-   *  - ENVIO LAS MATRICES : PUZZLE Y PIEZAS
-   * PUZZLE : TIENE EL ESTADO DE AVANCE DE LA PARTIDA ACTUAL
-   * PIEZAS : TIENE LAS PIEZAS QUE TODAVIA NO FUERON 
-   * UBICADAS EN EL PUZZLE 
-   */
-  guardarEstadoJuego(){
+    const id_usuario = $('id_usuario').getAttribute('data-value'); 
+    const id_partida = $('id_partida').getAttribute('data-value'); 
+
+    // Convertir el objeto estadoPartida a una cadena JSON
+    let jsonData = {
+      id_usuario: id_usuario,
+      id_partida: id_partida,
+      estadoPartida: estadoPartida,
+      progreso: progreso_partida,
+      puntaje: $('puntaje').getAttribute('data-value')
+    };
+
+    if(this.movimientos > 1){
+      jsonData.imagesCanvas = JSON.stringify(this.guardarImagesCanvas())
+    }else{
+      jsonData.imagesCanvas = JSON.stringify([]);
+    }
+
+    jsonData = JSON.stringify(jsonData);
+
+    console.log(jsonData);
+    // Realizar la petición AJAX al servidor utilizando fetch
+    fetch('/guardar_estado', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: jsonData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+       console.log(responseText);
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
     
-    let estadoPieza = [];   
-    let estadoPuzzle = [];  
-
-    /**
-     * SECTOR PIEZAS
-     * aca actualizo la matriz cada vez que se realiza un movimiento
-     * 1) uso una matriz auxiliar y luego seteo la matriz
-     */
-    estadoPieza = this.actualizarMatriz(this.getPiezas(), this.getEstadoPiezas());
-
-    this.setEstadoPiezas(estadoPieza);
-
-    console.log('SECCION Piezas');
-    /**
-     * 2) envio del estado de las piezas al backend
-     * para que se guarde en la base de datos
-     */
-    this.enviarMensaje({'estado_piezas': estadoPieza});
-    console.table(estadoPieza);
-
-    console.log('SECCION Puzzle : ');
-    /**
-     * SECTOR PUZZLE
-     * aca actualizo la matriz cada vez que se realiza un movimiento
-     * 3) uso una matriz auxiliar y luego seteo la matriz
-     */
-    estadoPuzzle = this.actualizarMatriz(this.getPuzzle(), this.getEstadoPuzzle());
-    
-    this.setEstadoPuzzle(estadoPuzzle);
-
-    /**
-     * 4) envio el estado del puzzle al backend
-     */
-    this.enviarMensaje({'estado_puzzle': estadoPuzzle});            
-    console.table(estadoPuzzle);
-
   } // FIN METODO guardarEstadoJuego
 
   /**
@@ -458,8 +462,13 @@ class Juego {
     const puntosPorError = this.errores * -5;
     const puntosPorTiempo = obtenerTiempoEnSegundos() * -1; // Corrección: sin multiplicar por -1
 
-    return puntosPorAcierto + puntosPorError + puntosPorTiempo;
+    if(puntosPorTiempo + puntosPorError > puntosPorAcierto ) {
+      return 0;
+    }else{
+      return puntosPorAcierto + puntosPorError + puntosPorTiempo;
+    }
 
+// 90 - 89
   }
 
 } // FIN CLASE
@@ -477,10 +486,9 @@ let minutos = 0;
 
 $('btn_cargar').addEventListener('click', async (e) => {
 
-  // Iniciar el temporizador
-  const intervalo = setInterval(actualizarTemporizador, 1000); // Cada segundo (1000 ms)
-
+  
   try {
+
     let url_data = $('url_data').value;
     /**
      * estos procesos deben deben ejecutarse
@@ -500,6 +508,9 @@ $('btn_cargar').addEventListener('click', async (e) => {
     const blob = await response.blob();
     const dataURI = await blobToDataURI(blob);
 
+    // Iniciar el temporizador
+    const intervalo = setInterval(actualizarTemporizador, 1000); // Cada segundo (1000 ms)
+
     eliminarHijos(piezas);
     eliminarHijos(puzzle);
 
@@ -508,17 +519,18 @@ $('btn_cargar').addEventListener('click', async (e) => {
     juego.setCurrentCanvas(null);
     juego.setPiezas(piezas);
     juego.crearCanvasyAsignarPiezas(dataURI);
-
+    
     let terminado = 9;
-
+  
     juego.setTerminado(terminado);
     juego.setPuzzle(puzzle);
+
     juego.crearPlaceHolder(dataURI);
     juego.setPiezas(piezas);
     juego.setPuzzle(puzzle);
     juego.crearEventosDeMouse();
-
-    juego.guardarEstadoJuego();
+    
+    juego.guardarEstadoJuego('iniciado');
 
   } catch (error) {
     if (error instanceof DOMException && error.name === 'TypeError') {

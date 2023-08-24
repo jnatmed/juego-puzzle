@@ -34,34 +34,58 @@ class JuegoController extends JuegoModel{
 
     public function new(){
         $sesion = new SessionController();
+
+        // pregunto si tiene sesion iniciada. 
+        $resultado = $sesion->tieneSesionActiva();
+        
+        if ($resultado['estado'] == 'ok') {
+
+            $juegoModel = new JuegoModel();
+            $nuevoIdPartida = $juegoModel->traerUltimoIdPartida($_SESSION['id_usuario']) + 1;
+            $resultado = $juegoModel->crearNuevaPartida($_SESSION['id_usuario'], $nuevoIdPartida);
+            // echo("<pre>");
+            // var_dump($resultado);
+            if($resultado['estado'] == 'ok'){
+                return view('nuevo_juego', [
+                    'id_partida' => $nuevoIdPartida,
+                    ...$sesion->cargarPanelNavegacion()
+                ]);
+            }else{
+                echo("<pre>");
+                var_dump($resultado);
+            }
+        }
         return view('nuevo_juego', $sesion->cargarPanelNavegacion());
     }
 
-    public function guardarEstado($estado){
-        $juegoModel = new JuegoModel();
-        $juegoModel->addEstado($estado);
-    }    
-    /*
-     * recibo el nombre de la matriz
-     * y la matriz
-     */
-    public function guardar($type, $param){
-        
-        $this->log->info("insertando {$type}");
-        $array = '['.implode(",", $param).']';
-        $this->log->info("method reciboEstado() {$array}");
-        /*
-         * unifico los dos parametros recibidos
-         * y los guardo en uno.
-         */
-        $this->guardarEstado([
-            "id_usuario" => 1,
-            "estados_del_juego" => implode(",",[
-                "nombre_matriz" => $type,
-                "matriz" => $array])
-        ]);
+    public function listado_partidas(){
 
-    }    
+        $sesion = New SessionController();
+
+        $respuesta = $sesion->tieneSesionActiva();
+        
+        if($respuesta['estado'] == 'ok' ){
+
+            $juegoModel = new JuegoModel();
+
+            $listado = $juegoModel->traerPartidas($_SESSION['id_usuario']);
+
+            // echo("<pre>");
+            // var_dump($listado);
+
+            if ($listado['estado'] == 'ok') {
+                return view('listado_partidas',[
+                    'partidas' => $listado['listado'],
+                    ...$sesion->cargarPanelNavegacion()
+                ]);
+            }else{
+                return view('listado_partidas',[
+                    'partidas' => [],
+                    ...$sesion->cargarPanelNavegacion()
+                ]);
+            }
+        }        
+    }
 
     public function reciboEstado(){
         
@@ -69,50 +93,47 @@ class JuegoController extends JuegoModel{
 
         $respuesta = $sesion->tieneSesionActiva();
         
-        if($respuesta['estado'] == 200 ){
+        if($respuesta['estado'] === 'ok' ){
+
+            $jsonData = file_get_contents("php://input");
             
-            $id_usuario = $sesion->getIdUsuario();
-            $matriz = $sesion->getMatriz();
-            $id_partida = $sesion->getIdPartida();
+            // Decodificar los datos JSON recibidos
+            $datos = json_decode($jsonData, true);
 
-            $this->log->info(`success : {$id_usuario}`);
+            $juegoModel = new JuegoModel();
+            $resultado = $juegoModel->actualizarPartida($datos);
 
-            return(json_encode(
-                            ["status" => "success",
-                             "data" => ["id_sesion" => $id_usuario,
-                            "matriz" => $matriz,
-                            "id_partida" => $id_partida]
-                        ]));
+            if($resultado['estado'] == 'ok') {
+                echo json_encode(array(
+                    'estado' => 'ok',
+                    'descripcion' => $resultado['descripcion']
+                ));
+            }else{
+                echo json_encode(array(
+                    'estado' => 'error',
+                    'descripcion' => $resultado['descripcion']
+                ));
+            }
+        }
+    } // FIN metodo : reciboEstado()
 
-        }else{
+    public function continuar_partida(){
 
-            $this->log->info(`error : error`);
-            
-            return(json_encode(
-                            ["status" => "error",
-                             "data" => []
-                        ]));
+        $sesion = New SessionController();
+
+        $respuesta = $sesion->tieneSesionActiva();
+        
+        if($respuesta['estado'] === 'ok' ){
+            /**
+             * resultado objetivo
+             */
+            return view('partida_iniciada',[
+                'imagenes' =>[ '0' => 'imagenBase64', '1' => 'imagenBase64' ],
+                'piezas' => [ '0' => 'canva_8', '1' => 'canva_2' ],
+                'puzzle' => [ '0' => '', '1' => 'canva_1']
+            ]);
         }
 
-        // $_post = json_decode(file_get_contents('php://input'),true);
+    } // FIN metodo : continuar_partida()
 
-        //recibo el array asociativo
-        // if(isset($_post['estado_puzzle'])){
-        
-        //     $this->guardar('estado_puzzle', $_post['estado_puzzle']);
-
-        //     $this->log->info("puzzle : INSERTADO CON EXITO");
-        //     return(json_encode(['pieza' => 'INSERTADO CON EXITO',
-        //                         "id_usuario" => "1" ]));            
-        // }
-        // if(isset($_post['estado_piezas'])){
-            
-        //     $this->guardar('estado_piezas', $_post['estado_piezas']);        
-
-        //     $this->log->info("pieza : INSERTADO CON EXITO");
-        //     return(json_encode(['pieza' => 'INSERTADO CON EXITO',
-        //                         "id_usuario" => "1" ]));
-        // }
-
-    }
-}
+} // FIN clase : juegoController

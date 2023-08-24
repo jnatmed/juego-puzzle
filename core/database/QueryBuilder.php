@@ -40,6 +40,91 @@ class QueryBuilder
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
 
+    public function selectAllByUser($id_usuario_actual)
+    {
+        $consulta = "SELECT id_partida, progreso FROM partida WHERE id_usuario = :id_usuario";
+        $stmt = $this->pdo->prepare($consulta);
+        $stmt->bindParam(':id_usuario', $id_usuario_actual, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Recuperar los resultados
+        $partidas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // echo("<pre>");
+        // var_dump($partidas);
+
+        if ($partidas) {
+                return [
+                    'estado' => 'ok',
+                    'listado' => $partidas,
+                    'descripcion' => 'QueryBuilder : inserción correcta'
+                ];
+            } else {
+                return [
+                    'estado' => 'error',
+                    'descripcion' => 'QueryBuilder : error al traer partidas'
+                ];
+        }
+    }
+
+    public function traerUltima($id_usuario){
+
+        $consulta = "SELECT MAX(id_partida) AS max_id FROM partida WHERE id_usuario = :id_usuario";
+        $stmt = $this->pdo->prepare($consulta);
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($fila['max_id'] !== null) {
+            // Obtener el último id_partida y aumentarlo en 1
+            // echo("<pre>");
+            // var_dump($fila);
+
+            $ultimo_id_partida = $fila['max_id'];
+            return $ultimo_id_partida;
+        }else {
+            return 0;
+        }
+        
+    }
+
+    public function crearNueva($id_usuario, $id_partida) {
+        try {
+            // echo("<pre>");
+            // var_dump($id_usuario);
+            
+            // Preparar la consulta de inserción
+            $consulta = "INSERT INTO partida (id_partida, id_usuario, estado_partida, progreso) VALUES (:id_partida, :id_usuario, NULL, 'iniciada')";
+            $stmt = $this->pdo->prepare($consulta);
+
+            // Asignar valores a los parámetros
+            $stmt->bindParam(':id_partida', $id_partida, PDO::PARAM_INT);
+            $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
+
+            // Ejecutar la consulta
+            $stmt->execute();
+
+            // Verificar si la inserción se realizó correctamente
+            if ($stmt->rowCount() > 0) {
+                return [
+                    'estado' => 'ok',
+                    'descripcion' => 'inserción correcta'
+                ];
+            } else {
+                return [
+                    'estado' => 'error',
+                    'descripcion' => 'error al insertar'
+                ];
+            }
+        } catch (PDOException $e) {
+            return [
+                'estado' => 'error',
+                'descripcion' => 'error en la inserción: ' . $e->getMessage()
+            ];
+        }
+    }
+
     public function selectOne($table, $column, $searched)
     {
         // echo("<pre>");
@@ -173,6 +258,38 @@ class QueryBuilder
         } catch (PDOException $e) {
             echo "Error al insertar el registro: " . $e->getMessage();
         }   
+    }
+
+    public function updatePartida($data){
+
+        // Construir la consulta SQL y prepararla        
+        $consultaSQL = "UPDATE partida SET estado_partida = :estado_partida, progreso = :progreso, imagenes = :imagenes, puntaje = :puntaje";
+            
+        $consultaSQL .= "WHERE id_usuario = :id_usuario AND id_partida = :id_partida";
+
+        $stmt = $this->pdo->prepare($consultaSQL);
+        foreach ($data as $key => $value) {
+            // Preparo el nombre del marcador, que debe comenzar con dos puntos
+            $paramName = ':' . $key;
+            // Vincular el valor al parámetro
+            $stmt->bindParam($paramName, $data[$key]);
+        }
+
+        try {
+            $stmt->execute();
+            
+            return [
+                'estado' => 'ok',
+                'descripcion' => 'Datos actualizados correctamente.'
+            ];
+
+        } catch (PDOException $e) {
+
+            return [
+                'estado' => 'error',
+                'descripcion' => "Error al actualizar los datos: {$e->getMessage()}"
+            ];
+        }
     }
 
     public function update($table, $parameters, $condition){

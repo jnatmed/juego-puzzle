@@ -9,15 +9,6 @@ body {
     background-repeat: no-repeat; /* Evitar repetición de la imagen */
 }
 
-#puntaje {
-    color: white;
-}
-
-.container {
-    display: flex;
-    justify-content: space-around;
-    
-}
 
 .divCanva {
     margin : 0;
@@ -102,12 +93,13 @@ body {
     display: none;
 }
 
-@media (max-width: 610px) {
+@media (max-width: 840px) {
 
     .container {
         /* background-color: aqua; */
         flex-wrap : wrap;
         flex-direction: column;
         justify-content: space-around;
+        align-items: center;
     }
 }

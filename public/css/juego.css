@@ -27,13 +27,32 @@
 }
 
 #puntaje {
+    color: white;
+    padding-left: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    border: aliceblue;
+}
+
+#puntaje {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  border-color: black;
 }
 
 .metricas {
+  border-color: black;
+  padding-bottom: 10px;
+}
+
+.metricas, #id_partida {
   font-size: 20px; 
   font-weight: bold;
+  color: rgba(255, 255, 255, 0.9);  
 }
 
 #aciertos, #tiempo, #errores {

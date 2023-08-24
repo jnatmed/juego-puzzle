@@ -1,0 +1,33 @@
+{% include 'partials/base.html' %}
+<body>
+    {% include 'partials/nav-puzzle.html' %}  
+
+    <main>
+        <h1>Listado de Partidas</h1>
+        <div class="table-container">
+            {% if partidas is empty %}
+                <p>No hay partidas disponibles.</p>
+            {% else %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Partida ID</th>
+                            <th>Progreso</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for partida in partidas %}
+                            <tr>
+                                <td>{{ partida.id_partida }}</td>
+                                <td>{{ partida.progreso }}</td>
+                                <td><a href="/continuar_partida?partida={{ partida.id_partida }}">Jugar</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}            
+        </div>
+    </main>
+    {% include 'partials/footer.html' %}
+</body>

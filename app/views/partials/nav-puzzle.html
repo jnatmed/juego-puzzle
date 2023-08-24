@@ -12,8 +12,8 @@
         </nav> 
             {% if sesion_activa %}
                 <section id="user_info">
-                    <label id="username" for="username">
-                        Usuario : {{ username|capitalize  }}                         
+                    <label id="id_usuario" for="id_usuario" data-value="{{id_usuario}}">
+                        Usuario : {{ id_usuario|capitalize  }}                         
                     </label>
                     <label id="tipo_usuario" for="tipo_usuario">
                         Tipo Usuario : {{ tipo_usuario}}

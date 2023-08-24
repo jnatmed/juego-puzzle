@@ -2,19 +2,12 @@
 namespace App\controllers;
 
 use \App\models\UsuarioModel;
+use \App\controllers\MenuController;
+use \App\controllers\JuegoController;
+
 
 class SessionController extends UsuarioModel{
-    public $opciones_navbar = array(
-            'jugador' => [['enlace'=>'/ranking','descripcion'=>'Mi Ranking'],
-                        ['enlace'=>'/login','descripcion'=>'Login'],
-                        ['enlace'=>'/new','descripcion'=>'Nuevo Juego']],
-            'admin' => [['enlace'=>'/ranking','descripcion'=>'Ranking'],
-                        ['enlace'=>'/login','descripcion'=>'Login'],
-                        ['enlace'=>'/new','descripcion'=>'Nuevo Juego'],
-                        ['enlace'=>'/listado_usuarios','descripcion'=>'Listado Usuarios'],
-                        ['enlace'=>'/partidas','descripcion'=>'Partidas Activas'],
-                        ['enlace'=>'/nuevo_admin','descripcion'=>'Registrar Nuevo Administrator']]
-    );        
+
     public $session;
     private $id_usuario;
     private $id_partida;
@@ -23,11 +16,9 @@ class SessionController extends UsuarioModel{
     public function cargarPanelNavegacion(){
 
         $usuarioModel = new UsuarioModel();
+        $menuController = new MenuController();
 
         $sesion = $this->tieneSesionActiva();
-
-        // echo("<pre>");
-        // var_dump($sesion);
         
         if ($sesion['estado'] == 'ok') {
             
@@ -36,8 +27,8 @@ class SessionController extends UsuarioModel{
             // echo("<pre>");
             // var_dump($this->opciones_navbar[$tipoUsuario]);
             
-            $datos['enlaces'] = $this->opciones_navbar[$tipoUsuario];
-            $datos['username'] = $_SESSION['id_usuario'];
+            $datos['enlaces'] = $menuController->crearMenu($tipoUsuario);
+            $datos['id_usuario'] = $_SESSION['id_usuario'];
             $datos['tipo_usuario'] = $tipoUsuario;
             $datos['sesion_activa'] = true;
             // echo("<pre>");
@@ -46,7 +37,7 @@ class SessionController extends UsuarioModel{
             return $datos;
         }
         
-        $datos['enlaces'] = $this->opciones_navbar['jugador'];
+        $datos['enlaces'] = $menuController->crearMenu('anonimo');
         $datos['sesion_activa'] = false;
          
         return $datos;
@@ -64,7 +55,11 @@ class SessionController extends UsuarioModel{
 
     public function iniciarSession(){
 
-        session_start();
+        /**
+         *  si la sesion no esta activa */ 
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $datos_de_inicio_de_sesion = [
                 'id_usuario' => $_POST['id_usuario'], 
@@ -83,16 +78,28 @@ class SessionController extends UsuarioModel{
         // var_dump($estado);
 
         if($estado['estado'] == 'ok'){
-            $tipoUsuario = $_SESSION['tipo_usuario'];
-            return view('nuevo_juego' , $this->cargarPanelNavegacion());
+
+            $juegoController = new JuegoController();
+
+            return $juegoController->listado_partidas();
+
         }
 
         return view('login' , $this->cargarPanelNavegacion());
     }
 
     public function tieneSesionActiva(){
-
-        session_start();
+        if($_SESSION !== NULL) {
+            session_start();
+        }
+                // Verificar si la sesión ha expirado
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1440)) {
+            session_unset();   // Desvincular todas las variables de sesión
+            session_destroy(); // Destruir la sesión
+            echo "La sesión ha expirado.";
+            // Actualizar la marca de tiempo de la última actividad
+            $_SESSION['LAST_ACTIVITY'] = time();
+        }
 
         if(isset($_SESSION['id_usuario'])){
 
@@ -158,17 +165,10 @@ class SessionController extends UsuarioModel{
     }
 
     public function cerrarSesion() {
-        session_unset();
+        setcookie(session_name(), '', time() - 3600);        
         session_destroy();
-        setcookie(session_name(), '', time() - 3600);
-
-        // echo("cerrarSesion");
-        // echo("<pre>");
-        // var_dump($_SESSION);
-
         return view('login' , $this->cargarPanelNavegacion());
     }
-
 
 }
 
