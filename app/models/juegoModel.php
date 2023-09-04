@@ -74,4 +74,20 @@ class JuegoModel extends Model{
         return $this->db->updatePartida($datos);
     }
 
+    public function traerDatosPartida($data) {
+
+        $resultado = $this->db->traerUltimoEstadoPartida($data);
+        
+        if($resultado['estado'] == 'ok'){
+            return ['estado' => 'ok',
+                    ...$resultado['dato'],
+                    'descripcion' => '1 - metodo traerDatosPartida: obtencion de datos exitoso'];
+        } else {
+            // Manejo si no se encuentran datos en la base de datos
+            return ['estado' => 'error',
+                    'descripcion' => '1 - metodo traerDatosPartida: error trayendo los datos de la db'];
+        }
+
+    }
+
 }

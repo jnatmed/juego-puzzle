@@ -124,14 +124,21 @@ class JuegoController extends JuegoModel{
         $respuesta = $sesion->tieneSesionActiva();
         
         if($respuesta['estado'] === 'ok' ){
-            /**
-             * resultado objetivo
-             */
-            return view('partida_iniciada',[
-                'imagenes' =>[ '0' => 'imagenBase64', '1' => 'imagenBase64' ],
-                'piezas' => [ '0' => 'canva_8', '1' => 'canva_2' ],
-                'puzzle' => [ '0' => '', '1' => 'canva_1']
+            $juegoModel = new JuegoModel();
+            // echo("{$_SESSION['id_usuario']} {$_GET['partida']}");
+            $datosPartida = $juegoModel->traerDatosPartida([
+                'id_usuario' => $_SESSION['id_usuario'], 
+                'id_partida' => $_GET['partida']
             ]);
+
+            // echo("<pre>");
+            // var_dump($datosPartida['piezas'][0]['div-id']);
+
+            return view('partida_iniciada', [
+                ...$datosPartida,
+                ...$sesion->cargarPanelNavegacion()
+            ]);
+            
         }
 
     } // FIN metodo : continuar_partida()

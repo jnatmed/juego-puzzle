@@ -89,9 +89,9 @@ class SessionController extends UsuarioModel{
     }
 
     public function tieneSesionActiva(){
-        if($_SESSION !== NULL) {
-            session_start();
-        }
+
+        session_start();    
+
                 // Verificar si la sesión ha expirado
         if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1440)) {
             session_unset();   // Desvincular todas las variables de sesión
@@ -167,9 +167,13 @@ class SessionController extends UsuarioModel{
     public function cerrarSesion() {
         setcookie(session_name(), '', time() - 3600);        
         session_destroy();
-        return view('login' , $this->cargarPanelNavegacion());
-    }
 
+        $menuController = new MenuController();
+        $datos = [];
+        $datos['enlaces'] = $menuController->crearMenu('anonimo');
+        $datos['sesion_activa'] = false;
+        return view('login' , $datos);
+    }
 }
 
 ?>

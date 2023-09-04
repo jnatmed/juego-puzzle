@@ -15,28 +15,53 @@
         <section class="container">
             
             <section id="puntaje" >
-               <article id="id_partida" class="metricas" data-value="{{ id_partida }}">{{ id_partida ? "Partida N°" ~ id_partida : "Sin partida asignada" }}</article>
+               <label id="id_partida" class="metricas" data-value="{{ id_partida }}">{{ id_partida ? "Partida N°" ~ id_partida : "Sin partida asignada" }}</label>
                <label for="aciertos" id="aciertos" class="metricas" data-value="{{ aciertos | default("00")}}">Aciertos: {{ aciertos | default("00")}}</label>     
                <label for="tiempo" id="tiempo" class="metricas" data-value="{{ tiempo | default("00:00") }}">Tiempo: {{ tiempo | default("00:00") }}</label>     
                <label for="errores" id="errores" class="metricas" data-value="{{ errores | default("00") }}">Errores: {{ errores | default("00") }}</label>     
-               <label for="puntaje_actual" id="puntaje_actual" class="metricas" data-value="{{ puntaje_actual | default("00") }}">Puntaje: {{ puntaje_actual | default("00") }}</label>     
+               
             </section>
-            <!-- en puzzle es donde el jugador 
-                va a colocar las piezas -->
+
             <section id="puzzle">
-                
+                {% for puzzlePiece in puzzle %}
+                    <div class="placeholder" id="{{ puzzlePiece['div-id'] }}">
+                        {% if puzzlePiece.canva_id is not null %}
+                            <canvas id="{{ puzzlePiece.canva_id }}" class="pieza" draggable="true" style="cursor: move;"></canvas>
+                        {% endif %}
+                    </div>
+                {% endfor %}                
             </section>
             
-            <!-- en piezas van las piezas cargadas -->
             <section id="piezas">
+                {% for pieza in piezas %}
+                    <div class="divCanva" id="{{ pieza['div-id'] }}">
+                        {% if pieza.canva_id is not null %}
+                            <canvas id="{{ pieza.canva_id }}" class="pieza" draggable="true"></canvas>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </section>       
 
-            </section>
-        </section>
-
+         </section>
     <div id="ganaste_cartel" class="hidden">
         <h2>Ganaste</h2>
         <div class="lights"></div>
     </div>
+
+    <script>
+    {% for idCanva, imageDataUrl in imagenes %}
+        let canvas{{ idCanva }} = document.getElementById("canvas_{{ idCanva }}");
+        let ctx{{ idCanva }} = canvas{{ idCanva }}.getContext("2d");
+        let img{{ idCanva }} = new Image();
+        img{{ idCanva }}.onload = function() {
+            ctx{{ idCanva }}.drawImage(img{{ idCanva }}, 0, 0);  // Dibuja la imagen en el canvas
+        };
+        img{{ idCanva }}.src = "{{ imageDataUrl }}";  // Establece la fuente de la imagen
+
+    {% endfor %}
+    </script>                            
+
+
 
     </main>
     {% include 'partials/footer.html' %}

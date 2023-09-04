@@ -15,7 +15,7 @@
         <section class="container">
             
             <section id="puntaje" >
-               <article id="id_partida" class="metricas" data-value="{{ id_partida }}">{{ id_partida ? "Partida N°" ~ id_partida : "Sin partida asignada" }}</article>
+               <label id="id_partida" class="metricas" data-value="{{ id_partida }}">{{ id_partida ? "Partida N°" ~ id_partida : "Sin partida asignada" }}</label>
                <label for="aciertos" id="aciertos" class="metricas" data-value="{{ aciertos | default("00")}}">Aciertos: {{ aciertos | default("00")}}</label>     
                <label for="tiempo" id="tiempo" class="metricas" data-value="{{ tiempo | default("00:00") }}">Tiempo: {{ tiempo | default("00:00") }}</label>     
                <label for="errores" id="errores" class="metricas" data-value="{{ errores | default("00") }}">Errores: {{ errores | default("00") }}</label>     

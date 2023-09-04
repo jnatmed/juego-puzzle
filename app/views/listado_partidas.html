@@ -13,6 +13,7 @@
                         <tr>
                             <th>Partida ID</th>
                             <th>Progreso</th>
+                            <th>Puntaje</th>
                             <th>Accion</th>
                         </tr>
                     </thead>
@@ -20,7 +21,8 @@
                         {% for partida in partidas %}
                             <tr>
                                 <td>{{ partida.id_partida }}</td>
-                                <td>{{ partida.progreso }}</td>
+                                <td>{{ partida.progreso| title }}</td>
+                                <td>{{ partida.puntaje }}</td>
                                 <td><a href="/continuar_partida?partida={{ partida.id_partida }}">Jugar</a></td>
                             </tr>
                         {% endfor %}

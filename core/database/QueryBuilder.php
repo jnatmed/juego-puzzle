@@ -42,7 +42,7 @@ class QueryBuilder
 
     public function selectAllByUser($id_usuario_actual)
     {
-        $consulta = "SELECT id_partida, progreso FROM partida WHERE id_usuario = :id_usuario";
+        $consulta = "SELECT id_partida, progreso, puntaje FROM partida WHERE id_usuario = :id_usuario";
         $stmt = $this->pdo->prepare($consulta);
         $stmt->bindParam(':id_usuario', $id_usuario_actual, PDO::PARAM_STR);
         $stmt->execute();
@@ -95,7 +95,7 @@ class QueryBuilder
             // var_dump($id_usuario);
             
             // Preparar la consulta de inserción
-            $consulta = "INSERT INTO partida (id_partida, id_usuario, estado_partida, progreso) VALUES (:id_partida, :id_usuario, NULL, 'iniciada')";
+            $consulta = "INSERT INTO partida (id_partida, id_usuario, estado_partida, progreso, imagenes, puntaje) VALUES (:id_partida, :id_usuario, NULL, 'iniciada', NULL, NULL)";
             $stmt = $this->pdo->prepare($consulta);
 
             // Asignar valores a los parámetros
@@ -260,20 +260,53 @@ class QueryBuilder
         }   
     }
 
+    public function guardarImagenes($imagenes, $id_partida, $id_usuario){
+        $resultados = array();
+        $carpeta_destino = realpath("imagenes_partida");
+
+
+        foreach ($imagenes as $img_data) {
+            $id_canva = $img_data['idCanvas'];
+            $img_base64 = $img_data['imageDataUrl'];
+
+            $idCanvaOrigin = "{$id_partida}.{$id_usuario}.{$id_canva}";
+            $idCanvaHash = hash('sha256', $idCanvaOrigin);
+            
+            $archivo_destino = "{$carpeta_destino}/{$idCanvaHash}.png";
+
+            file_put_contents($archivo_destino, $img_base64);
+            
+            $resultados[] = array("{$idCanvaOrigin}" => $idCanvaHash);
+        }
+        
+        return $resultados;
+    }
+
     public function updatePartida($data){
 
+        // Asegúrate de que $data['progreso'] es seguro para la interpolación
+        $progreso = $this->pdo->quote($data['progreso']);
+
         // Construir la consulta SQL y prepararla        
-        $consultaSQL = "UPDATE partida SET estado_partida = :estado_partida, progreso = :progreso, imagenes = :imagenes, puntaje = :puntaje";
+        $consultaSQL = "UPDATE partida SET estado_partida = :estado_partida, progreso = $progreso, imagenes = :imagenes, puntaje = :puntaje";
             
-        $consultaSQL .= "WHERE id_usuario = :id_usuario AND id_partida = :id_partida";
+        $consultaSQL .= " WHERE id_usuario = :id_usuario AND id_partida = :id_partida";
 
         $stmt = $this->pdo->prepare($consultaSQL);
-        foreach ($data as $key => $value) {
-            // Preparo el nombre del marcador, que debe comenzar con dos puntos
-            $paramName = ':' . $key;
-            // Vincular el valor al parámetro
-            $stmt->bindParam($paramName, $data[$key]);
-        }
+
+        $imagesCanva = json_decode($data['imagesCanvas'], true);
+        
+        $pathUrlCanvas = json_encode($this->guardarImagenes($imagesCanva, $data['id_usuario'], $data['id_partida']), true);
+        $data_puntaje = intval($data['puntaje']);
+
+        $data['estado_partida'] = json_encode($data['estado_partida']);
+
+        // Vincula los parámetros con los tipos correspondientes, excepto para progreso
+        $stmt->bindParam(':estado_partida', $data['estado_partida'], PDO::PARAM_STR);
+        $stmt->bindParam(':imagenes', $pathUrlCanvas, PDO::PARAM_STR);
+        $stmt->bindParam(':puntaje', $data_puntaje, PDO::PARAM_INT);
+        $stmt->bindParam(':id_usuario', $data['id_usuario'], PDO::PARAM_STR);
+        $stmt->bindParam(':id_partida', $data['id_partida'], PDO::PARAM_INT);
 
         try {
             $stmt->execute();
@@ -284,7 +317,7 @@ class QueryBuilder
             ];
 
         } catch (PDOException $e) {
-
+            $this->sendToLog($e);
             return [
                 'estado' => 'error',
                 'descripcion' => "Error al actualizar los datos: {$e->getMessage()}"
@@ -329,6 +362,91 @@ class QueryBuilder
             $this->logger->error('Error', ["Error" => $e]);
         }
     }
+    
+    public function cargarImagenes($hashDataImage, $dataUser){
+        $id_canva = 0;
+        $dataImages = array();
+
+        foreach ($hashDataImage as $dataImg) {
+            $id_partida = $dataUser['id_partida'];
+            $id_usuario = $dataUser['id_usuario'];
+            // obtengo idCanva 
+            $idCanva = "{$id_usuario}.{$id_partida}.{$id_canva}";
+            // le hago el hash para saber el nombre del archivo
+            if (isset($dataImg[$idCanva])) {
+                $nombreArchivo = $dataImg[$idCanva] . ".png";
+                // Ruta completa del archivo usando DIRECTORY_SEPARATOR
+                $pathImg = realpath("imagenes_partida") . DIRECTORY_SEPARATOR  . $nombreArchivo;
+    
+                if (file_exists($pathImg)) {
+                    // El archivo existe, carga y convierte en base64
+                    $imgBase64 = trim(base64_encode(file_get_contents($pathImg)));
+                    $imgBase64 = preg_replace('/dataimage\/pngbase64/', 'data:image/png;base64,', $imgBase64);
+                    $dataImages["{$id_canva}"] = $imgBase64;
+                } 
+                // else {
+                //     // El archivo no existe, maneja esta situación
+                //     echo "El archivo {$nombreArchivo} correspondiente a la llave {$idCanva} no existe en la ubicación especificada";
+                // }
+            } else {
+             echo "la llave {$id_canva} no existe en el array asociativo";
+            }
+
+            // aumento en 1 el contador 
+            $id_canva++;
+        }
+        // saliendo del bucle foreach, hago el return de la funcion 
+        // devolviendo el array asociativo que luego ira al front
+        // previo a ser convertido a json para poder ser enviado e interpretado 
+        return $dataImages;
+    }
+
+    public function traerUltimoEstadoPartida($data) {
+        try {
+            $sql = "SELECT estado_partida, imagenes FROM partida WHERE id_usuario = :id_usuario AND id_partida = :id_partida";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':id_usuario', $data['id_usuario'], PDO::PARAM_INT);
+            $stmt->bindParam(':id_partida', $data['id_partida'], PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            // Obtén los valores de las columnas estado_partida e imagenes directamente
+            $consulta_array = $stmt->fetch(PDO::FETCH_ASSOC);
+            $estado_partida = json_decode($consulta_array['estado_partida'], true);
+            $imagenes = $this->cargarImagenes(json_decode($consulta_array['imagenes'], true), [ 
+                'id_usuario' => $data['id_usuario'],
+                'id_partida' => $data['id_partida']
+            ]);
+
+            if ($estado_partida) {
+
+                $arrayPiezasDesordenadas = json_encode($estado_partida['divPiezasDesordenadas']);
+                $arrayPiezasCompletadas = json_encode($estado_partida['divPiezasCompletadas']);
+                $aciertos = $estado_partida['aciertos'];
+                $errores = $estado_partida['errores'];
+                $tiempoTranscurrido = $estado_partida['tiempoTranscurrido'];
+
+                return ['estado' => 'ok',
+                        'dato' => [
+                            'piezas' => $arrayPiezasDesordenadas,
+                            'puzzle' => $arrayPiezasCompletadas,
+                            'aciertos' => $aciertos, 
+                            'errores' => $errores,
+                            'tiempo' => $tiempoTranscurrido,
+                            'id_partida' => $data['id_partida'],
+                            'imagenes' => $imagenes,
+                        ],
+                        'descripcion' => 'metodoContinuarPartida: obtencion de datos exitoso'];
+            } else {
+                return ['estado' => 'error',
+                        'descripcion' => 'metodoContinuarPartida: la sección divPiezasDesordenadas no se encontró'];
+            }
+        } catch (Exception $e) {
+            return ['estado' => 'error',
+                    'descripcion' => 'metodoContinuarPartida: ' . $e->getMessage()];
+        }
+    }
+
 
     /**
      * Limpia guiones - que puedan venir en los nombre de los parametros
@@ -344,4 +462,5 @@ class QueryBuilder
         }
         return $cleaned_params;
     }
+
 }

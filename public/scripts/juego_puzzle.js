@@ -140,7 +140,7 @@ class Juego {
       e.target.classList.remove('hover');
       e.target.style = 'cursor: pointer';
     });
-    
+  
     this.puzzle.addEventListener('drop', e => {
       e.target.classList.remove('hover');
       const id = e.dataTransfer.getData('id');
@@ -242,7 +242,7 @@ class Juego {
 
               ganasteCartel.style.display = 'block';
 
-              // Detener el intervalo
+              // Detener el intervalo del tiempo 
               clearInterval(this.intervalId);
 
               this.guardarEstadoJuego('terminado');
@@ -345,8 +345,6 @@ class Juego {
             this.getPiezas().appendChild(divCanva);
             
       } // FIN FOR j
-
-
       
       const piezasArray = Array.from(piezasDiv.children); // Convierto a un array para mezclar
 
@@ -364,49 +362,80 @@ class Juego {
 
   } // FIN METODO  
 
-  
-  serializeDivContent(divId){
-    const divElement = $(divId);
-    console.log(divElement.innerHTML);
-    return divElement.outerHTML;
-  }
-
-  guardarImagesCanvas(){
-
-    const canvasImages = [];
-    const canvasElements = this.getPiezas().querySelectorAll('canvas');
-    /**
-     * 
-     * Recorro todos los elementos canvas del div 
-     * piezas, de cada canvas obtengo el id del nodo padre
-     * y lo guardo junto con la img el id del padre y la imagen en si
-     * todo esto dentro de un json que contiene la informacion 
-     * de todas las imagenes y eso es lo que voy a devolver
-     */
-    console.log(canvasElements);
-    canvasElements.forEach( canvas => {
-      const imageDataUrl = canvas.toDataURL();
-      canvasImages.push({
-        idCanva : canvas.id.split('_')[1],
-        imageDataUrl : imageDataUrl
-      })
-    })
+  elementosAArray(selector) {
+    // Obtengo el elemento del documento con el ID especificado en el selector
+    const contenedor = $(selector);
+    const arrayResultante = [];
     
-    return canvasImages;
+    // Selecciono todos los elementos dentro del contenedor que tengan una de las dos clases CSS: .divCanva o .placeholder y luego los recorro uno por uno
+    contenedor.querySelectorAll('.divCanva, .placeholder').forEach(elemento => {
+      // Para cada elemento, creo un objeto vacío llamado infoElemento para almacenar su información
+      const infoElemento = {};      
+      // Almaceno el ID del elemento padre en el objeto infoElemento
+      infoElemento.id = elemento.id;
+      // Utilizo querySelector para encontrar un elemento descendiente de tipo canvas (si existe) dentro del elemento actual
+      const hijo = elemento.querySelector('canvas');
+      // Verifico si se encontró un hijo canvas
+      if (hijo) {
+        // Si se encontró un hijo canvas, almaceno su ID en el objeto infoElemento
+        infoElemento.canvasId = hijo.id;
+      }
+      // Finalmente, agrego el objeto infoElemento al arrayResultante
+      arrayResultante.push(infoElemento);
+    });
+    // La función devuelve el arrayResultante que contiene información sobre los elementos encontrados
+    return arrayResultante;
   }
+
+  guardarImagesCanvas() {
+    /**
+     * inicializo un array canvasImages
+     */
+    const canvasImages = [];
+
+    // guardo en una lista los canvas desordenados
+    
+    const canvasElements = Array.from(this.getPiezas().querySelectorAll('canvas'));
+
+    // en la otra lista los canvas ordenados
+    const canvasElementsPuzzle = Array.from(this.getPuzzle().querySelectorAll('canvas'));
+
+    // Uno ambas listas
+    const combinedCanvasElements = canvasElementsPuzzle.concat(canvasElements);
+
+    /**
+     * Recorro todos los elementos de la lista
+     * obtengo el id del nodo padre
+     * y lo guardo junto con la imagen y el id del padre
+     * todo esto dentro de un objeto que contiene la información 
+     * de todas las imágenes y eso es lo que voy a devolver
+     */
+    combinedCanvasElements.forEach(canvas => {
+      // Aquí guardo el fragmento de la imagen en formato png
+      const imageDataUrl = canvas.toDataURL('image/png');
+
+      // Lo guardo junto con el identificador de canvas
+      // y lo agrego a la lista de canvasImages
+      canvasImages.push({
+        idCanvas: canvas.id.split('_')[1],
+        imageDataUrl: imageDataUrl,
+      });
+    });
+    return canvasImages;
+  }    
 
   guardarEstadoJuego(progreso_partida){
-
+    // aumento en 1 la cantidad de movimientos
     this.movimientos++;
 
 
-    let estadoPartida = JSON.stringify({
-      divPiezasDesordenadas: this.serializeDivContent('piezas'),
-      divPiezasCompletadas: this.serializeDivContent('puzzle'),
+    let estado_partida = {
+      divPiezasDesordenadas: this.elementosAArray('piezas'),
+      divPiezasCompletadas: this.elementosAArray('puzzle'),
       aciertos: $('aciertos').getAttribute('data-value'), 
       errores: $('errores').getAttribute('data-value'), 
       tiempoTranscurrido: $('tiempo').innerHTML 
-    });
+    };
 
     // console.log(estadoPartida);
 
@@ -417,16 +446,11 @@ class Juego {
     let jsonData = {
       id_usuario: id_usuario,
       id_partida: id_partida,
-      estadoPartida: estadoPartida,
+      estado_partida: estado_partida,
       progreso: progreso_partida,
-      puntaje: $('puntaje').getAttribute('data-value')
+      puntaje: $('puntaje_actual').getAttribute('data-value'),
+      imagesCanvas: this.movimientos > 1 ? JSON.stringify(this.guardarImagesCanvas()) : JSON.stringify([])
     };
-
-    if(this.movimientos > 1){
-      jsonData.imagesCanvas = JSON.stringify(this.guardarImagesCanvas())
-    }else{
-      jsonData.imagesCanvas = JSON.stringify([]);
-    }
 
     jsonData = JSON.stringify(jsonData);
 
@@ -456,21 +480,21 @@ class Juego {
    * El tiempo se resta de la puntuación, donde cada segundo reduce la puntuación en 1 punto.
    * @returns {BigInteger}
    */
-  calcularPuntaje(){
+  calcularPuntaje() {
     // Calcular el puntaje
     const puntosPorAcierto = this.aciertos * 10;
-    const puntosPorError = this.errores * -5;
-    const puntosPorTiempo = obtenerTiempoEnSegundos() * -1; // Corrección: sin multiplicar por -1
+    const puntosPorError = this.errores * -2; // Reducción del impacto de los errores
+    const tiempoTranscurrido = obtenerTiempoEnSegundos();
+    const puntosPorTiempo = tiempoTranscurrido * -0.5; // Reducción del impacto del tiempo
 
-    if(puntosPorTiempo + puntosPorError > puntosPorAcierto ) {
-      return 0;
-    }else{
-      return puntosPorAcierto + puntosPorError + puntosPorTiempo;
-    }
+    // Puntaje mínimo (por ejemplo, 0)
+    const puntajeMinimo = 0;
 
-// 90 - 89
+    const puntaje = puntosPorAcierto + puntosPorError + puntosPorTiempo;
+
+    // Garantizar que el puntaje nunca sea menor que el puntaje mínimo
+    return Math.max(puntaje, puntajeMinimo);
   }
-
 } // FIN CLASE
 
 // Obtener el elemento del temporizador
@@ -545,6 +569,7 @@ $('btn_cargar').addEventListener('click', async (e) => {
                                Prueba con otra URL. Esta fué bloqueada por politicas de ${CORs}`;
       console.error(`Error en la solicitud: ${error.message}`);
 
+      // agrego un estilo para que inicie una estilo de vibracion
       label_error.classList.add('vibrating-label');
 
       setTimeout(() => {
