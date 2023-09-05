@@ -387,7 +387,7 @@ class Juego {
     return arrayResultante;
   }
 
-  guardarImagesCanvas() {
+  async guardarImagesCanvas() {
     /**
      * inicializo un array canvasImages
      */
@@ -410,21 +410,26 @@ class Juego {
      * todo esto dentro de un objeto que contiene la información 
      * de todas las imágenes y eso es lo que voy a devolver
      */
-    combinedCanvasElements.forEach(canvas => {
-      // Aquí guardo el fragmento de la imagen en formato png
-      const imageDataUrl = canvas.toDataURL('image/png');
+  const promises = combinedCanvasElements.map(canvas => new Promise((resolve) => {
+    canvas.toBlob(async function(blob) {
+      if (blob) {
+        const imageURL = URL.createObjectURL(blob);
+        canvasImages.push({
+          idCanvas: canvas.id.split('_')[1],
+          imageDataUrl: imageURL,
+        });
+      }
+      resolve(); // Resolvemos la promesa después de procesar cada canvas
+    }, 'image/png');
+  }));
 
-      // Lo guardo junto con el identificador de canvas
-      // y lo agrego a la lista de canvasImages
-      canvasImages.push({
-        idCanvas: canvas.id.split('_')[1],
-        imageDataUrl: imageDataUrl,
-      });
-    });
-    return canvasImages;
+  // Esperar a que todas las promesas se resuelvan
+  await Promise.all(promises);
+  console.log(canvasImages);
+  return canvasImages;
   }    
 
-  guardarEstadoJuego(progreso_partida){
+  async guardarEstadoJuego(progreso_partida){
     // aumento en 1 la cantidad de movimientos
     this.movimientos++;
 
@@ -442,6 +447,7 @@ class Juego {
     const id_usuario = $('id_usuario').getAttribute('data-value'); 
     const id_partida = $('id_partida').getAttribute('data-value'); 
 
+    const imagesCanvas = this.movimientos > 1 ? await this.guardarImagesCanvas() : [];
     // Convertir el objeto estadoPartida a una cadena JSON
     let jsonData = {
       id_usuario: id_usuario,
@@ -449,7 +455,7 @@ class Juego {
       estado_partida: estado_partida,
       progreso: progreso_partida,
       puntaje: $('puntaje_actual').getAttribute('data-value'),
-      imagesCanvas: this.movimientos > 1 ? JSON.stringify(this.guardarImagesCanvas()) : JSON.stringify([])
+      imagesCanvas: imagesCanvas
     };
 
     jsonData = JSON.stringify(jsonData);
@@ -495,6 +501,30 @@ class Juego {
     // Garantizar que el puntaje nunca sea menor que el puntaje mínimo
     return Math.max(puntaje, puntajeMinimo);
   }
+
+  async enviarDataURIAlBackend(dataURIRecibida) {
+    try {
+      // Realiza una solicitud POST al servidor
+      // console.log(dataURIRecibida);
+      const response = await fetch('/guardar_imagen', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ dataURI : dataURIRecibida}), // Convierte el dataURI en una cadena JSON
+      });
+
+      if (response.ok) {
+        const resultado = await response.json(); // Si el servidor responde con JSON
+        console.log('El servidor respondió:', resultado);
+      } else {
+        console.error('Error al enviar el dataURI al servidor:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  }  
+
 } // FIN CLASE
 
 // Obtener el elemento del temporizador
@@ -544,6 +574,9 @@ $('btn_cargar').addEventListener('click', async (e) => {
     juego.setPiezas(piezas);
     juego.crearCanvasyAsignarPiezas(dataURI);
     
+    // envio la imagen al backend
+    await juego.enviarDataURIAlBackend(dataURI);
+
     let terminado = 9;
   
     juego.setTerminado(terminado);

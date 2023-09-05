@@ -23,6 +23,7 @@ $router->get('cerrar_sesion', 'SessionController@cerrarSesion');
 
   
   $router->post('guardar_estado','juegoController@reciboEstado');
+  $router->post('guardar_imagen','juegoController@guardar_imagen');
    
 
 

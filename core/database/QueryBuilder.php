@@ -184,7 +184,7 @@ class QueryBuilder
             }
 
         }catch (PDOException $e) {
-            echo $e->getMessage();
+            $this->sendToLog("{$e->getMessage()}");
             $this->logger->info($e->getMessage());
         }
 
@@ -222,7 +222,7 @@ class QueryBuilder
         return $result[0];
     } catch (PDOException $e) {
         // Manejo de errores
-        echo "Error: " . $e->getMessage();
+        $this->sendToLog("Error: {$e->getMessage()}");
         return array(); // En caso de error, retornar un array vacío o false, según convenga
     } 
 
@@ -256,35 +256,56 @@ class QueryBuilder
                         'descripcion' => 'fallo al insertar'];
             }
         } catch (PDOException $e) {
-            echo "Error al insertar el registro: " . $e->getMessage();
+            $this->sendToLog("Error al insertar el registro: {$e->getMessage()}");
         }   
     }
 
-    public function guardarImagenes($imagenes, $id_partida, $id_usuario){
-        $resultados = array();
-        $carpeta_destino = realpath("imagenes_partida");
+public function guardarImagenes($imagenes, $id_partida, $id_usuario){
+    $resultados = array();
+    $carpeta_destino = realpath("imagenes_partida");
 
-
-        foreach ($imagenes as $img_data) {
-            $id_canva = $img_data['idCanvas'];
-            $img_base64 = $img_data['imageDataUrl'];
-
-            $idCanvaOrigin = "{$id_partida}.{$id_usuario}.{$id_canva}";
-            $idCanvaHash = hash('sha256', $idCanvaOrigin);
-            
-            $archivo_destino = "{$carpeta_destino}/{$idCanvaHash}.png";
-
-            file_put_contents($archivo_destino, $img_base64);
-            
-            $resultados[] = array("{$idCanvaOrigin}" => $idCanvaHash);
-        }
+    foreach ($imagenes as $img_data) {
+        $id_canva = $img_data['idCanvas'];
+        $imageDataUrl = $img_data['imageDataUrl'];
         
-        return $resultados;
+        // Decodificar la URL de datos en datos binarios
+        $datos_binarios = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageDataUrl));
+
+        if ($datos_binarios !== false) {
+            // Generar un nombre de archivo único
+            $nombre_archivo = hash('sha256', $datos_binarios) . '.png';
+            $ruta_destino = $carpeta_destino . DIRECTORY_SEPARATOR . $nombre_archivo;
+
+            // Crear una imagen a partir de los datos binarios y guardarla
+            if (file_put_contents($ruta_destino, $datos_binarios) !== false) {
+                // Agregar el resultado a la lista de resultados
+                $resultados[] = array(
+                    'idCanvas' => $id_canva,
+                    'nombreArchivo' => $nombre_archivo,
+                );
+            } else {
+                // Error al guardar el archivo
+                $resultados[] = array(
+                    'idCanvas' => $id_canva,
+                    'error' => 'Error al guardar el archivo'
+                );
+            }
+        } else {
+            // Error en la decodificación de datos binarios
+            $resultados[] = array(
+                'idCanvas' => $id_canva,
+                'error' => 'Error en la decodificación de datos binarios'
+            );
+        }
     }
+
+    return $resultados;
+}
+
+
 
     public function updatePartida($data){
 
-        // Asegúrate de que $data['progreso'] es seguro para la interpolación
         $progreso = $this->pdo->quote($data['progreso']);
 
         // Construir la consulta SQL y prepararla        
@@ -294,8 +315,8 @@ class QueryBuilder
 
         $stmt = $this->pdo->prepare($consultaSQL);
 
-        $imagesCanva = json_decode($data['imagesCanvas'], true);
-        
+        $imagesCanva = $data['imagesCanvas'];
+
         $pathUrlCanvas = json_encode($this->guardarImagenes($imagesCanva, $data['id_usuario'], $data['id_partida']), true);
         $data_puntaje = intval($data['puntaje']);
 
@@ -354,14 +375,6 @@ class QueryBuilder
             return $e->getCode();
         }          
     }  
-
-    private function 
-    sendToLog(Exception $e)
-    {
-        if ($this->logger) {
-            $this->logger->error('Error', ["Error" => $e]);
-        }
-    }
     
     public function cargarImagenes($hashDataImage, $dataUser){
         $id_canva = 0;
@@ -384,14 +397,9 @@ class QueryBuilder
                     $imgBase64 = preg_replace('/dataimage\/pngbase64/', 'data:image/png;base64,', $imgBase64);
                     $dataImages["{$id_canva}"] = $imgBase64;
                 } 
-                // else {
-                //     // El archivo no existe, maneja esta situación
-                //     echo "El archivo {$nombreArchivo} correspondiente a la llave {$idCanva} no existe en la ubicación especificada";
-                // }
             } else {
-             echo "la llave {$id_canva} no existe en el array asociativo";
+              $this->sendToLog("la llave {$id_canva} no existe en el array asociativo");
             }
-
             // aumento en 1 el contador 
             $id_canva++;
         }
@@ -410,7 +418,7 @@ class QueryBuilder
 
             $stmt->execute();
 
-            // Obtén los valores de las columnas estado_partida e imagenes directamente
+            // Obtengo los valores de las columnas estado_partida e imagenes 
             $consulta_array = $stmt->fetch(PDO::FETCH_ASSOC);
             $estado_partida = json_decode($consulta_array['estado_partida'], true);
             $imagenes = $this->cargarImagenes(json_decode($consulta_array['imagenes'], true), [ 
@@ -447,6 +455,11 @@ class QueryBuilder
         }
     }
 
+    private function sendToLog($e){
+        if ($this->logger) {
+            $this->logger->error('Error', ["Error" => $e]);
+        }
+    }
 
     /**
      * Limpia guiones - que puedan venir en los nombre de los parametros

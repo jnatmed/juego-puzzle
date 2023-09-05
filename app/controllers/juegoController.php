@@ -143,4 +143,45 @@ class JuegoController extends JuegoModel{
 
     } // FIN metodo : continuar_partida()
 
+
+    public function guardar_imagen(){
+
+        echo("guardar_imagen*******");
+        // echo("<pre>");
+        // var_dump($_POST);
+
+        // $dataURI = $_POST['dataURI']; // Obtengo el dataURI de la solicitud POST
+        // $carpeta_destino = realpath("imagenes_partida");
+
+        // // Verifico si el dataURI está en el formato correcto
+        // if (preg_match('/^data:image\/(\w+);base64,/', $dataURI, $matches)) {
+        //     $tipoImagen = $matches[1]; // Obtengo el tipo de imagen (por ejemplo, 'jpeg', 'png', etc.)
+        //     $contenidoImagen = substr($dataURI, strpos($dataURI, ',') + 1); // Obtengo el contenido de la imagen codificado en base64
+
+        //     // Decodifico el contenido de la imagen
+        //     $imagenDecodificada = base64_decode($contenidoImagen);
+
+        //     if ($imagenDecodificada !== false) {
+        //         // Genero un nombre de archivo único
+        //         $nombreArchivo = uniqid() . '.' . $tipoImagen;
+
+        //         // Ruta completa del archivo en la carpeta de destino
+        //         $rutaCompleta = $carpetaDestino . DIRECTORY_SEPARATOR . $nombreArchivo;
+
+        //         // Guardo la imagen en la carpeta de destino
+        //         if (file_put_contents($rutaCompleta, $imagenDecodificada) !== false) {
+        //             return $nombreArchivo; // Devuelve el nombre del archivo guardado
+        //             echo 'Error al guardar la imagen en el servidor.';
+        //             return false; // Error al guardar la imagen
+        //         }
+        //     } else {
+        //         echo 'Error al decodificar la imagen.';
+        //         return false; // Error al decodificar la imagen
+        //     }
+        // } else {
+        //     echo 'DataURI no válido.';
+        //     return false; // DataURI no válido
+        // }
+    }
+
 } // FIN clase : juegoController
