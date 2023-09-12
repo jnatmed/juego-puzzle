@@ -7,8 +7,8 @@ use PDOException;
 
 class UsuarioModel extends Model{
     public $db;
-    private $id_usuario;
-    private $tipo_usuario;
+    // private $id_usuario;
+    // private $tipo_usuario;
 
     public function existeUsuario($id_usuario){
 
@@ -52,8 +52,7 @@ class UsuarioModel extends Model{
 
                     $_SESSION = [
                         'id_usuario' => $resultadoConsulta['id_usuario'],
-                        'tipo_usuario' => $resultadoConsulta['tipo_usuario'],
-                        'contrasenia' => $resultadoConsulta['contrasenia']
+                        'tipo_usuario' => $resultadoConsulta['tipo_usuario']
                     ];
 
                     return [
@@ -70,7 +69,12 @@ class UsuarioModel extends Model{
         }
     }
 
+    public function validarToken($token_sin_validar, $id_usuario){
+        // $resultado = $this->db->
+    }
+
     public function registrarNuevo($datos_registro){
+        
         if(!$this->existeUsuario($datos_registro['id_usuario'])){
             return $this->db->insert("usuario", $datos_registro);
         }else {

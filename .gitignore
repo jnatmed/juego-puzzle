@@ -4,6 +4,8 @@ base-directory-tree
 tutoriales.txt
 .vscode/
 config.php
+json_datos_correo.json
+certificado.pem
 Diagrama1.dia
 Diagrama1.dia~
 notas.docx

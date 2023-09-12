@@ -1,9 +1,14 @@
 /* Estilos para el pie de página */
 footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background-color: #333; /* Color de fondo del pie de página */
     color: #fff; /* Color del texto */
     padding: 10px; /* Espaciado interno */
     text-align: center; /* Alinear en el centro horizontalmente */
+
 }
 
 footer a {

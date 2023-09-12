@@ -199,7 +199,7 @@ class QueryBuilder
         $valores = array();
 
         // Recorrer el arreglo asociativo de datos de búsqueda para construir la consulta
-        foreach ($datosBusqueda as $campo => $valor) {
+        foreach ($datosBusqueda['id_usuario'] as $campo => $valor) {
             // Agregar el campo y su valor a la consulta
             $consultaSQL .= "$campo = :$campo AND ";
             // Agregar el valor a la lista de valores para vincular
@@ -219,7 +219,20 @@ class QueryBuilder
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Retornar los resultados
-        return $result[0];
+        if (count($result) > 0) {
+            // Retornar el primer resultado
+            $contrasenia = $datosBusqueda['contrasenia'];
+            $hashAlmacenado = $result[0]['contrasenia'];
+
+            if (password_verify($contrasenia, $hashAlmacenado)) {
+                return $result[0]; // Las contraseñas coinciden
+            } else {
+                return null; // Las contraseñas no coinciden
+            }
+        } else {
+            // El usuario no existe, puedes manejar este caso según tus necesidades
+            return null; // O podrías lanzar una excepción, retornar un mensaje de error, etc.
+        }
     } catch (PDOException $e) {
         // Manejo de errores
         $this->sendToLog("Error: {$e->getMessage()}");
@@ -249,7 +262,7 @@ class QueryBuilder
             if ($inserted) {
                     return ['estado' => 'ok',
                             'codigo' => 200,
-                            'descripcion' => 'insercion exitosa'];
+                            'descripcion' => 'Usuario Registrado con exito !'];
             } else {
                 return ['estado' => 'error',
                         'codigo' => 2,
@@ -257,6 +270,10 @@ class QueryBuilder
             }
         } catch (PDOException $e) {
             $this->sendToLog("Error al insertar el registro: {$e->getMessage()}");
+            return [
+                'estado' => 'error',
+                'codigo' => 3,
+                'descripcion' => "PDOException: {$e->getMessage()}"];
         }   
     }
 
@@ -269,40 +286,46 @@ public function guardarImagenes($imagenes, $id_partida, $id_usuario){
         $imageDataUrl = $img_data['imageDataUrl'];
         
         // Decodificar la URL de datos en datos binarios
-        $datos_binarios = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageDataUrl));
+        $datos_binarios = base64_decode(preg_match('/^data:image\/(\w+);base64,/', $imageDataUrl, $matches));
 
-        if ($datos_binarios !== false) {
+        if ($datos_binarios) {
             // Generar un nombre de archivo único
-            $nombre_archivo = hash('sha256', $datos_binarios) . '.png';
-            $ruta_destino = $carpeta_destino . DIRECTORY_SEPARATOR . $nombre_archivo;
+            $tipoImagen = $matches[1]; // Obtengo el tipo de imagen (por ejemplo, 'jpeg', 'png', etc.)
+            $contenidoImagen = substr($imageDataUrl, strpos($imageDataUrl, ',') + 1); // Obtengo el contenido de la imagen codificado en base64
+            // Decodifico el contenido de la imagen
+            $imagenDecodificada = base64_decode($contenidoImagen);
 
-            // Crear una imagen a partir de los datos binarios y guardarla
-            if (file_put_contents($ruta_destino, $datos_binarios) !== false) {
-                // Agregar el resultado a la lista de resultados
-                $resultados[] = array(
-                    'idCanvas' => $id_canva,
-                    'nombreArchivo' => $nombre_archivo,
-                );
-            } else {
-                // Error al guardar el archivo
-                $resultados[] = array(
-                    'idCanvas' => $id_canva,
-                    'error' => 'Error al guardar el archivo'
-                );
+            if ($imagenDecodificada !== false) {
+                // Genero un nombre de archivo único
+                $nombreArchivo = hash('sha256', $id_usuario . $id_partida);                 
+
+                // Ruta completa del archivo en la carpeta de destino
+                $rutaCompleta = $carpeta_destino . DIRECTORY_SEPARATOR . $nombreArchivo . '.' . $tipoImagen;
+
+                if (file_put_contents($rutaCompleta, $imagenDecodificada) !== false) {          
+                        $resultados[] = array(
+                            'idCanvas' => $id_canva,
+                            'nombreArchivo' => $nombreArchivo
+                        );
+                        return json_encode([
+                            'estado' => 'ok',
+                            'descripcion' => 'canva guardado correctamente.']);   
+                }else{
+                    return json_encode(['estado' => 'error',
+                    'descripcion' => 'Error al guardar la imagen en el servidor.']);
+                }
+            }else{
+                return json_encode(['estado' => 'error',
+                'descripcion' => 'Error al decodificar la imagen.']);  
             }
         } else {
-            // Error en la decodificación de datos binarios
-            $resultados[] = array(
-                'idCanvas' => $id_canva,
-                'error' => 'Error en la decodificación de datos binarios'
-            );
+            return json_encode(['estado' => 'error',
+            'descripcion' => 'DataURI no válido.']);   
         }
-    }
+     }
 
     return $resultados;
 }
-
-
 
     public function updatePartida($data){
 
@@ -421,15 +444,11 @@ public function guardarImagenes($imagenes, $id_partida, $id_usuario){
             // Obtengo los valores de las columnas estado_partida e imagenes 
             $consulta_array = $stmt->fetch(PDO::FETCH_ASSOC);
             $estado_partida = json_decode($consulta_array['estado_partida'], true);
-            $imagenes = $this->cargarImagenes(json_decode($consulta_array['imagenes'], true), [ 
-                'id_usuario' => $data['id_usuario'],
-                'id_partida' => $data['id_partida']
-            ]);
 
             if ($estado_partida) {
 
-                $arrayPiezasDesordenadas = json_encode($estado_partida['divPiezasDesordenadas']);
-                $arrayPiezasCompletadas = json_encode($estado_partida['divPiezasCompletadas']);
+                $arrayPiezasDesordenadas = $estado_partida['divPiezasDesordenadas'];
+                $arrayPiezasCompletadas = $estado_partida['divPiezasCompletadas'];
                 $aciertos = $estado_partida['aciertos'];
                 $errores = $estado_partida['errores'];
                 $tiempoTranscurrido = $estado_partida['tiempoTranscurrido'];
@@ -441,8 +460,7 @@ public function guardarImagenes($imagenes, $id_partida, $id_usuario){
                             'aciertos' => $aciertos, 
                             'errores' => $errores,
                             'tiempo' => $tiempoTranscurrido,
-                            'id_partida' => $data['id_partida'],
-                            'imagenes' => $imagenes,
+                            'id_partida' => $data['id_partida']
                         ],
                         'descripcion' => 'metodoContinuarPartida: obtencion de datos exitoso'];
             } else {

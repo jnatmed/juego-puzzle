@@ -24,9 +24,9 @@
 
             <section id="puzzle">
                 {% for puzzlePiece in puzzle %}
-                    <div class="placeholder" id="{{ puzzlePiece['div-id'] }}">
-                        {% if puzzlePiece.canva_id is not null %}
-                            <canvas id="{{ puzzlePiece.canva_id }}" class="pieza" draggable="true" style="cursor: move;"></canvas>
+                    <div class="placeholder" id="{{ puzzlePiece['id'] }}">
+                        {% if puzzlePiece.canvasId is not null %}
+                            <canvas id="{{ puzzlePiece.canvasId }}" class="pieza" draggable="true" style="cursor: move;"></canvas>
                         {% endif %}
                     </div>
                 {% endfor %}                
@@ -34,9 +34,9 @@
             
             <section id="piezas">
                 {% for pieza in piezas %}
-                    <div class="divCanva" id="{{ pieza['div-id'] }}">
-                        {% if pieza.canva_id is not null %}
-                            <canvas id="{{ pieza.canva_id }}" class="pieza" draggable="true"></canvas>
+                    <div class="divCanva" id="{{ pieza['id'] }}">
+                        {% if pieza.canvasId is not null %}
+                            <canvas id="{{ pieza.canvasId }}" class="pieza" draggable="true"></canvas>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -47,22 +47,22 @@
         <h2>Ganaste</h2>
         <div class="lights"></div>
     </div>
+    {% if fragmentos is not empty %}
 
-    <script>
-    {% for idCanva, imageDataUrl in imagenes %}
-        let canvas{{ idCanva }} = document.getElementById("canvas_{{ idCanva }}");
-        let ctx{{ idCanva }} = canvas{{ idCanva }}.getContext("2d");
-        let img{{ idCanva }} = new Image();
-        img{{ idCanva }}.onload = function() {
-            ctx{{ idCanva }}.drawImage(img{{ idCanva }}, 0, 0);  // Dibuja la imagen en el canvas
-        };
-        img{{ idCanva }}.src = "{{ imageDataUrl }}";  // Establece la fuente de la imagen
-
-    {% endfor %}
-    </script>                            
-
-
-
+        <script>
+            {% for fragmento in fragmentos %} 
+                var canvas{{ loop.index }} = document.getElementById("canvas_{{ loop.index }}");
+                var ctx{{ loop.index }} = canvas{{ loop.index }}.getContext("2d");
+                var img{{ loop.index }} = new Image();
+                img{{ loop.index }}.onload = function() {
+                    ctx{{ loop.index }}.drawImage(img{{ loop.index }}, 0, 0, 100, 100);
+                };
+                img{{ loop.index }}.src = "data:image/jpeg;base64,{{ fragmento }}";
+            {% endfor %}
+        </script>                          
+    {% else %}
+        <p>No hay fragmentos para mostrar.</p>
+    {% endif %}    
     </main>
     {% include 'partials/footer.html' %}
 </body>

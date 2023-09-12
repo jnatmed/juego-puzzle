@@ -1,5 +1,6 @@
 <?php
 namespace App\controllers;
+use Exception;
 
 class MenuController {
     public static function crearMenu($tipoUsuario) {

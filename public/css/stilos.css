@@ -5,8 +5,11 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('https://static.vecteezy.com/system/resources/previews/011/084/658/non_2x/background-of-a-2d-game-a-beautiful-natural-lake-in-the-middle-of-the-forest-and-high-mountains-free-vector.jpg');
-    background-size: cover; /* Ajustar la imagen al tamaño de la ventana */
-    background-repeat: no-repeat; /* Evitar repetición de la imagen */
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    /* Aplica un filtro de desenfoque al contenido del body */
+    backdrop-filter: blur(5px); /* Ajusta la cantidad de desenfoque aquí */
 }
 
 

@@ -3,6 +3,7 @@ namespace App\controllers;
 
 use \App\models\JuegoModel;
 use \App\controllers\SessionController;
+use \App\controllers\MashupController;
 use App\Core\App;
 
 class JuegoController extends JuegoModel{
@@ -20,7 +21,7 @@ class JuegoController extends JuegoModel{
 
         $juegoModel = new JuegoModel();
 
-        $rankingJugador = $juegoModel->getRankingJugador($_SESSION['id_usuario']);
+        // $rankingJugador = $juegoModel->getRankingJugador($_SESSION['id_usuario']);
 
         $listado = [
             'ranking_jugadores' => [['id_usuario' => 'juan', 'alias' => 'juanman','puntaje' => 10]],
@@ -31,7 +32,6 @@ class JuegoController extends JuegoModel{
         return view('ranking', $listado);
     }        
     
-
     public function new(){
         $sesion = new SessionController();
 
@@ -103,17 +103,18 @@ class JuegoController extends JuegoModel{
             $juegoModel = new JuegoModel();
             $resultado = $juegoModel->actualizarPartida($datos);
 
-            if($resultado['estado'] == 'ok') {
-                echo json_encode(array(
-                    'estado' => 'ok',
-                    'descripcion' => $resultado['descripcion']
-                ));
-            }else{
-                echo json_encode(array(
-                    'estado' => 'error',
-                    'descripcion' => $resultado['descripcion']
-                ));
-            }
+            // $datos['']
+                if($resultado['estado'] == 'ok') {
+                    echo json_encode(array(
+                        'estado' => 'ok',
+                        'descripcion' => $resultado['descripcion']
+                    ));
+                }else{
+                    echo json_encode(array(
+                        'estado' => 'error',
+                        'descripcion' => $resultado['descripcion']
+                    ));
+                }
         }
     } // FIN metodo : reciboEstado()
 
@@ -125,14 +126,11 @@ class JuegoController extends JuegoModel{
         
         if($respuesta['estado'] === 'ok' ){
             $juegoModel = new JuegoModel();
-            // echo("{$_SESSION['id_usuario']} {$_GET['partida']}");
+            
             $datosPartida = $juegoModel->traerDatosPartida([
                 'id_usuario' => $_SESSION['id_usuario'], 
                 'id_partida' => $_GET['partida']
             ]);
-
-            // echo("<pre>");
-            // var_dump($datosPartida['piezas'][0]['div-id']);
 
             return view('partida_iniciada', [
                 ...$datosPartida,
@@ -146,42 +144,64 @@ class JuegoController extends JuegoModel{
 
     public function guardar_imagen(){
 
-        echo("guardar_imagen*******");
-        // echo("<pre>");
-        // var_dump($_POST);
+        $jsonData = json_decode(file_get_contents("php://input"), true);
 
-        // $dataURI = $_POST['dataURI']; // Obtengo el dataURI de la solicitud POST
-        // $carpeta_destino = realpath("imagenes_partida");
+        $sesion = New SessionController();
 
-        // // Verifico si el dataURI está en el formato correcto
-        // if (preg_match('/^data:image\/(\w+);base64,/', $dataURI, $matches)) {
-        //     $tipoImagen = $matches[1]; // Obtengo el tipo de imagen (por ejemplo, 'jpeg', 'png', etc.)
-        //     $contenidoImagen = substr($dataURI, strpos($dataURI, ',') + 1); // Obtengo el contenido de la imagen codificado en base64
+        $respuesta = $sesion->tieneSesionActiva();
+        
+        if($respuesta['estado'] === 'ok' ){
 
-        //     // Decodifico el contenido de la imagen
-        //     $imagenDecodificada = base64_decode($contenidoImagen);
+            $dataURI = $jsonData['dataURI']; // Obtengo el dataURI de la solicitud POST
 
-        //     if ($imagenDecodificada !== false) {
-        //         // Genero un nombre de archivo único
-        //         $nombreArchivo = uniqid() . '.' . $tipoImagen;
+            echo("<pre>");
+            var_dump($dataURI);
+            
+            $id_partida = $jsonData['id_partida'];
+            $id_usuario = $jsonData['id_usuario'];
+            $carpeta_destino = realpath("imagenes_partida");
+    
+            // Verifico si el dataURI está en el formato correcto
+            if (preg_match('/^data:image\/(\w+);base64,/', $dataURI, $matches)) {
+                $tipoImagen = $matches[1]; // Obtengo el tipo de imagen (por ejemplo, 'jpeg', 'png', etc.)
+                $contenidoImagen = substr($dataURI, strpos($dataURI, ',') + 1); // Obtengo el contenido de la imagen codificado en base64
+    
+                // Decodifico el contenido de la imagen
+                $imagenDecodificada = base64_decode($contenidoImagen);
+    
+                if ($imagenDecodificada !== false) {
+                    // Genero un nombre de archivo único
+                    $nombreArchivo = hash('sha256', $id_usuario . $id_partida); 
+    
+                    // Ruta completa del archivo en la carpeta de destino
+                    $rutaCompleta = $carpeta_destino . DIRECTORY_SEPARATOR . $nombreArchivo . '.' . $tipoImagen;
+    
+                    // Guardo la imagen en la carpeta de destino
+                    if (file_put_contents($rutaCompleta, $imagenDecodificada) !== false) {
+                        return json_encode([
+                            'estado' => 'ok',
+                            'nombreArchivo' => $nombreArchivo]); // Devuelve el nombre del archivo guardado
+                    }else {   
+                        return json_encode(['estado' => 'error',
+                        'descripcion' => 'Error al guardar la imagen en el servidor.']);
+                    }
+                } else {
+                    return json_encode(['estado' => 'error',
+                    'descripcion' => 'Error al decodificar la imagen.']);                
+                }
+            } else {
+                return json_encode(['estado' => 'error',
+                'descripcion' => 'DataURI no válido.']);                
+            }
+        } else {
+            return json_encode(['estado' => 'error',
+            'descripcion' => 'Sesion no iniciada.']);                
+        }       
+    } // FIN metodo : guardar_imagen()
 
-        //         // Ruta completa del archivo en la carpeta de destino
-        //         $rutaCompleta = $carpetaDestino . DIRECTORY_SEPARATOR . $nombreArchivo;
+    public function mashup(){
+        
 
-        //         // Guardo la imagen en la carpeta de destino
-        //         if (file_put_contents($rutaCompleta, $imagenDecodificada) !== false) {
-        //             return $nombreArchivo; // Devuelve el nombre del archivo guardado
-        //             echo 'Error al guardar la imagen en el servidor.';
-        //             return false; // Error al guardar la imagen
-        //         }
-        //     } else {
-        //         echo 'Error al decodificar la imagen.';
-        //         return false; // Error al decodificar la imagen
-        //     }
-        // } else {
-        //     echo 'DataURI no válido.';
-        //     return false; // DataURI no válido
-        // }
     }
 
 } // FIN clase : juegoController
