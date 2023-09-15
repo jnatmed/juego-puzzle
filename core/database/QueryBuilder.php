@@ -190,55 +190,32 @@ class QueryBuilder
 
     }
 
-    public function buscarUsuario($datosBusqueda){
-
-    try {
-        $consultaSQL = "SELECT * FROM usuario WHERE ";
-
-        // Inicializar el array para almacenar los valores que se vincularán a la consulta
-        $valores = array();
-
-        // Recorrer el arreglo asociativo de datos de búsqueda para construir la consulta
-        foreach ($datosBusqueda['id_usuario'] as $campo => $valor) {
-            // Agregar el campo y su valor a la consulta
-            $consultaSQL .= "$campo = :$campo AND ";
-            // Agregar el valor a la lista de valores para vincular
-            $valores[":$campo"] = $valor;
-        }
-
-        // Eliminar el último "AND" de la consulta SQL
-        $consultaSQL = rtrim($consultaSQL, "AND ");
-
-        // Preparar la consulta
-        $stmt = $this->pdo->prepare($consultaSQL);
-
-        // Ejecutar la consulta con los valores vinculados
-        $stmt->execute($valores);
-
-        // Obtener los resultados (si los hay)
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Retornar los resultados
-        if (count($result) > 0) {
-            // Retornar el primer resultado
-            $contrasenia = $datosBusqueda['contrasenia'];
-            $hashAlmacenado = $result[0]['contrasenia'];
-
-            if (password_verify($contrasenia, $hashAlmacenado)) {
-                return $result[0]; // Las contraseñas coinciden
+    public function buscarUsuario($datosBusqueda) {
+        try {
+            $consultaSQL = "SELECT * FROM usuario WHERE id_usuario = :id_usuario";
+            $valores = [":id_usuario" => $datosBusqueda["id_usuario"]];
+    
+            $stmt = $this->pdo->prepare($consultaSQL);
+            $stmt->execute($valores);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            if (count($result) > 0) {
+                $hashAlmacenado = $result[0]['contrasenia'];
+                $contrasenia_ingresada = $datosBusqueda['contrasenia'];
+    
+                if (password_verify($contrasenia_ingresada, $hashAlmacenado)) {
+                    return $result[0]; // Las contraseñas coinciden
+                } else {
+                    return null; // Las contraseñas no coinciden
+                }
             } else {
-                return null; // Las contraseñas no coinciden
+                return null; // El usuario no existe
             }
-        } else {
-            // El usuario no existe, puedes manejar este caso según tus necesidades
-            return null; // O podrías lanzar una excepción, retornar un mensaje de error, etc.
+        } catch (PDOException $e) {
+            // Manejo de errores
+            $this->sendToLog("Error: {$e->getMessage()}");
+            return null; // En caso de error, retornar null o manejar según tus necesidades
         }
-    } catch (PDOException $e) {
-        // Manejo de errores
-        $this->sendToLog("Error: {$e->getMessage()}");
-        return array(); // En caso de error, retornar un array vacío o false, según convenga
-    } 
-
     }
 
     /**

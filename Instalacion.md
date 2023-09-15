@@ -7,6 +7,7 @@
   - Configurar la base de datos creada y los usuarios correspondientes
  - Ejecutar `composer install`
  - Ejecutar `composer require phpmailer/phpmailer`
+ - Ejecutar `composer require google/apiclient:^2.0`
 
 - hay que descomentar en el php.ini la linea referida a la extension:
     extension=pdo_mysql y reiniciar el servidor. 

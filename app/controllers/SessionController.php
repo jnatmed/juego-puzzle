@@ -62,12 +62,11 @@ class SessionController extends UsuarioModel{
             session_start();
         }
 
-        $contrasenia = $_POST['contrasenia'];
-        $hashContrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
-
+        
+        
         $datos_de_inicio_de_sesion = [
                 'id_usuario' => $_POST['id_usuario'], 
-                 'contrasenia' => $hashContrasenia
+                 'contrasenia' => $_POST['contrasenia']
                 ];
 
         // echo("<pre>");
@@ -169,6 +168,9 @@ class SessionController extends UsuarioModel{
             'fecha_expiracion_enlace' => $validadorController->generarFechaExpiracion(),
         ];
 
+        echo "<pre>";
+        var_dump($datosUsuario);
+
         $resultado = $sesion->registrarNuevo($datosUsuario);
 
         $datos = $this->cargarPanelNavegacion();
@@ -185,10 +187,15 @@ class SessionController extends UsuarioModel{
     public function confirmarCorreo(){
         $token_sin_validar = $_GET['token'];
         $sesion = $this->tieneSesionActiva();
-        
-        var_dump($token_sin_validar);
-        
+                
         if ($sesion['estado'] == 'ok') {
+            $sesionModel = new UsuarioModel();
+            $resultado = $sesionModel->validarToken($token_sin_validar, $_SESSION['id_sesion']);
+
+            if ($resultado['estado'] == 'ok'){
+                return view('login', $resultado);
+            }
+
         }
     }
 

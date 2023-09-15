@@ -1,7 +1,11 @@
 {% include 'partials/base.html' %}
 <body>
     {% include 'partials/nav-puzzle.html' %}  
-
+    <div class="success-message">
+        <p>{{ successMessage }}</p>
+        <div class="close-button">X</div> <!-- Agregamos una "X" para cerrar el mensaje -->
+    </div>
+     
     <main>
         <h1 id="titulo_partida">Listado de Partidas</h1>
         <div class="container">
