@@ -38,8 +38,8 @@ class CorreoController
                 $mail->isSMTP();
                 $mail->Host       = $this->host;
                 $mail->SMTPAuth   = true;
-                // $mail->Username   = $this->remitente;
-                // $mail->Password   = $this->pass;
+                $mail->Username   = $this->remitente;
+                $mail->Password   = $this->pass;
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar STARTTLS
                 $mail->Port       = 587; // Puerto de STARTTLS
                 // $mail->Port       = 25; // Puerto de STARTTLS

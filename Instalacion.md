@@ -6,6 +6,7 @@
  - Crear un archivo `config.php` (Hay un ejemplo para copiar en `config.php.example`)
   - Configurar la base de datos creada y los usuarios correspondientes
  - Ejecutar `composer install`
+ - Ejecutar `composer require phpmailer/phpmailer`
 
 - hay que descomentar en el php.ini la linea referida a la extension:
     extension=pdo_mysql y reiniciar el servidor. 
