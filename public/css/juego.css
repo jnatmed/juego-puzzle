@@ -31,6 +31,11 @@
     padding-left: 20px;
 }
 
+#titulo_partida {
+  text-align: center;
+  color: #f0f0f0;
+}
+
 .container {
     display: flex;
     justify-content: space-between;

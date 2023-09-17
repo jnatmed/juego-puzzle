@@ -7,6 +7,7 @@ use PDOException;
 
 class UsuarioModel extends Model{
     public $db;
+    const TOKEN_VALIDADO = 'validada' ;
     // private $id_usuario;
     // private $tipo_usuario;
 
@@ -14,18 +15,10 @@ class UsuarioModel extends Model{
 
         $resultadoConsulta = $this->db->selectOne('usuario','id_usuario',$id_usuario);        
 
-        // echo("<pre>");
-        // var_dump($resultadoConsulta);
-
-        if(!empty($resultadoConsulta)) {
-            $_SESSION = [
-                'id_usuario' => $id_usuario,
-                'tipo_usuario' => $resultadoConsulta['tipo_usuario'],
-                'contrasenia' => $resultadoConsulta['contrasenia']
-            ];
-            return true;
-        }else{
+        if($resultadoConsulta['estado'] == 'error') {
             return false;
+        }else{
+            return true;
         }  
     }   
 
@@ -52,6 +45,7 @@ class UsuarioModel extends Model{
 
                     $_SESSION = [
                         'id_usuario' => $resultadoConsulta['id_usuario'],
+                        'alias' => $resultadoConsulta['alias'],
                         'tipo_usuario' => $resultadoConsulta['tipo_usuario']
                     ];
 
@@ -70,12 +64,57 @@ class UsuarioModel extends Model{
     }
 
     public function validarToken($token_sin_validar, $id_usuario){
+
+        $resultado = $this->db->selectOne('usuario', 'id_usuario', $id_usuario);
+
+        // echo("<pre>");
+        // var_dump($resultado);
+
+        if($resultado['estado'] == 'ok'){
+            /**comparar token_sin_validar */
+            if ($resultado['token_validacion'] == $token_sin_validar){
+
+                /**actualizar la estado_validacion 
+                 * de la tabla de usuario */
+                $parameters = [
+                    'estado_validacion' => self::TOKEN_VALIDADO
+                ];
+                $condition = "id_usuario = '{$id_usuario}'";
+
+                $resultado_update = $this->db->update('usuario', $parameters, $condition);
+
+                // echo("<pre>");
+                // var_dump($resultado);
+
+                if($resultado_update['estado'] == 'ok'){
+                    return [
+                        'estado' => 'ok',
+                        'description' => $resultado_update['descripcion']
+                    ];
+                }else{
+                    return [
+                        'estado' => 'error',
+                        'description' => $resultado_update['descripcion']
+                    ];
+                }
+            }else{
+                return [
+                    'estado' => 'error',
+                    'descripcion' => 'los token no coinciden'
+                ];
+            }
+        }
         // $resultado = $this->db->
     }
 
     public function registrarNuevo($datos_registro){
         
         if(!$this->existeUsuario($datos_registro['id_usuario'])){
+            $_SESSION = [
+                'id_usuario' => $datos_registro['id_usuario'],
+                'alias' => $datos_registro['alias'],
+                'tipo_usuario' => $datos_registro['tipo_usuario']
+            ];
             return $this->db->insert("usuario", $datos_registro);
         }else {
             return ['estado' => 'error',

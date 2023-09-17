@@ -7,8 +7,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// error_log("Error: ", 3, "my-errors.log");
-
 use App\Core\App;
 use App\Core\Router;
 use App\Core\Request;
@@ -16,7 +14,6 @@ use App\Core\Logger;
 use App\Core\Exceptions\RouteNotFoundException as RouteNotFoundException;
 
 $logger = App::get('logger');
-
 
 try {
     $render = Router::load( '../app/routes.php')

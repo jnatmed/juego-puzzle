@@ -10,10 +10,11 @@ use \App\controllers\CorreoController;
 class SessionController extends UsuarioModel{
 
     public $session;
+    const CORREO_VALIDADO = 'CORREO VALIDADO CON EXITO';
+
     // private $id_usuario;
     // private $id_partida;
     // private $matriz = array();
-
     public function cargarPanelNavegacion(){
 
         // $usuarioModel = new UsuarioModel();
@@ -24,12 +25,13 @@ class SessionController extends UsuarioModel{
         if ($sesion['estado'] == 'ok') {
             
             $tipoUsuario = $_SESSION['tipo_usuario'];
+            $alias = $_SESSION['alias'];
             
             // echo("<pre>");
             // var_dump($this->opciones_navbar[$tipoUsuario]);
             
             $datos['enlaces'] = $menuController->crearMenu($tipoUsuario);
-            $datos['id_usuario'] = $_SESSION['id_usuario'];
+            $datos['alias'] = $alias;
             $datos['tipo_usuario'] = $tipoUsuario;
             $datos['sesion_activa'] = true;
             // echo("<pre>");
@@ -46,7 +48,7 @@ class SessionController extends UsuarioModel{
     }
 
     public function login(){
-
+        
         return view('login' , $this->cargarPanelNavegacion());
     }
 
@@ -58,27 +60,23 @@ class SessionController extends UsuarioModel{
 
         /**
          *  si la sesion no esta activa */ 
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
-        
+        session_start();
         
         $datos_de_inicio_de_sesion = [
                 'id_usuario' => $_POST['id_usuario'], 
                  'contrasenia' => $_POST['contrasenia']
                 ];
 
-        // echo("<pre>");
-        // var_dump($id_usuario);
-        // var_dump($pass);
+        echo "datos $_POST";        
+        echo("<pre>");
+        var_dump($_POST);
 
         $sesion_model = new UsuarioModel();
 
         $estado = $sesion_model->iniciar($datos_de_inicio_de_sesion);
 
-        // echo("<pre>");
-        // var_dump($estado);
+        echo("<pre>");
+        var_dump($_SESSION);
 
         if($estado['estado'] == 'ok'){
 
@@ -93,25 +91,12 @@ class SessionController extends UsuarioModel{
 
     public function tieneSesionActiva(){
 
-        // Deshabilito las notificaciones de error relacionadas con las sesiones
-        // error_reporting(E_ALL & ~E_NOTICE);
-
-        // Inicia la sesión solo si no está activa
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-                // Verificar si la sesión ha expirado
-        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1440)) {
-            session_unset();   // Desvincular todas las variables de sesión
-            session_destroy(); // Destruir la sesión
-            echo "La sesión ha expirado.";
-            // Actualizar la marca de tiempo de la última actividad
-            $_SESSION['LAST_ACTIVITY'] = time();
-        }
-
-        if(isset($_SESSION['id_usuario'])){
+        if(session_status() == PHP_SESSION_ACTIVE){
 
             $usuarioModel = new usuarioModel(); 
+
+            echo("<pre>");
+            var_dump($_SESSION);
 
             if($usuarioModel->existeUsuario($_SESSION['id_usuario'])){
 
@@ -154,7 +139,10 @@ class SessionController extends UsuarioModel{
 
         $token_validacion = $validadorController->generarToken($destinatario, $idUsuario);
 
-        $enviado = $validadorController->enviarCorreoValidacion($destinatario, $token_validacion, $alias_to);
+        $enviado = $validadorController->enviarCorreoValidacion($destinatario, 
+                                                                $token_validacion, 
+                                                                $alias_to,
+                                                                $idUsuario);
 
 
         $datosUsuario = [
@@ -168,8 +156,8 @@ class SessionController extends UsuarioModel{
             'fecha_expiracion_enlace' => $validadorController->generarFechaExpiracion(),
         ];
 
-        echo "<pre>";
-        var_dump($datosUsuario);
+        // echo "<pre>";
+        // var_dump($datosUsuario);
 
         $resultado = $sesion->registrarNuevo($datosUsuario);
 
@@ -186,16 +174,16 @@ class SessionController extends UsuarioModel{
 
     public function confirmarCorreo(){
         $token_sin_validar = $_GET['token'];
-        $sesion = $this->tieneSesionActiva();
-                
-        if ($sesion['estado'] == 'ok') {
-            $sesionModel = new UsuarioModel();
-            $resultado = $sesionModel->validarToken($token_sin_validar, $_SESSION['id_sesion']);
+        $id_usuario = $_GET['id'];
 
-            if ($resultado['estado'] == 'ok'){
-                return view('login', $resultado);
-            }
+        $sesionModel = new UsuarioModel();
+        $resultado = $sesionModel->validarToken($token_sin_validar, $id_usuario);
 
+        if ($resultado['estado'] == 'ok'){
+            return view('correo_validado', [
+                'mostrarMensaje' => self::CORREO_VALIDADO,
+                ...$resultado
+            ]);
         }
     }
 
@@ -213,20 +201,34 @@ class SessionController extends UsuarioModel{
     }
 
     public function cerrarSesion() {
-        // Verificar si la sesión está iniciada
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            // Destruir la sesión
-            setcookie(session_name(), '', time() - 3600);
-            session_destroy();
+
+        // Iniciar la sesión (si aún no está iniciada)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-        
+
+        // Destruir la sesión (si está iniciada)
+        if (session_id() !== '') {
+            // Borra todas las variables de sesión
+            $_SESSION = [];
+
+            // Borra la cookie de sesión (opcional)
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 3600,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+
+            // Finalmente, destruir la sesión
+            session_destroy();
+        }        
+
         $menuController = new MenuController();
         $datos = [];
         $datos['enlaces'] = $menuController->crearMenu('anonimo');
-        
-        // La sesión se ha cerrado correctamente
-        $datos['sesion_activa'] = false;
-    
+
         return view('login', $datos);
     }
 }

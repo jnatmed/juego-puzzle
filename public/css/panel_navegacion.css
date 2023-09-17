@@ -1,13 +1,13 @@
 
 /* Estilo para los elementos dentro de las secciones */
-#username, #tipo_usuario, label {
+#username, #tipo_usuario, #alias, label {
     margin-left: 20px; /* Agrega espacio entre los elementos */
 }
-
 
 #menu_icon.hidden {
     display: none
 }
+
 /* Estilo para el icono del menú */
 #menu_icon {
     cursor: pointer;

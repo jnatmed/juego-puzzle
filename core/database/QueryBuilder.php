@@ -136,9 +136,17 @@ class QueryBuilder
             $resultado = $statement->fetchAll(PDO::FETCH_CLASS);
 
             if(!$resultado) {
-                return false;
+                return [
+                    'estado' => 'error',
+                    'descripcion' => "no se encontraron filas con el id {$searched}"
+                ];
             }else{
-                return get_object_vars($resultado[0]);
+
+                return [
+                    'estado' => 'ok',
+                    ...get_object_vars($resultado[0]),
+                    'descripcion' => 'se encontraron ' . count($resultado) . 'filas'
+                ];
             }
         } catch (Exception $e) {
             $this->sendToLog($e);
@@ -362,18 +370,34 @@ public function guardarImagenes($imagenes, $id_partida, $id_usuario){
             $params,
             $condition
         );
-        // echo("<pre>");
-        // var_dump($sql);
 
+                // echo("<pre>");
+                // var_dump($sql);
         try {
             $statement = $this->pdo->prepare($sql);
             $result = $statement->execute();
-            return $result;
+            if ($result) {
+                $log = 'Tabla actualizada con éxito';
+                $this->sendToLog($log);
+                return array(
+                    'estado' => 'ok',
+                    'descripcion' => $log
+                );
+            } else {
+                $log = 'Error al actualizar: ' . implode(', ', $statement->errorInfo());
+                $this->sendToLog($log);
+                return array(
+                    'estado' => 'error',
+                    'descripcion' => $log
+                );
+            }
         } catch (Exception $e) {
             $this->sendToLog($e);
-            echo($e->getMessage());
-            return $e->getCode();
-        }          
+            return array(
+                'estado' => 'error',
+                'descripcion' => 'Error al actualizar: ' . $e->getCode()
+            );
+        } 
     }  
     
     public function cargarImagenes($hashDataImage, $dataUser){

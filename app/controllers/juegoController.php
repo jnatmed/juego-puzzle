@@ -33,11 +33,19 @@ class JuegoController extends JuegoModel{
     }        
     
     public function new(){
+
+        if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+    
+
         $sesion = new SessionController();
 
         // pregunto si tiene sesion iniciada. 
         $resultado = $sesion->tieneSesionActiva();
         
+        echo "metodo new: tienesesionactiva? </br>";
+        echo("<pre>");
+        var_dump($resultado);
+
         if ($resultado['estado'] == 'ok') {
 
             $juegoModel = new JuegoModel();

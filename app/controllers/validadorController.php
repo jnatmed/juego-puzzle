@@ -23,12 +23,12 @@ class ValidadorController
     }
 
     // Función para enviar un correo de validación
-    public function enviarCorreoValidacion($destinatario, $token, $alias_to)
+    public function enviarCorreoValidacion($destinatario, $token, $alias_to, $id)
     {
         // Configurar y enviar el correo de validación
         $asunto = 'Confirmación de correo electrónico';
         $mensaje = "Por favor, haga clic en el siguiente enlace para confirmar su correo electrónico:\n\n";
-        $mensaje .= "{$this->mi_sitio}/confirmar_correo?token={$token}";
+        $mensaje .= "{$this->mi_sitio}/confirmar_correo?id={$id}&token={$token}";
 
         // Asume que $correoController tiene un método para enviar correos
         $this->correoController->enviarCorreo($destinatario, $asunto, $mensaje, $alias_to);
