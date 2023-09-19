@@ -42,10 +42,6 @@ class JuegoController extends JuegoModel{
         // pregunto si tiene sesion iniciada. 
         $resultado = $sesion->tieneSesionActiva();
         
-        echo "metodo new: tienesesionactiva? </br>";
-        echo("<pre>");
-        var_dump($resultado);
-
         if ($resultado['estado'] == 'ok') {
 
             $juegoModel = new JuegoModel();
@@ -92,7 +88,15 @@ class JuegoController extends JuegoModel{
                     ...$sesion->cargarPanelNavegacion()
                 ]);
             }
-        }        
+
+        }else{
+            /** redirigo a una pagina donde por 
+             * defecto le informo al usuario que no
+             * esta logueado
+             * que debe loguearse para ver sus partidas.
+             */
+            return view('login', $sesion->cargarPanelNavegacion());
+        }       
     }
 
     public function reciboEstado(){
@@ -145,6 +149,8 @@ class JuegoController extends JuegoModel{
                 ...$sesion->cargarPanelNavegacion()
             ]);
             
+        } else {
+            return view('login', $sesion->cargarPanelNavegacion());
         }
 
     } // FIN metodo : continuar_partida()

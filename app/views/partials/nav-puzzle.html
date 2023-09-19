@@ -4,9 +4,9 @@
         <nav class="menu_nav"> 
             <ul>
                 {% for item in enlaces %}    
-                    {% if item.descripcion != "Login" or not sesion_activa %}
+                    {# {% if item.descripcion != "Login" or not sesion_activa %} #}
                         <li><a href="{{item.enlace}}">{{item.descripcion}}</a></li> 
-                    {% endif %}
+                    {# {% endif %} #}
                 {% endfor %}
             </ul>
         </nav> 

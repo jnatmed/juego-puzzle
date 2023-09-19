@@ -12,12 +12,9 @@ class SessionController extends UsuarioModel{
     public $session;
     const CORREO_VALIDADO = 'CORREO VALIDADO CON EXITO';
 
-    // private $id_usuario;
-    // private $id_partida;
-    // private $matriz = array();
     public function cargarPanelNavegacion(){
 
-        // $usuarioModel = new UsuarioModel();
+
         $menuController = new MenuController();
 
         $sesion = $this->tieneSesionActiva();
@@ -26,16 +23,11 @@ class SessionController extends UsuarioModel{
             
             $tipoUsuario = $_SESSION['tipo_usuario'];
             $alias = $_SESSION['alias'];
-            
-            // echo("<pre>");
-            // var_dump($this->opciones_navbar[$tipoUsuario]);
-            
+                      
             $datos['enlaces'] = $menuController->crearMenu($tipoUsuario);
             $datos['alias'] = $alias;
             $datos['tipo_usuario'] = $tipoUsuario;
             $datos['sesion_activa'] = true;
-            // echo("<pre>");
-            // var_dump($datos);            
             
             return $datos;
         }
@@ -48,7 +40,12 @@ class SessionController extends UsuarioModel{
     }
 
     public function login(){
-        
+
+        // Iniciar la sesión (si aún no está iniciada)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         return view('login' , $this->cargarPanelNavegacion());
     }
 
@@ -58,25 +55,19 @@ class SessionController extends UsuarioModel{
 
     public function iniciarSession(){
 
-        /**
-         *  si la sesion no esta activa */ 
-        session_start();
+        // Iniciar la sesión (si aún no está iniciada)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         
         $datos_de_inicio_de_sesion = [
                 'id_usuario' => $_POST['id_usuario'], 
                  'contrasenia' => $_POST['contrasenia']
                 ];
 
-        echo "datos $_POST";        
-        echo("<pre>");
-        var_dump($_POST);
-
         $sesion_model = new UsuarioModel();
 
         $estado = $sesion_model->iniciar($datos_de_inicio_de_sesion);
-
-        echo("<pre>");
-        var_dump($_SESSION);
 
         if($estado['estado'] == 'ok'){
 
@@ -91,12 +82,14 @@ class SessionController extends UsuarioModel{
 
     public function tieneSesionActiva(){
 
-        if(session_status() == PHP_SESSION_ACTIVE){
+         // Iniciar la sesión (si aún no está iniciada)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-            $usuarioModel = new usuarioModel(); 
+        $usuarioModel = new usuarioModel(); 
 
-            echo("<pre>");
-            var_dump($_SESSION);
+        if(isset($_SESSION['id_usuario'])){
 
             if($usuarioModel->existeUsuario($_SESSION['id_usuario'])){
 
@@ -110,21 +103,31 @@ class SessionController extends UsuarioModel{
                         'descripcion' => 'usuario inexistente en la base'];
             }
         }else{
-            
             return ['estado' => 'error',
-                    'codigo' => 1,
-                    'descripcion' => 'sesion no iniciada'];
+            'codigo' => 3,
+            'descripcion' => 'hay sesion activa pero es anonima'];
         }
+
     }
 
     public function registrar_usuario(){
 
         $sesion = new UsuarioModel(); 
-
-        $contrasenia = $_POST['contrasenia'];
-        $hashContrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
-
         $datos_mailer = require __DIR__ . '/../../config.php';
+
+
+        /**verifico que no haya pida el recurso en un post vacio, yendo directamente a la url */
+        if(!isset($_POST['id_usuario'])){
+            /** lo redirigo directmente a la pagina del registro con el mensaje de error */
+            $datos['msj_estado_registro'] = 'Formulario de registro vacio';            
+            return view('registrar_usuario', [
+                ...$datos,
+                ...$this->cargarPanelNavegacion()
+                ] );
+        }
+
+        /**paso a controlar la contraseña */
+        $contrasenia = $_POST['contrasenia'];
 
         $validadorController = new ValidadorController(
             new CorreoController(
@@ -137,13 +140,26 @@ class SessionController extends UsuarioModel{
         $idUsuario = $_POST['id_usuario'];
         $alias_to = $_POST['alias'];
 
+        $resultado_validacion_contrasenia = $validadorController->validarContrasena($contrasenia);
+       
+        /** si la contraseña esta validada entonces la hasheo*/
+        if($resultado_validacion_contrasenia['estado'] == 'validado'){
+            $hashContrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
+        }else{
+            /** caso contrario envio error a la pagina de registro */
+            $datos['msj_estado_registro'] = $resultado_validacion_contrasenia['descripcion'];            
+            return view('registrar_usuario', [
+                ...$datos,
+                ...$this->cargarPanelNavegacion()
+                ] );
+        }
+
         $token_validacion = $validadorController->generarToken($destinatario, $idUsuario);
 
         $enviado = $validadorController->enviarCorreoValidacion($destinatario, 
                                                                 $token_validacion, 
                                                                 $alias_to,
                                                                 $idUsuario);
-
 
         $datosUsuario = [
             'id_usuario' => $_POST['id_usuario'],
@@ -156,23 +172,24 @@ class SessionController extends UsuarioModel{
             'fecha_expiracion_enlace' => $validadorController->generarFechaExpiracion(),
         ];
 
-        // echo "<pre>";
-        // var_dump($datosUsuario);
 
         $resultado = $sesion->registrarNuevo($datosUsuario);
 
         $datos = $this->cargarPanelNavegacion();
         $datos['msj_estado_registro'] = $resultado['descripcion'];
 
-
-        if($resultado['estado']=='ok') {
-            return view('login', $datos );
-        }else{
-            return view('registrar_usuario', $datos );
+        if ($resultado['estado'] === 'ok') {
+            $vista = 'listado_partidas';
+        } else {
+            $vista = 'registrar_usuario';
         }
+        
+        return view($vista, $datos);
+
     }
 
     public function confirmarCorreo(){
+        
         $token_sin_validar = $_GET['token'];
         $id_usuario = $_GET['id'];
 
@@ -182,7 +199,8 @@ class SessionController extends UsuarioModel{
         if ($resultado['estado'] == 'ok'){
             return view('correo_validado', [
                 'mostrarMensaje' => self::CORREO_VALIDADO,
-                ...$resultado
+                ...$resultado,
+                ...$this->cargarPanelNavegacion()
             ]);
         }
     }
@@ -198,6 +216,38 @@ class SessionController extends UsuarioModel{
         ];
 
         return view('listado_usuarios', $listado);
+    }
+
+    public function datosUsuario(){
+        $sesion = new UsuarioModel();
+       
+        $resultado = $this->tieneSesionActiva();
+        
+        if($resultado['estado'] === 'ok'){
+
+            $vista = 'datos_usuario';
+            $datos = $sesion->traerDatosUsuario($_SESSION['id_usuario']);
+
+            $datos['msj_estado_registro'] = $datos['descripcion'];
+
+            if($datos['estado'] === 'ok'){
+                $datos = [
+                    ...$datos,
+                    'datos_usuario' => [
+                        'ID de Usuario' => $datos['id_usuario'],
+                        'Correo' => $datos['email'] . " (" . $datos['estado_validacion'] .")",
+                        'Alias' => $datos['alias'],
+                    ],
+                    ...$this->cargarPanelNavegacion()
+                ];
+            }
+
+        }else{
+            $vista = 'login';
+            $datos = $this->cargarPanelNavegacion();
+        }
+
+        return view($vista, $datos);
     }
 
     public function cerrarSesion() {

@@ -69,4 +69,44 @@ class ValidadorController
 
         return $fecha_expiracion_enlace;
     }
+
+    public static function validarContrasena($contrasena) {
+        $resultado = [
+            'estado' => 'validado',
+            'descripcion' => 'contraseña validada',
+        ];
+    
+        // Verificar que la contraseña tenga al menos 8 caracteres
+        if (strlen($contrasena) < 8) {
+            $resultado['estado'] = 'error';
+            $resultado['descripcion'] = 'La contraseña debe tener al menos 8 caracteres';
+        }
+        
+        // Verificar que la contraseña contenga al menos una letra minúscula
+        if (!preg_match('/[a-z]/', $contrasena)) {
+            $resultado['estado'] = 'error';
+            $resultado['descripcion'] = 'La contraseña debe contener al menos una letra minúscula';
+        }
+        
+        // Verificar que la contraseña contenga al menos una letra mayúscula
+        if (!preg_match('/[A-Z]/', $contrasena)) {
+            $resultado['estado'] = 'error';
+            $resultado['descripcion'] = 'La contraseña debe contener al menos una letra mayúscula';
+        }
+        
+        // Verificar que la contraseña contenga al menos un dígito
+        if (!preg_match('/\d/', $contrasena)) {
+            $resultado['estado'] = 'error';
+            $resultado['descripcion'] = 'La contraseña debe contener al menos un dígito';
+        }
+        
+        // Verificar que la contraseña contenga al menos un carácter especial
+        if (!preg_match('/[@$!%*?&]/', $contrasena)) {
+            $resultado['estado'] = 'error';
+            $resultado['descripcion'] = 'La contraseña debe contener al menos un carácter especial (@ $ ! % * ? &)';
+        }
+        
+        return $resultado;
+    }
+
 }

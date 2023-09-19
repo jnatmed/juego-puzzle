@@ -1,0 +1,22 @@
+.usuario-info {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f7f7f7;
+    width: 70%;
+}
+.campo {
+    margin-bottom: 10px;
+}
+
+.campo label {
+    font-weight: bold;
+}
+
+.campo span {
+    font-style: italic;
+    color: #666;
+}

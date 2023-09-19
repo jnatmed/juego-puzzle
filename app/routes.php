@@ -13,6 +13,8 @@ $router->get('internal_error', 'ProjectController@internalError');
    $router->get('confirmar_correo', 'SessionController@confirmarCorreo');
    $router->post('iniciar_session', 'SessionController@iniciarSession');
    $router->post('registrar_usuario', 'SessionController@registrar_usuario');
+   $router->get('datos_usuario', 'SessionController@datosUsuario');
+   
 /** logout */
 $router->get('cerrar_sesion', 'SessionController@cerrarSesion');
 

@@ -26,22 +26,9 @@ class UsuarioModel extends Model{
 
         try {
 
-            // echo("<pre>");
-            // var_dump($datosUsuario);
-
-        // echo("<pre>");
-        // var_dump($this->db);
-
-
             $resultadoConsulta = $this->db->buscarUsuario($datosUsuario);
-
-            // echo("<pre>");
-            // var_dump($resultadoConsulta);
-            
+           
             if(!empty($resultadoConsulta)){
-
-                    // echo("<pre>");
-                    // var_dump($resultadoConsulta);
 
                     $_SESSION = [
                         'id_usuario' => $resultadoConsulta['id_usuario'],
@@ -67,9 +54,6 @@ class UsuarioModel extends Model{
 
         $resultado = $this->db->selectOne('usuario', 'id_usuario', $id_usuario);
 
-        // echo("<pre>");
-        // var_dump($resultado);
-
         if($resultado['estado'] == 'ok'){
             /**comparar token_sin_validar */
             if ($resultado['token_validacion'] == $token_sin_validar){
@@ -82,9 +66,6 @@ class UsuarioModel extends Model{
                 $condition = "id_usuario = '{$id_usuario}'";
 
                 $resultado_update = $this->db->update('usuario', $parameters, $condition);
-
-                // echo("<pre>");
-                // var_dump($resultado);
 
                 if($resultado_update['estado'] == 'ok'){
                     return [
@@ -125,6 +106,13 @@ class UsuarioModel extends Model{
 
     public function listadoUsuarios(){
         return $this->db->selectAll('usuario');
+    }
+
+    public function traerDatosUsuario($id_usuario){
+        $datos = $this->db->selectOne('usuario', 'id_usuario', $id_usuario);        
+
+        return $datos;
+
     }
 }
 
