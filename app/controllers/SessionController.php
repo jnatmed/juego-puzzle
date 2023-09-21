@@ -75,9 +75,10 @@ class SessionController extends UsuarioModel{
 
             return $juegoController->listado_partidas();
 
-        }
-
-        return view('login' , $this->cargarPanelNavegacion());
+        } 
+        return view('login' , [
+            'msj_estado_registro' => 'usuario o contraseña incorrectos',
+            ...$this->cargarPanelNavegacion()]);
     }
 
     public function tieneSesionActiva(){

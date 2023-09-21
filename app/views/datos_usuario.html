@@ -3,19 +3,21 @@
     {% include 'partials/nav-puzzle.html' %}  
 
     <main>
-        <div class="usuario-info">
-            <h2>Datos del Usuario</h2>
-            {% for campo, valor in datos_usuario %}
-                <div class="campo">
-                    <label>{{ campo }}:</label>
-                    {% if campo == 'Contraseña' %}
-                        <span>********</span> <!-- Mostrar asteriscos en lugar de la contraseña real -->
-                    {% else %}
-                        <span>{{ valor }}</span>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
+       <div class="container_info">
+           <div class="usuario-info">
+               <h2>Datos del Usuario</h2>
+               {% for campo, valor in datos_usuario %}
+                   <div class="campo">
+                       <label>{{ campo }}:</label>
+                       {% if campo == 'Contraseña' %}
+                           <span>********</span> <!-- Mostrar asteriscos en lugar de la contraseña real -->
+                       {% else %}
+                           <span>{{ valor }}</span>
+                       {% endif %}
+                   </div>
+               {% endfor %}
+           </div>
+       </div> 
     </main>
     {% include 'partials/footer.html' %}
 </body>

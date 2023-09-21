@@ -1,0 +1,46 @@
+/* Estilos para el contenedor principal */
+.container_modo_in {
+    display: flex;
+    flex-direction: column;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+/* Estilos para el div .modo_in dentro del contenedor */
+.modo_in {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+/* Estilos para los elementos dentro de .modo_in_component */
+.modo_in_component {
+    flex-basis: calc(33.33% - 10px); /* Divide el espacio en 3 columnas con un pequeño margen entre ellas */
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para los inputs y elementos con la clase .input_component */
+.input_component {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+/* Estilos para el botón */
+#btn_cargar_imagen {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#btn_cargar_imagen:hover {
+    background-color: #0056b3;
+}

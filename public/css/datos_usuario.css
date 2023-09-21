@@ -1,15 +1,23 @@
+.container_info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+}
 .usuario-info {
     display: flex; 
-    flex-direction: column; 
+    flex-direction: column;
     justify-content: center; 
     align-items: center; 
     border: 1px solid #ccc;
     padding: 20px;
-    background-color: #f7f7f7;
-    width: 70%;
+    background-color: #be6868;
+    width: 100vh;
 }
 .campo {
     margin-bottom: 10px;
+    color: #f7f7f7;
+    font-size: 1.2rem;
 }
 
 .campo label {

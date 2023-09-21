@@ -4,34 +4,32 @@
   {% include 'partials/nav-puzzle.html' %}  
   <main>
     
-
-  <section class="session">
-        
-      <fieldset>
-          <legend>Login</legend>
-          <form id="form_login" action="iniciar_session" method="POST">
-            <article class="inputform">
-              <label for="usuario">Usuario</label>
-              <input type="text" name="id_usuario">
-            </article>
-            <article class="inputform">
-              <label for="contraseña">Contraseña</label>
-              <input type="password" name="contrasenia">
-            </article>
-            <article class="inputform">
-            </article>  
-              <input class="submit" type="submit" name="login" value="Loguearse">
-
-          </form>
-
-          <label id="registro" for="registro">
-            No tiene usuario ? <a href="/nuevo_usuario">Registrarse</a>  
-          </label>
-
-          <p>{{ msj_estado_registro }}</p>
-      </fieldset>
-      
-       
+  <section class="container_info">
+    <section class="session">
+        <fieldset>
+            <legend>Login</legend>
+            <form id="form_login" action="iniciar_session" method="POST">
+              <article class="inputform">
+                <label for="usuario">Usuario</label>
+                <input class="input_login" type="text" name="id_usuario">
+              </article>
+              <article class="inputform">
+                <label for="contraseña">Contraseña</label>
+                <input class="input_login" type="password" name="contrasenia">
+              </article>
+              <article class="inputform">
+              </article>  
+                <input class="submit" type="submit" name="login" value="Loguearse">
+  
+            </form>
+  
+            <label id="registro" for="registro">
+              No tiene usuario ? <a href="/nuevo_usuario">Registrarse</a>  
+            </label>
+  
+            <p>{{ msj_estado_registro }}</p>
+        </fieldset>                 
+    </section>
   </section>
   </main>
 </body>

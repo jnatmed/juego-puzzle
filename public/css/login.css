@@ -1,32 +1,48 @@
+.container_registro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+}
 .session,
 .registro {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Distribuir en columnas, ajustándolas automáticamente */
+    gap: 10px; /* Espacio entre los elementos */
+  }
+  
+  .inputform {
     display: flex;
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: center; /* Centrar verticalmente */
-    height: 100vh; /* Tamaño del contenedor al 100% de la ventana */
-    flex-direction: column; /* Alinear los elementos en columna */
-}
-
-/* Estilos adicionales para los formularios */
-form {
-    width: 300px; /* Ancho del formulario */
-    padding: 20px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Espacio entre formularios */
-}
-
-.inputform {
+    flex-direction: column;
     margin-bottom: 10px;
-}
-
-.submit {
+  }
+  
+  label {
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; /* Ajusta el tamaño del texto según tus preferencias */
+  }
+  
+  .submit {
     background-color: #007bff;
-    color: white;
+    color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-}
+  }
+  
+  /* Estilos adicionales para pantallas pequeñas */
+  @media screen and (max-width: 768px) {
+    .registro {
+      grid-template-columns: 1fr; /* Una columna para pantallas pequeñas */
+    }
+  }
+  

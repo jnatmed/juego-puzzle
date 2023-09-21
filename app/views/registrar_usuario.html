@@ -3,34 +3,36 @@
 <body>
   {% include 'partials/nav-puzzle.html' %}  
   <main>    
-      <section class="registro">
-      <fieldset>
-          <legend>Registro</legend>
-          <form action="registrar_usuario" method="POST">
-            <article class="inputform">
-              <label for="usuario">Usuario</label>
-              <input type="text" name="id_usuario">
-            </article>  
-            <article class="inputform">
-              <label for="contraseña">Contraseña</label>
-              <input type="password" name="contrasenia">
-            </article>
-            <article class="inputform">
-              <label for="alias">Alias</label>
-              <input type="text" name="alias" id="alias">
-            </article>   
-            <article class="inputform">
-              <label for="email">Correo Electrónico</label>
-              <input type="text" name="email" id="email">
-            </article>   
-            <article class="inputform">
-              <input class="submit" type="submit" name="login" value="Registrar">
-            </article>  
-          </form>
-          <p>{{ msj_estado_registro }}</p>
-        </fieldset>
-       
-  </section>
+    <section class="container_registro">     
+          <section class="registro">
+          <fieldset>
+              <legend>Registro</legend>
+              <form action="registrar_usuario" method="POST">
+                <article class="inputform">
+                  <label for="usuario">Usuario</label>
+                  <input type="text" name="id_usuario">
+                </article>  
+                <article class="inputform">
+                  <label for="contraseña">Contraseña</label>
+                  <input type="password" name="contrasenia">
+                </article>
+                <article class="inputform">
+                  <label for="alias">Alias</label>
+                  <input type="text" name="alias" id="alias">
+                </article>   
+                <article class="inputform">
+                  <label for="email">Correo Electrónico</label>
+                  <input type="text" name="email" id="email">
+                </article>   
+                <article class="inputform">
+                  <input class="submit" type="submit" name="login" value="Registrar">
+                </article>  
+              </form>
+              <p>{{ msj_estado_registro }}</p>
+            </fieldset>
+          
+      </section>
+    </section>
   </main>
 </body>
 {% include 'partials/footer.html' %}
