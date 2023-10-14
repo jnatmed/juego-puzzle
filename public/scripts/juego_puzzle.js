@@ -10,7 +10,7 @@ function actualizarTemporizador() {
   const tiempoFormateado = (minutos < 10 ? "0" : "") + minutos + ":" + (segundos < 10 ? "0" : "") + segundos;
 
   // Actualizar el contenido del elemento del temporizador
-  timerElement.textContent = tiempoFormateado;
+  timerElement.textContent = 'Tiempo : ' + tiempoFormateado;
 }
 
 function obtenerTiempoEnSegundos() {
@@ -538,7 +538,7 @@ class Juego {
           } else {
             console.error('Error al enviar el dataURI al servidor:', response.statusText);
           }
-        } catch (error) {
+        } catch (error) { 
           console.error('Error en la solicitud:', error);
         }
       } else {
@@ -565,9 +565,9 @@ $('btn_cargar').addEventListener('click', async (e) => {
   
   try {
 
-    let url_data = $('url_data').value;
+    let url_data = $('input_url').value;
     /**
-     * estos procesos deben deben ejecutarse
+     * estos procesos deben ejecutarse
      * con await a fin de asegurar que la
      * siguiente variable contenga el valor
      * esperado.
@@ -632,6 +632,8 @@ $('btn_cargar').addEventListener('click', async (e) => {
 
     } else {
       
+
+      console.log(error);
       const CORs = '<a href="https://developer.mozilla.org/es/docs/Web/HTTP/CORS">CORs</a>'
 
       label_error.innerHTML = `Error en la solicitud: ${error.message} - 

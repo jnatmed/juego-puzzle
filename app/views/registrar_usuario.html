@@ -13,9 +13,11 @@
                   <input type="text" name="id_usuario">
                 </article>  
                 <article class="inputform">
-                  <label for="contraseña">Contraseña</label>
-                  <input type="password" name="contrasenia">
-                </article>
+                    <input type="password" name="contrasenia" id="password" placeholder="Contraseña">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <i class="material-icons" id="toggle-icon">ver</i> <!-- Icono de ojo abierto por defecto -->
+                    </span>
+                </article>                
                 <article class="inputform">
                   <label for="alias">Alias</label>
                   <input type="text" name="alias" id="alias">

@@ -4,52 +4,30 @@
 <body>
 
     <main>
-        
-        {% include 'panel_input_url_imagen.html' %}
 
-        <section>
-            
-        </section>
         
         
-        <section class="container">
+        <section class="container_partida">    
             
-            {# <section id="puntaje" >
-               <label id="id_partida" class="metricas" data-value="{{ id_partida }}">{{ id_partida ? "Partida N°" ~ id_partida : "Sin partida asignada" }}</label>
-               <label for="aciertos" id="aciertos" class="metricas" data-value="{{ aciertos | default("00")}}">Aciertos: {{ aciertos | default("00")}}</label>     
-               <label for="tiempo" id="tiempo" class="metricas" data-value="{{ tiempo | default("00:00") }}">Tiempo: {{ tiempo | default("00:00") }}</label>     
-               <label for="errores" id="errores" class="metricas" data-value="{{ errores | default("00") }}">Errores: {{ errores | default("00") }}</label>     
-               <label for="puntaje_actual" id="puntaje_actual" class="metricas" data-value="{{ puntaje_actual | default("00") }}">Puntaje: {{ puntaje_actual | default("00") }}</label>     
-            </section> #}
-            <div class="container_modo_in">
-                <div class="modo_in">
-                    <div id="modo_in_pc" class="modo_in_component">
-                        <input id="input_pc" class="input_component" type="text" placeholder="PC">
-                    </div>
-                    <div id="modo_in_url" class="modo_in_component">
-                        <input id="input_url" class="input_component" type="text" placeholder="URL">
-                    </div>
-                    <div id="modo_in_imagenes" class="modo_in_component">
-                        <!-- Contenido dentro de div #modo_in_imagenes -->
-                    </div>
-                </div>
-                <button id="btn_cargar_imagen">Cargar Imagen</button>
-            </div>            
-            <!-- en puzzle es donde el jugador 
-                va a colocar las piezas -->
-            <section id="puzzle">
+                {% include 'panel_input_url_imagen.html' %}        
 
-            </section>
-            
-            <!-- en piezas van las piezas cargadas -->
-            <section id="piezas">
+                {% include 'puntaje.html' %}
+
+                <section class="container_juego">
+                    <!-- en puzzle es donde el jugador 
+                        va a colocar las piezas -->
+                    <section id="puzzle">
+        
+                    </section>
+                    
+                    <!-- en piezas van las piezas cargadas -->
+                    <section id="piezas">
+        
+                    </section>
 
             </section>
         </section>
-
-    <div class="image-grid" id="image-grid"></div>
-    <button id="load-images">Cargar Imágenes</button>
-
+        
     <div id="ganaste_cartel" class="hidden">
         <h2>Ganaste</h2>
         <div class="lights"></div>

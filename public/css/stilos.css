@@ -10,8 +10,22 @@ body {
     height: 100vh;
     /* Aplica un filtro de desenfoque al contenido del body */
     backdrop-filter: blur(5px); /* Ajusta la cantidad de desenfoque aquí */
+    position: relative;
+    /* padding-bottom: 100vh; */
+    min-height: 100vh;
 }
 
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.metricas,
+.icons,
+.container_juego {
+  display: none;
+}
 
 .divCanva {
     margin : 0;
@@ -105,4 +119,16 @@ body {
         justify-content: space-around;
         align-items: center;
     }
+
+    /* Estilos para el pie de página */
+    footer {
+        position: fixed;
+        bottom: 0;
+        width: 97%;
+        background-color: #333; /* Color de fondo del pie de página */
+        color: #fff; /* Color del texto */
+        padding: 10px; /* Espaciado interno */
+        text-align: center; /* Alinear en el centro horizontalmente */
+    }
+
 }

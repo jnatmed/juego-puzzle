@@ -26,20 +26,21 @@
   animation: lights 3s ease-in-out infinite;
 }
 
-#puntaje {
-    color: white;
-    padding-left: 20px;
-}
-
 #titulo_partida {
   text-align: center;
   color: #f0f0f0;
 }
 
-.container {
-    display: flex;
-    justify-content: space-between;
-    border: aliceblue;
+.container_partida {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container_juego {
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 #puntaje {

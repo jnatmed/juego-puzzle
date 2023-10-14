@@ -8,9 +8,6 @@ use Monolog\Logger as MonologLogger;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 
-// echo(__DIR__);
-// exit();
-
 /**
  * Load config
  */

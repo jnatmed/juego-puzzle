@@ -1,8 +1,8 @@
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-gap: 10px;
-    margin: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Columnas adaptables */
+    grid-gap: 10px; /* Espacio entre elementos */
+    grid-auto-flow: dense;
 }
 
 .image-card {
