@@ -1,26 +1,14 @@
-<div class="container_modo_in">
-    <div class="modo_in">
-        <div id="modo_in_pc" class="modo_in_component">
-            <label for="input_pc" class="input_label">Seleccionar imagen de PC:</label>
-            <input id="input_pc" class="input_component" type="file" accept="image/*">
-        </div>
-        <div id="modo_in_url" class="modo_in_component">
-            <input id="input_url" class="input_component" type="text" placeholder="URL" pattern="https://.*">
-            <label for="msj_error_url_imagen" id="msj_error_url_imagen" class="vibrating-label"></label>
-        </div>
-        <button id="btn_cargar">Cargar Imagen</button>
-    </div>
-    <div id="modo_in_imagenes" class="modo_in_component">
-        <button id="load-images">Cargar Imágenes</button>
-        <div class="image-grid" id="image-grid">
-            <!-- 
-                aca van las imagenes cargadas
-                al hacer click sobre una imagen 
-                esta se carga en el puzzle y comienza
-                la partida
-                1162551227
-                maximo change money
-             -->
-        </div>
-    </div>
-</div>            
+<div id="modo_in_pc" class="modo_in_component">
+    <label for="input_pc" class="input_label">Seleccionar imagen de PC:</label>
+    <input id="input_pc" class="input_component" type="file" accept="image/*">
+</div>
+
+<div id="url_input" class="url_input_component">
+    <label for="url" class="input_label">Ingresar URL de la imagen:</label>
+    <input id="url" class="input_component" type="text">
+    <button id="loadFromURL">Cargar desde URL</button>
+</div>
+
+<div id="image_list" class="image_list_component">
+    <!-- Imágenes cargadas desde la API -->
+</div>
