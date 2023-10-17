@@ -18,6 +18,43 @@ export class Rompecabezas {
     this.tamanioPieza = tamanioPieza;
   }
 
+  // Método para inicializar el juego
+  iniciarJuego(urlImagen) {
+    this.imagenOriginal.src = urlImagen;
+    this.tiempoInicio = new Date();
+    this.imagenOriginal.onload = () => {
+      this.redimensionarYFragmentarImagen();
+      this.ajustarTamanioContenedor();
+      this.organizarPiezas();
+      this.inicializarEventos();
+    };
+  }
+
+  redimensionarYFragmentarImagen() {
+    const imagenRedimensionada = this.redimensionarImagen(this.imagenOriginal);
+    this.fragmentarImagen(imagenRedimensionada);
+  }
+
+  redimensionarImagen(imagen) {
+    const anchoDeseado = this.tamanioPieza.ancho;
+    const altoDeseado = this.tamanioPieza.alto;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    // Define el tamaño deseado en el canvas
+    canvas.width = anchoDeseado;
+    canvas.height = altoDeseado;
+
+    // Dibuja la imagen original redimensionada en el canvas
+    context.drawImage(imagen, 0, 0, anchoDeseado, altoDeseado);
+
+    // Crea una nueva imagen a partir del canvas redimensionado
+    const imagenRedimensionada = new Image();
+    imagenRedimensionada.src = canvas.toDataURL();
+
+    return imagenRedimensionada;
+  }
+
   // Método para fragmentar la imagen en lienzos y organizar las piezas
   fragmentarImagen(imagen) {
 
@@ -57,26 +94,6 @@ export class Rompecabezas {
     this.piezasOrdenadas.sort((a, b) => a.id - b.id);
   }
 
-  redimensionarImagen(imagen) {
-    const anchoDeseado = this.tamanioPieza.ancho;
-    const altoDeseado = this.tamanioPieza.alto;
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-
-    // Define el tamaño deseado en el canvas
-    canvas.width = anchoDeseado;
-    canvas.height = altoDeseado;
-
-    // Dibuja la imagen original redimensionada en el canvas
-    context.drawImage(imagen, 0, 0, anchoDeseado, altoDeseado);
-
-    // Crea una nueva imagen a partir del canvas redimensionado
-    const imagenRedimensionada = new Image();
-    imagenRedimensionada.src = canvas.toDataURL();
-
-    return imagenRedimensionada;
-  }
-
   // Método para organizar las piezas en base a la dificultad
   organizarPiezas() {
     // Lógica para organizar las piezas
@@ -98,43 +115,7 @@ export class Rompecabezas {
     // Establece el tamaño del contenedor
     contenedorPiezasDesordenadas.style.width = `${anchoContenedor}px`;
     contenedorPiezasDesordenadas.style.height = `${altoContenedor}px`;
-  }
-
-  // Método para inicializar el juego
-  iniciarJuego(urlImagen) {
-    this.imagenOriginal.src = urlImagen;
-    this.tiempoInicio = new Date();
-    this.imagenOriginal.onload = () => {
-      this.fragmentarImagen(this.imagenOriginal);
-      this.ajustarTamanioContenedor();
-      this.organizarPiezas();
-    // Inicializa eventos de arrastrar y soltar
-      this.inicializarEventos();
-    };
-  }
-  
-
-  // Método para verificar si el juego está completo
-  verificarJuegoCompleto() {
-    if (this.aciertos === this.dificultad.filas * this.dificultad.columnas) {
-      this.tiempoActual = new Date();
-      this.tiempoTranscurrido = (this.tiempoActual - this.tiempoInicio) / 1000;
-      const puntaje = this.calcularPuntaje();
-      console.log('¡Juego completado!');
-      console.log(`Aciertos: ${this.aciertos}`);
-      console.log(`Errores: ${this.errores}`);
-      console.log(`Puntaje: ${puntaje}`);
-      console.log(`Tiempo transcurrido: ${this.tiempoTranscurrido} segundos`);
-    }
-  }
-
-  // Método para calcular el puntaje
-  calcularPuntaje() {
-    const puntosPorAcierto = this.aciertos * 10;
-    const puntosPorError = this.errores * -5;
-    const tiempoPenalizacion = this.tiempoTranscurrido;
-    return Math.max(puntosPorAcierto + puntosPorError - tiempoPenalizacion, 0);
-  }
+  }  
 
   // Método para inicializar eventos de arrastrar y soltar
   inicializarEventos() {
@@ -166,4 +147,27 @@ export class Rompecabezas {
       });
     });
   }
+
+  // Método para verificar si el juego está completo
+  verificarJuegoCompleto() {
+    if (this.aciertos === this.dificultad.filas * this.dificultad.columnas) {
+      this.tiempoActual = new Date();
+      this.tiempoTranscurrido = (this.tiempoActual - this.tiempoInicio) / 1000;
+      const puntaje = this.calcularPuntaje();
+      console.log('¡Juego completado!');
+      console.log(`Aciertos: ${this.aciertos}`);
+      console.log(`Errores: ${this.errores}`);
+      console.log(`Puntaje: ${puntaje}`);
+      console.log(`Tiempo transcurrido: ${this.tiempoTranscurrido} segundos`);
+    }
+  }
+
+  // Método para calcular el puntaje
+  calcularPuntaje() {
+    const puntosPorAcierto = this.aciertos * 10;
+    const puntosPorError = this.errores * -5;
+    const tiempoPenalizacion = this.tiempoTranscurrido;
+    return Math.max(puntosPorAcierto + puntosPorError - tiempoPenalizacion, 0);
+  }
+
 }
