@@ -25,6 +25,10 @@ $router->get('cerrar_sesion', 'SessionController@cerrarSesion');
   $router->get('continuar_partida', 'juegoController@continuar_partida'); 
   $router->post('guardar_estado','juegoController@reciboEstado');
   $router->post('guardar_imagen','juegoController@guardar_imagen');
+  
+  /** traductor */
+  $router->get('traductor','juegoController@traductor');
+
    
 
 

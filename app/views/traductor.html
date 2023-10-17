@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traductor</title>
+</head>
+<body>
+    <h1>Traductor</h1>
+    <input type="text" id="inputText" placeholder="Ingrese su frase">
+    <button onclick="traducir()">Traducir</button>
+    <label id="outputLabel"></label>
+
+    <script>
+        const equivalencias = {
+            "a": "a",
+            "b": "a",
+            "c": "a",
+            "d": "b",
+            "e": "b",
+            "f": "c",
+            "g": "t",
+            "h": "e",
+            "i": "h",
+            "j": "i",
+            "k": "ca",
+            "l": "k",
+            "m": "l",
+            "n": "l",
+            "ñ": "m",
+            "o": "n",
+            "p": "o",
+            "q": "o",
+            "r": "pp",
+            "s": "cu",
+            "t": "ku",
+            "u": "x",
+            "v": "x",
+            "w": "u",
+            "x": "u",
+            "y": "z",
+            "z": "p"
+        };
+
+        function traducir() {
+            const inputText = document.getElementById("inputText").value.toLowerCase();
+            let fraseTraducida = "";
+
+            for (let i = 0; i < inputText.length; i++) {
+                const letra = inputText[i];
+                if (letra in equivalencias) {
+                    fraseTraducida += equivalencias[letra];
+                } else {
+                    fraseTraducida += letra;
+                }
+            }
+
+            document.getElementById("outputLabel").textContent = fraseTraducida;
+        }
+    </script>
+</body>
+</html>

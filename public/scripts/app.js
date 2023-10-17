@@ -5,11 +5,14 @@ import { FileVerifier } from "./fileverifier.js";
 const verifier = new FileVerifier(2 * 1024 * 1024); // Tamaño máximo de 2 MB
 
 // Configura la dificultad del juego (puedes cambiar estos valores)
-const dificultadNovato = new Dificultad(3, 3);
-const dificultadAvanzado = new Dificultad(4, 4);
-const dificultadInsane = new Dificultad(6, 6);
+const dificultadElegida = new Dificultad(3, 3);
+const tamanioPieza = { 
+    "ancho" : 300, 
+    "alto" : 300 
+};
 
-const dificultadElegida = dificultadNovato;
+const rompecabezas = new Rompecabezas(dificultadElegida, tamanioPieza); // Cambia la dificultad según corresponda
+// ajusta el tamnio del contenedor de acuerdo al tamaño de la imagen definida.
 
 // Input el elemento de entrada de archivo
 const inputElement = document.getElementById("input_pc");
@@ -17,11 +20,8 @@ inputElement.addEventListener("change", async () => {
     try {
         const imageElement = await verifier.verifyFile(inputElement.files[0]);
         // Aquí puedes usar imageElement, que es una instancia de HTMLImageElement
-        console.log("Imagen cargada desde PC:", imageElement.src);
-        // Inicializa el juego con la dificultad seleccionada
-        const rompecabezas = new Rompecabezas(dificultadElegida); // Cambia la dificultad según corresponda
+        console.log("Imagen cargada desde PC:", imageElement.src);      
         rompecabezas.iniciarJuego(imageElement.src);
-
     } catch (error) {
         alert(error);
         inputElement.value = "";
@@ -37,10 +37,7 @@ loadFromURLButton.addEventListener("click", async () => {
         const imageElement = await verifier.verifyFile(url);
         // Aquí puedes usar imageElement, que es una instancia de HTMLImageElement
         console.log("Imagen cargada desde URL:", imageElement.src);
-        // Inicializa el juego con la dificultad seleccionada
-        const rompecabezas = new Rompecabezas(dificultadElegida); // Cambia la dificultad según corresponda
         rompecabezas.iniciarJuego(imageElement.src);
-
     } catch (error) {
         alert(error);
     }
@@ -55,10 +52,7 @@ imageList.addEventListener("click", async (event) => {
             const imageElement = await verifier.verifyFile(imageUrl);
             // Aquí puedes usar imageElement, que es una instancia de HTMLImageElement
             console.log("Imagen cargada desde la lista:", imageElement.src);
-            // Inicializa el juego con la dificultad seleccionada
-            const rompecabezas = new Rompecabezas(dificultadElegida); // Cambia la dificultad según corresponda
             rompecabezas.iniciarJuego(imageElement.src);
-
         } catch (error) {
             alert(error);
         }

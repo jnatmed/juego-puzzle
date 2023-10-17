@@ -218,4 +218,9 @@ class JuegoController extends JuegoModel{
 
     }
 
+
+    public function traductor(){
+        return view("traductor");
+    }
+
 } // FIN clase : juegoController

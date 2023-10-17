@@ -17,7 +17,8 @@ class MenuController {
         return [
             ['enlace' => '/ranking', 'descripcion' => 'Ranking'],
             ['enlace' => '/login', 'descripcion' => 'Login'],
-            ['enlace' => '/new', 'descripcion' => 'Nuevo Juego']
+            ['enlace' => '/new', 'descripcion' => 'Nuevo Juego'],
+            ['enlace' => '/traductor', 'descripcion' => 'Traductor']
         ];
     }
 
