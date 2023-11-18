@@ -4,7 +4,7 @@ import { FileVerifier } from "./fileverifier.js";
 
 const verifier = new FileVerifier(2 * 1024 * 1024); // Tamaño máximo de 2 MB
 
-// Configura la dificultad del juego (puedes cambiar estos valores)
+// Configura la dificultad del juego 
 const dificultadElegida = new Dificultad(3, 3);
 const tamanioPieza = { 
     "ancho" : 300, 
@@ -21,6 +21,7 @@ inputElement.addEventListener("change", async () => {
         const imageElement = await verifier.verifyFile(inputElement.files[0]);
         // Aquí puedes usar imageElement, que es una instancia de HTMLImageElement
         console.log("Imagen cargada desde PC:", imageElement.src);      
+        
         rompecabezas.iniciarJuego(imageElement.src);
     } catch (error) {
         alert(error);

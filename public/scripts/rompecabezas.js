@@ -83,7 +83,7 @@ export class Rompecabezas {
 
             // Agregar la pieza desordenada a la lista de piezas desordenadas
             this.piezasDesordenadas.push(pieza);
-
+            console.log(pieza.canvas);
             // Agregar la pieza ordenada a la lista de piezas ordenadas
             this.piezasOrdenadas.push(pieza);
 

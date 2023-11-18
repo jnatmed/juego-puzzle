@@ -1,11 +1,15 @@
 <?php
+
 namespace App\controllers;
+
 use Exception;
 
-class MenuController {
-    public static function crearMenu($tipoUsuario) {
+class MenuController
+{
+    public static function crearMenu($tipoUsuario)
+    {
         $NombreDelMetodo = 'crearMenu' . ucfirst($tipoUsuario);
-        
+
         if (method_exists(self::class, $NombreDelMetodo)) {
             return self::$NombreDelMetodo();
         } else {
@@ -13,16 +17,17 @@ class MenuController {
         }
     }
 
-    private static function crearMenuAnonimo() {
+    private static function crearMenuAnonimo()
+    {
         return [
             ['enlace' => '/ranking', 'descripcion' => 'Ranking'],
             ['enlace' => '/login', 'descripcion' => 'Login'],
-            ['enlace' => '/new', 'descripcion' => 'Nuevo Juego'],
-            ['enlace' => '/traductor', 'descripcion' => 'Traductor']
+            ['enlace' => '/new', 'descripcion' => 'Nuevo Juego']
         ];
     }
 
-    private static function crearMenuJugador() {
+    private static function crearMenuJugador()
+    {
         return [
             ['enlace' => '/ranking', 'descripcion' => 'Mi Ranking'],
             ['enlace' => '/new', 'descripcion' => 'Nuevo Juego'],
@@ -31,7 +36,8 @@ class MenuController {
         ];
     }
 
-    private static function crearMenuAdmin() {
+    private static function crearMenuAdmin()
+    {
         return [
             ['enlace' => '/ranking', 'descripcion' => 'Ranking Jugadores'],
             ['enlace' => '/new', 'descripcion' => 'Nuevo Juego'],
@@ -42,4 +48,3 @@ class MenuController {
         ];
     }
 }
-
